@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Edit Itinerary</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div id="edit-div" class="well">
+    <form name="form" class="css-form" novalidate>
+      <div>
+        <label for="input-title">Title:</label>
+        <input id="input-title" style="width: 90%;" ng-model="data.title" name="title" type="text" required="" />
+        <div ng-show="form.$submitted || form.title.$touched">
+          <div id="title-required" class="alert alert-warning" role="alert" ng-show="form.title.$error.required">Enter a title for the itinerary</div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <label for="input-start-date">Date from:</label>
+          <input id="input-start-date" type="date" placeholder="yyyy-MM-dd" size="25" name="startdate" ng-model="data.start" />
+        </div>
+        <div>
+          <label for="input-finish-date">Date to:</label>
+          <input id="input-finish-date" type="date" placeholder="yyyy-MM-dd" size="25" name="finishdate" ng-model="data.finish" />
+        </div>
+        <div ng-show="form.$submitted || form.start-date.$touched">
+          <div id="invalid-start-date" class="alert alert-warning" role="alert" ng-show="form.startdate.$error.date">Not a valid start date!</div>
+          <div id="invalid-end-date" class="alert alert-warning" role="alert" ng-show="form.finishdate.$error.date">Not a valid end date!</div>
+        </div>
+      </div>
+      <div>
+        <label for="input-description" style="vertical-align:top;">Description:</label>
+        <pagedown-editor id="input-description" content="data.description" help="markdownHelp()"></pagedown-editor>
+      </div>
+      <div id="div-form-buttons" style="margin-top: 20px;">
+        <button id="btn-save" ng-click="saveItinerary(data)" class="btn btn-lg btn-success">Save</button>
+        <button id="btn-delete" ng-click="delete(data)" type="button" class="btn btn-lg btn-danger" ng-show="data.id">Delete</button>
+        <button id="btn-cancel" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
+        <button id="btn-reset" ng-click="reset(form)" type="button" class="btn btn-lg btn-danger">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>

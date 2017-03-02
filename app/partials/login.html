@@ -1,0 +1,27 @@
+<div id="login" class="container">
+  <div ng-messages="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+    <div class="alert alert-warning" role="alert" ng-message="unauthorized">Invalid credentials!</div>
+  </div>
+  <div class="container">
+    <form name="form" class="form-signin" novalidate>
+      <h2 class="form-signin-heading">Login</h2>
+      <label for="input-email" class="sr-only">E-Mail:</label>
+      <input id="input-email" type="email" class="form-control" placeholder="Email address" name="email" size="25" ng-model="data.email" required="" autofocus=""/>
+      <label for="input-password" class="sr-only">Password:</label>
+      <input id="input-password" type="password" class="form-control" placeholder="Password" name="password" size="20" ng-model="data.password" required=""/>
+      <div ng-show="form.$submitted || form.email.$touched">
+        <div id="emailError" class="alert alert-warning" role="alert" ng-show="form.email.$error.required">Enter your e-mail address</div>
+        <div id="emailInvalid" class="alert alert-warning" role="alert"
+             ng-show="form.email.$error.email">Invalid e-mail address</div>
+      </div>
+      <div ng-show="form.$submitted || form.password.$touched">
+        <div id="passwordError" class="alert alert-warning" role="alert" ng-show="form.password.$error.required">Enter your password</div>
+      </div>
+      <button id="btn-submit" ng-click="doLogin(data)" value="Submit" class="btn btn-lg btn-success">Login</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+/**
+ * @license TRIP - Trip Recording and Itinerary Planning application.
+ * (c) 2016, 2017 Frank Dean <frank@fdsd.co.uk>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+'use strict';
+
+angular.module('myApp.state.service', [] )
+
+  .service(
+    'StateService',
+    ['$log',
+     function($log) {
+
+       this.reset = function() {
+         this.tracksSearch = undefined;
+         this.tracksPage = 1;
+         this.itinerariesPage = 1;
+         this.admin = undefined;
+       };
+       this.reset();
+
+       this.saveSearch = function(search) {
+         this.tracksSearch = search;
+       };
+
+       this.getSearch = function() {
+         return this.tracksSearch;
+       };
+
+       this.saveTracksPage = function(page) {
+         this.tracksPage = page;
+       };
+       this.getTracksPage = function() {
+         return this.tracksPage;
+       };
+
+       this.saveAdmin = function(admin) {
+         this.admin = admin;
+       };
+       this.getAdmin = function() {
+         return this.admin;
+       };
+
+       this.saveItinerariesPage = function(page) {
+         this.itinerariesPage = page;
+       };
+       this.getItinerariesPage = function() {
+         return this.itinerariesPage;
+       };
+
+     }]);

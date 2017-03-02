@@ -1,0 +1,27 @@
+{
+  "globalstrict": true,
+  "globals": {
+	"FormData" : false,
+	"Buffer": false,
+	"browser": false,
+	"by": false,
+	"element": false,
+	"io": false,
+	"jasmine": false,
+	"pending": false,
+	"protractor": false,
+	"require": false,
+	"spyOn": false,
+    "afterEach": false,
+    "angular": false,
+    "beforeEach": false,
+    "describe": false,
+	"xdescribe": false,
+    "expect": false,
+    "inject": false,
+    "it": false,
+	"xit": false,
+    "module": false,
+	"L": false
+  }
+}

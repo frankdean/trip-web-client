@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="page-header">
+    <h1>System Status</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div class="well">
+    <div ng-show="data.tileUsage">
+      <p>Fetched {{data.tileUsage.count}} tiles, as at
+        {{data.tileUsage.time | date: 'HH:mm EEE dd-MMM-yyyy'}}</p>
+    </div>
+    <div ng-show="!data.tileUsage">
+      <p>No tile usage data has been collected yet.</p>
+    </div>
+  </div>
+</div>

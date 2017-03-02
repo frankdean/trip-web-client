@@ -1,0 +1,153 @@
+<div class="container">
+  <div class="page-header">
+    <h1>User Management</h1>
+  </div>
+  <div id="ajax-error" ng-messages="ajaxRequestError" ng-show="ajaxRequestError">
+    <div id="system-error" class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred, status code returned is
+      {{ajaxRequestError.status}}
+    </div>
+    <div id="bad-request" class="alert alert-danger" role="alert" ng-message="badRequest">Save
+      failed.  The most likely cause is that the nickname or e-mail address
+      already exist.
+    </div>
+  </div>
+  <div id="search" class="well" ng-show="!state.edit">
+    <form name="search" class="css-form" novalidate>
+      <div>
+        Search by:&nbsp;
+        <input id="radio-nickname" type="radio" ng-model="criteria.field" value="nickname" />
+        <label for="radio-nickname">&nbsp;Nickname&nbsp;</label>
+        <input id="radio-email" type="radio" ng-model="criteria.field" value="email" />
+        <label for="radio-email">&nbsp;Email&nbsp;</label>
+      </div>
+      <div ng-show="criteria.field === 'nickname'">
+        <label for="input-search-nickname">Nickname:</label>
+        <input id="input-search-nickname" ng-model="search.nickname" type="text"
+               name="search-nickname" size="32" maxlength="120" />
+      </div>
+      <div ng-show="criteria.field === 'email'">
+        <label for="input-search-email">E-mail address:</label>
+        <input id="input-search-email" ng-model="search.email" type="text"
+               name="search-email" size="32" maxlength="120" />
+      </div>
+      <div>
+        Search type:&nbsp;
+        <input id="radio-exact-match" type="radio" ng-model="criteria.type" value="exact" />
+        <label for="radio-exact-match">&nbsp;Exact&nbsp;</label>
+        <input id="radio-partial-match" type="radio" ng-model="criteria.type" value="partial" />
+        <label for="radio-partial-match">&nbsp;Partial match</label>
+      </div>
+      <div>
+        <button id="btn-search" ng-click="searchUsers(search)"
+                class="btn btn-lg btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
+  <div id="no-users-found" class="alert alert-info" ng-show="ajaxRequestError.noresults">
+    <p>No matching users found</p>
+  </div>
+  <div id="users" ng-show="users.payload.length > 0 && !state.edit">
+    <table id="table-users" class="wide-table table table-striped">
+      <tr>
+        <th>Nickname</th>
+        <th>E-mail</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>uuid</th>
+        <th>Admin</th>
+        <th></th>
+      </tr>
+      <tr ng-repeat="user in users.payload">
+        <td><a href="#/edit-user?id={{user.id}}">{{user.nickname}}</a></td>
+        <td>{{user.email}}</td>
+        <td>{{user.firstname}}</td>
+        <td>{{user.lastname}}</td>
+        <td>{{user.uuid}}</td>
+        <td>{{user.admin == true ? '\u2713' : ''}}</td>
+        <td><input type="checkbox" ng-model="user.selected" /></td>
+      </tr>
+    </table>
+    <div id="div-paging">
+      <paging
+         class="small"
+         page="page"
+         page-size="pageSize"
+         total="totalCount"
+         hide-if-empty="true"
+         show-prev-next="true"
+         show-first-last="true"
+         paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+      </paging>
+    </div>
+  </div>
+  <div ng-messages="formError">
+    <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+         ng-message="editOnlyOne">
+      Select only one user.</div>
+  </div>
+  <div id="div-choice-buttons">
+    <button id="btn-delete" ng-click="delete(form)" class="btn btn-lg btn-danger"ng-show="users.payload.length > 0 && !state.edit">Delete</button>
+    <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-default"ng-show="users.payload.length > 0 && !state.edit">Edit</button>
+    <button id="btn-edit-password" ng-click="editPassword(form)" class="btn btn-lg btn-info" ng-show="users.payload.length > 0 && !state.edit">Password reset</button>
+    <button id="btn-new" ng-click="showNewUserForm()"
+            class="btn btn-lg btn-warning" ng-show="!state.edit">New</button>
+  </div>
+  <div class="well" ng-show="state.edit">
+    <form name="form" class="css-form" autocomplete="off" novalidate>
+      <div>
+        <label for="input-nickname">Nickname:</label>
+        <input id="input-nickname" ng-model="data.nickname" type="text" name="nickname" size="32" maxlength="120" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dFrom.$touched">
+        <div id="error-nickname-required" class="alert alert-warning" role="alert" ng-show="form.nickname.$error.required">Enter a nickname for the user</div>
+      </div>
+      <div>
+        <label for="input-name">E-mail address:</label>
+        <input id="input-name" ng-model="data.username" type="email" name="email" size="32" maxlength="120" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dFrom.$touched">
+        <div id="error-email-required" class="alert alert-warning" role="alert" ng-show="form.email.$error.required">Enter the user's e-mail address</div>
+        <div id="error-email-invalid" class="alert alert-warning" role="alert" ng-show="form.email.$error.email">The e-mail address is invalid</div>
+      </div>
+      <div id="div-password" ng-show="state.new">
+        <div>
+          <label for="input-password">Password:</label>
+          <input id="input-password" ng-model="data.password" type="password" name="password" size="32" maxlength="120" required=""/>
+        </div>
+        <div ng-show="form.$submitted || form.dFrom.$touched">
+          <div id="error-password-required" class="alert alert-warning" role="alert" ng-show="form.password.$error.required">Enter a password for the user</div>
+        </div>
+        <div>
+          <label for="input-password2">Repeat password:</label>
+          <input id="input-password2" ng-model="data.password2" type="password" name="password2" match="data.password" size="32" maxlength="120" required="" />
+        </div>
+        <div ng-show="form.$submitted || form.dFrom.$touched">
+          <div id="error-password2-required" class="alert alert-warning" role="alert" ng-show="form.password2.$error.required">Confirm the password for the user</div>
+        </div>
+        <div ng-show="form.$submitted || form.dFrom.$touched">
+          <div id="error-password-match" class="alert alert-warning" role="alert" ng-show="form.password2.$error.match">Passwords do not match</div>
+        </div>
+      </div>
+      <div>
+        <label for="input-firstname">First name:</label>
+        <input id="input-firstname" ng-model="data.firstname" type="text" name="firstname" size="32" maxlength="120" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dFrom.$touched">
+        <div id="error-firstname-required" class="alert alert-warning" role="alert" ng-show="form.firstname.$error.required">Enter the user's first name</div>
+      </div>
+      <div>
+        <label for="input-lastname">Last name:</label>
+        <input id="input-lastname" ng-model="data.lastname" type="text" name="lastname" size="32" maxlength="120" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dFrom.$touched">
+        <div id="error-lastname-required" class="alert alert-warning" role="alert" ng-show="form.lastname.$error.required">Enter the user's last name</div>
+      </div>
+      <div>
+        <button id="btn-cancel" type="button" ng-click="cancelEdit(form)" class="btn btn-lg btn-danger">Cancel</button>
+        <button id="btn-submit" type="submit" ng-click="saveUser(form)" class="btn btn-lg btn-success">Save</button>
+        <button id="btn-reset" ng-click="reset(form)" class="btn btn-lg btn-danger" ng-show="!state.new">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>

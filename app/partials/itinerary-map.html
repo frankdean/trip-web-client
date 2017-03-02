@@ -1,0 +1,15 @@
+<div>
+  <div id="system-error" class="map-page-div" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <leaflet ng-if="status.showMap" paths="map.paths" controls="map.controls" lf-center="map.center" bounds="map.bounds" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
+  <div class="text-center map-page-div map-page-buttons">
+    <button id="btn-whereami" ng-click="map.center.zoom=16; map.center.autoDiscover=true; ajaxRequestError=null;" type="button" class="btn btn-primary">My position</button>
+    <button id="btn-mark-pos" ng-show="canDropMarker" ng-click="markPosition()" type="button" class="btn btn-success">Drop marker</button>
+    <button id="btn-back" ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
+  </div>
+</div>

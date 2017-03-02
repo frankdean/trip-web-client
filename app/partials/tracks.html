@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Tracks</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div id="locations" ng-show="locations != null">
+    <div id="location-count" class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><span ng-bind="locations.count"></span> track points received</h3>
+        </div>
+        <div class="panel-body">
+          <div>Between <span ng-bind="locations.date_from | date:'medium'"></span> and <span ng-bind="locations.date_to | date:'medium'"></span></div>
+        </div>
+      </div>
+    </div>
+    <div id="div-locations-table" ng-show="locations.payload.length > 0">
+      <table id="track-points-table" class="wide-table table table-striped" ng-show="locations.count">
+        <tr><th>ID</th><th>Time</th><th>Latitude</th><th>Longitude</th><th>HDOP</th><th>Altitude</th><th>Speed</th><th>Bearing</th><th>Note</th><th>Provider</th><th>Satellites</th><th>Battery</th></tr>
+        <tr ng-repeat="location in locations.payload">
+          <td>{{location.id}}</td>
+          <td>{{location.time | date:'medium'}}</td>
+          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lat | number:5}}</a></td>
+          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lng | number:5}}</a></td>
+          <td>{{location.hdop | number:1}}</td>
+          <td>{{location.altitude | number:0}}</td>
+          <td>{{location.speed | number:1}}</td>
+          <td>{{location.bearing | number:0}}</td>
+          <td>{{location.note}}</td>
+          <td>{{location.provider}}</td>
+          <td>{{location.sat}}</td>
+          <td>{{location.battery | number:1}}</td>
+        </tr>
+      </table>
+      <div id="div-paging">
+        <paging
+           class="small"
+           page="page"
+           page-size="pageSize"
+           total="totalCount"
+           hide-if-empty="true"
+           show-prev-next="true"
+           show-first-last="true"
+           paging-action="DoPagingAction('Paging Clicked', page, pageSize, total)">
+        </paging>
+      </div>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <div id="div-nicknames" ng-show="nicknames.length > 0">
+        <label for="nicknameSelect">Display shared user's tracks:</label>
+        <select id="nicknameSelect" ng-model="tracks.search.nicknameSelect">
+          <option value="">&nbsp;</option>
+          <option ng-repeat="nickname in nicknames" value="{{nickname.nickname}}">{{nickname.nickname}}</option>
+        </select>
+      </div>
+      <div>
+        <label for="input-date-from">Date from:</label>
+        <input id="input-date-from" type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" name="dFrom" size="25" maxlength="25" ng-model="tracks.search.dateFrom" required=""/>
+        <div ng-show="form.$submitted || form.dFrom.$touched">
+          <div id="error-required-from" ng-show="form.dFrom.$error.required" class="alert alert-warning" role="alert">Enter the start date to fetch points from.</div>
+          <div id="invalid-date-from" class="alert alert-warning" role="alert" ng-show="form.dFrom.$error.datetimelocal">Not a valid date!</div>
+        </div>
+      </div>
+      <div>
+        <label for="input-date-to">Date to:</label>
+        <input id="input-date-to" type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" name="dTo" size="25" maxlength="25" ng-model="tracks.search.dateTo" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dTo.$touched">
+        <div id="error-required-to" ng-show="form.dTo.$error.required" class="alert alert-warning" role="alert">Enter the end date to fetch points from.</div>
+        <div id="invalid-date-to" class="alert alert-warning" role="alert" ng-show="form.dTo.$error.datetimelocal">Not a valid date!</div>
+      </div>
+      <div>
+        <label for="input-max-hdop">Max hdop:</label>
+        <input id="input-max-hdop" type="number" min="0" max="9999" name="max_hdop" size="5" maxlength="4" ng-model="tracks.search.hdop" /> (leave blank for no maximum)
+      </div>
+      <div>
+        <label for="input-notes-only">Show notes only:</label>
+        <input id="input-notes-only" type="checkbox" name="notes_only_flag" ng-model="tracks.search.notesOnlyFlag" />
+      </div>
+      <div ng-show="form.$submitted || form.max_hdop.$touched">
+        <div id="error-number-hdop" class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.number">Not valid number!</div>
+        <div class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.min">Minimum hdop = 0</div>
+        <div id="error-max-hdop" class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.max">Maximum hdop = 9999</div>
+      </div>
+      <button id="btn-tracks" ng-click="doListTracks()" value="Submit" class="btn btn-lg btn-success">List tracks</button>
+      <button id="btn-map" ng-click="showMap(tracks.search)" value="Submit" class="btn btn-lg btn-primary">Show map</button>
+      <button id="btn-download" ng-click="gpxDownload(tracks.search)" value="Submit" class="btn btn-lg btn-primary">Download tracks</button>
+      <button id="btn-reset" ng-click="reset(form)" value="Reset" class="btn btn-lg btn-danger">Reset</button>
+    </form>
+  </div>
+</div>

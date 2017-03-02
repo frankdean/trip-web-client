@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Track</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <div>
+        <div>
+          <label for="input-name">Name:</label>
+          <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
+          <span ng-show="data.distance">{{data.distance}}&nbsp;km {{data.distance / 1.609344 | number:2}}&nbsp;mi</span>
+        </div>
+        <div>
+          <label for="input-color">Colour:</label>
+          <select id="input-color" ng-model="data.color">
+            <option value="">-- not set --</option>
+            <option ng-repeat="color in colors" value="{{color.key}}">{{color.value}}</option>
+          </select>
+        </div>
+      </div>
+      <div id="wpt-buttons">
+        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success" ng-show="!ajaxRequestError">Save</button>
+        <button id="btn-cancel" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
+        <button id="btn-reset" ng-click="reset(form)" type="button" class="btn btn-lg btn-danger">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>

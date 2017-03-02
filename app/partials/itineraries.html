@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itineraries</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div class="alert alert-info" ng-show="itineraries.payload.length === 0">
+    <p>There are no itineraries to display</p>
+  </div>
+  <div id="itineraries" ng-show="itineraries.payload.length > 0">
+    <table id="table-itineraries" class="wide-table table table-striped">
+      <tr>
+        <th>Start Date</th>
+        <th>Title</th>
+        <th>Owner</th>
+        <th>Sharing</th>
+      </tr>
+      <tr ng-repeat="itinerary in itineraries.payload">
+        <td>{{itinerary.start | date :'EEE dd-MMM-yyyy'}}</td>
+        <td><a href="#/itinerary?id={{itinerary.id}}">{{itinerary.title}}</a></td>
+        <td>{{itinerary.nickname}}</td>
+        <td>{{itinerary.shared == true ? '\u2713' : ''}}</td>
+      </tr>
+    </table>
+    <div id="div-paging">
+      <paging
+         class="small"
+         page="page"
+         page-size="pageSize"
+         total="totalCount"
+         hide-if-empty="true"
+         show-prev-next="true"
+         show-first-last="true"
+         paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+      </paging>
+    </div>
+  </div>
+  <div id="div-buttons">
+    <form name="form" class="css-form" novalidate>
+      <div id="div-form-buttons">
+        <button id="btn-new" ng-click="newItinerary()" class="btn btn-lg btn-warning">New</button>
+      </div>
+    </form>
+    <div ng-show="itineraries.payload.length > 0">
+      <button id="btn-shares-report" ng-click="showSharesReport()" class="btn btn-lg btn-primary">Itinerary shares report</button>
+    </div>
+  </div>
+</div>

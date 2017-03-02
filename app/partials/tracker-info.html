@@ -1,0 +1,108 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Tracker URL</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <p>Use one of the following 'Online tracking web addresses' in either
+    the <a href="http://code.mendhak.com/gpslogger/">GPSLogger for Android</a> app or
+    <a href="http://osmand.net/">OsmAnd</a> app's
+    <a href="http://osmand.net/features?id=trip-recording-plugin">trip
+      recording plug-in</a> to log your journeys.
+  </p>
+
+  <p>Copy <a id="gpslog-href-url" href="{{gpsLoggerUrlPrefix}}{{uuid.uuid}}">this link for GPSLogger</a>.</p>
+
+  <p>Copy <a id="osmand-href-url" href="{{osmAndTrackingUrlPrefix}}{{uuid.uuid}}">this link for OsmAnd</a>.</p>
+  <div>
+    <p>To construct a custom URL for a tracker client, use the parameter names
+      listed below to pass appropriate values.  The parameter names must all
+      be in lower-case.</p>
+    <p>For the <a href="https://www.traccar.org/client/">Traccar Client</a>
+    app, enter the 'Device identifier' as <strong>{{uuid.uuid}}</strong> and
+    set the host and port values in the normal way.  As there is no option on
+    the app to specify a URL prefix, this tracker client may not be supported
+    on some implementations of TRIP.</p>
+    <table class="wide-table logger-param-table">
+      <tr><th>Parameter</th><th>Value</th><th>Mandatory</th></tr>
+      <tr><td>uuid</td><td>{{uuid.uuid}}</td><td>&#x2713;</td></tr>
+      <tr><td>lat</td><td>Decimal degrees latitude</td><td>&#x2713;</td></tr>
+      <tr><td>lon</td><td>Decimal degrees longitude</td><td>&#x2713;</td></tr>
+      <tr>
+        <td>time</td>
+        <td>Time in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 format</a> e.g. {{now | date : 'yyyy-MM-ddTHH:mm:ss.sssZ'}}</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>unixtime</td>
+        <td><a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> e.g. {{now}}</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>mstime</td>
+        <td><a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> in <a href="https://en.wikipedia.org/wiki/Millisecond">milliseconds</a> e.g. {{now * 1000}}</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>hdop</td>
+        <td><a href="https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)">Horizontal Dilution of Precision</a> (accuracy)</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>altitude</td>
+        <td>Altitude</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>speed</td>
+        <td>Speed</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>bearing</td>
+        <td>Bearing in decimal degrees</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>sat</td>
+        <td>Numeric count of satellites with fixes</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>prov</td>
+        <td>Type of location provider as text.  E.g. GPS or Network</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>batt</td>
+        <td>Numeric remaining battery percentage</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>note</td>
+        <td>Free text description of point</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+    <p><strong>Note:</strong> Where one of the time parameters is not
+    included, the server will record the time it <strong><em>receives</em></strong> the
+    location using the server's time zone.  As the time received may vary
+    greatly from the actual time the location was recorded in the device, it
+    is highly recommended to include a time parameter if at all possible.</p>
+  </div>
+  <div ng-messages="ajaxRequestMessage">
+    <div id="msg-success" class="alert alert-success" role="alert" ng-message="success">
+      New key <span ng-non-bindable>{</span>{{uuid.uuid}}<span ng-non-bindable>}</span>
+      generated.  <strong>Previous keys will no longer work.  You must
+      configure your tracker client app(s) to use the new key.</strong></div>
+  </div>
+  <form name="form" class="css-form" novalidaate>
+    <button id="btn-generate" ng-click="generateUuid()"
+            value="Generate" class="btn btn-lg btn-success">Generate new tracking ID</button>
+  </form>
+</div>

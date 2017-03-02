@@ -1,0 +1,103 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Waypoint</h1>
+  </div>
+  <div class="well">
+    <div id="system-error" ng-messages="ajaxRequestError"
+         ng-show="ajaxRequestError">
+      <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+        unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+          {{ajaxRequestError.status}}<span>
+      </div>
+    </div>
+    <form name="form" class="css-form" novalidate>
+      <label for="input-name">Name:</label>
+      <input id="input-name" ng-model="data.name" name="name" type="text" size="30" required="" />
+      <div ng-show="form.$submitted || form.name.$touched">
+        <div id="name-required" class="alert alert-warning" role="alert" ng-show="form.name.$error.required">Enter the name for the itinerary waypoint</div>
+      </div>
+      <div>
+        <label for="input-position">Position:</label>
+        <input id="input-position" ng-model="data.position" name="position" type="text" size="30" required="" position/>
+        <div ng-show="form.$submitted || form.position.$touched">
+          <div id="position-required" class="alert alert-warning" role="alert" ng-show="form.position.$error.required">Enter the position for the itinerary waypoint</div>
+        </div>
+        <div id="position-invalid" class="alert alert-warning" role="alert" ng-show="form.position.$error.position">Invalid latitude/longitude.  Many common formats are recognised, but try entering numeric only values, separated by a comma, e.g. 51.3,-2.3 for N5.31&deg; W2.3&deg;.  Then look at the various supported formats by changing the Display position format below.  You can use a letter 'd' instead of the &deg; symbol.  Single and double quotes are accepted for minutes and seconds.</div>
+      </div>
+      <div>
+        <label for="input-coord-format">Display position format:</label>
+        <select id="input-coord-format" ng-model="coordFormat" >
+          <option ng-repeat="format in georefFormats" value="{{format.key}}">{{format.value}}</option>
+        </select>
+      </div>
+      <div>
+        <label for="position-separator">Position ordering and separator:</label>
+        <select id="position-separator" ng-model="positionFormat">
+          <option value="lat-lng">lat lng</option>
+          <option value="lat,lng">lat,lng</option>
+          <option value="lng-lat">lng lat (Proj4 reversed)</option>
+          <option value="lng,lat">lng,lat (Reversed)</option>
+        </select>
+      </div>
+      <div>
+        <span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng"></span>
+        <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
+      </div>
+      <div>
+        <label for="input-altitude">Altitude:</label>
+        <input id="input-altitude" ng-model="data.altitude" name="altitude" type="number" min="-9999999" max="99999999" />
+        <div ng-show="form.$submitted || form.altitude.$touched">
+          <div id="range-error-altitude" class="alert alert-warning" role="alert" ng-show="form.altitude.$error.min || form.atitude.$error.max">Altitude out of range.  Must be between -9,999,999 and 99,999,999</div>
+        </div>
+      </div>
+      <div>
+        <label for="input-symbol">Symbol:</label>
+        <select id="input-symbol" ng-model="data.symbol">
+          <option value="">-- not set --</option>
+          <option ng-repeat="symbol in symbols" value="{{symbol.key}}">{{symbol.value}}</option>
+        </select>
+      </div>
+      <div>
+        <label for="input-time">Time:</label>
+        <input id="input-time"
+               type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" name="time"
+               size="25" maxlength="25" ng-model="data.time" />
+        <div id="invalid-time" class="alert alert-warning" role="alert"
+             ng-show="form.time.$error.datetimelocal">Not a valid date and time!</div>
+      </div>
+      <div>
+        <p>The description is not intended to be displayed on GPS devices.</p>
+        <label for="input-description" style="vertical-align:top;">Description:</label>
+        <input id="input-description" ng-model="data.description" name="description" type="text" size="30" />
+      </div>
+      <div>
+        <p>The comment is intended to be displayed on the GPS device.</p>
+        <label for="input-comment">Comment:</label>
+        <textarea id="input-comment" style="width: 100%;" ng-model="data.comment" rows="8"></textarea>
+      </div>
+      <div>
+        <label for="input-samples">Garmin averaging sample count</label>
+        <input id="input-samples" ng-model="data.samples" name="samples" type="number" min="1" max="99999" />
+        <div ng-show="form.$submitted || form.samples.$touched">
+          <div id="range-error-samples" class="alert alert-warning" role="alert" ng-show="form.samples.$error.min || form.samples.$error.max">Averaging sample count is out of range.  Must be between 1 and 99,999</div>
+        </div>
+      </div>
+      <div>
+        <label for="input-type">OsmAnd category (type):</label>
+        <input id="input-type" ng-model="data.type" name="type" type="text" />
+      </div>
+      <div>
+        <label for="input-color">OsmAnd colour:</label>
+        <input id="input-color" ng-model="data.color" name="color" type="text" ng-pattern="/^#[0-9a-fA-F]*$/"/>
+        <div ng-show="form.$submitted || form.color.$touched">
+          <div id="error-color" class="alert alert-warning" role="alert" ng-show="form.color.$error.pattern">Color must be a hexadecimal number preceeding by the # sign, e.g. #b4123adf</div>
+        </div>
+      </div>
+      <div id="wpt-buttons">
+        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success">Save</button>
+        <button id="btn-cancel" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
+        <button id="btn-reset" ng-click="reset(form)" type="button" class="btn btn-lg btn-danger">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>

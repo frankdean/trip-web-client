@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Sharing</h1>
+  </div>
+  <div id="shares" ng-show="shares != null && data.state.new === undefined">
+    <div ng-show="shares.payload.length > 0">
+      <table id="table-shares" class="table table-striped" ng-show="shares.count">
+        <tr>
+          <th>Nickname</th>
+          <th>Active</th>
+          <th><input id="input-select-all" type="checkbox" ng-model="selectAllCheckbox" ng-change="markAllShares()" /></th>
+        </tr>
+        <tr ng-repeat="share in shares.payload">
+          <td>{{share.nickname}}</td>
+          <td>{{share.active ? '\u2713' : ''}}</td>
+          <td><input type="checkbox" ng-model="share.selected" ng-change="clearSelectAllCheckbox()" /></td>
+        </tr>
+      </table>
+      <div id="div-paging">
+        <paging
+          class="small"
+          page="page"
+          page-size="pageSize"
+          total="totalCount"
+          hide-if-empty="true"
+          show-prev-next="true"
+          show-first-last="true"
+          paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+        </paging>
+        <div id="div-buttons">
+          <button id="btn-activate" ng-click="activate()" class="btn btn-lg btn-success">Activate</button>
+          <button id="btn-deactivate" ng-click="deactivate()" class="btn btn-lg btn-primary">Deactivate</button>
+          <button id="btn-delete" ng-click="delete()" class="btn btn-lg btn-danger">Delete selected</button>
+          <button id="btn-edit" ng-click="edit()" class="btn btn-lg btn-info">Edit selected</button>
+          <button id="btn-new" ng-click="new()" class="btn btn-lg btn-warning">New</button>
+          <button id="btn-close" ng-click="cancel()" type="button" class="btn btn-lg btn-danger">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-messages="formError">
+    <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+         ng-message="editOnlyOne">
+      Select only one nickname for edit.</div>
+  </div>
+  <div id="form" class="well" ng-show="data.state.new !== undefined ">
+    <div ng-messages="ajaxRequestError">
+      <div id="error-invalid-nickname" class="alert alert-danger" role="alert"
+           ng-message="saveFailed">Update failed.  Is the nickname correct?  Note
+           that nicknames are case-significant.</div>
+    </div>
+    <form name="form" class="css-form" autocomplete="off" novalidate>
+      <div>
+        <label for="input-nickname">Nickname:</label>
+        <input id="input-nickname" ng-model="data.nickname" type="text"
+               name="nickname" ng-disabled="!data.state.new" size="32"
+               maxlength="120" required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.dFrom.$touched">
+        <div id="error-nickname-required" class="alert alert-warning" role="alert" ng-show="form.nickname.$error.required">Enter a nickname for the user</div>
+      </div>
+      <div id="div-active">
+        <label for="input-active">Active:</label><input id="input-active" type="checkbox" ng-model="data.active" />
+      </div>
+      <div id="div-form-buttons">
+        <button id="btn-save" ng-click="save(form)" class="btn btn-lg btn-primary">Save</button>
+        <button id="btn-cancel" ng-click="cancelEdit(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

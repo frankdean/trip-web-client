@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRIP - Trip Recording and Itinerary Planner</title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" >
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" >
+  <link rel="stylesheet" href="bower_components/leaflet-draw/dist/leaflet.draw.css" >
+  <link rel="stylesheet" href="bower_components/angular-pagedown/angular-pagedown.min.css" >
+  <link rel="stylesheet" href="css/app.css">
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-i18n/angular-locale_en-gb.js"></script>
+  <script src="bower_components/pagedown/Markdown.Converter.js"></script>
+  <script src="bower_components/leaflet/dist/leaflet.js"></script>
+  <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="bower_components/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
+  <script src="bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
+  <script>
+    // include angular loader, which allows the files to load in any order
+    //@@NG_LOADER_START@@
+    // You need to run `npm run update-index-async` to inject the angular async code here
+    //@@NG_LOADER_END@@
+
+    // include a third-party async loader library
+    /*!
+     * $script.js v1.3
+     * https://github.com/ded/script.js
+     * Copyright: @ded & @fat - Dustin Diaz, Jacob Thornton 2011
+     * Follow our software http://twitter.com/dedfat
+     * License: MIT
+     */
+    !function(a,b,c){function t(a,c){var e=b.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){e[m]&&!/^c|loade/.test(e[m])||f||(e.onload=e[o]=null,f=1,c())},e.async=1,e.src=a,d.insertBefore(e,d.firstChild)}function q(a,b){p(a,function(a){return!b(a)})}var d=b.getElementsByTagName("head")[0],e={},f={},g={},h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange",p=function(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1};!b[m]&&b[n]&&(b[n](l,function r(){b.removeEventListener(l,r,j),b[m]="complete"},j),b[m]="loading");var s=function(a,b,d){function o(){if(!--m){e[l]=1,j&&j();for(var a in g)p(a.split("|"),n)&&!q(g[a],n)&&(g[a]=[])}}function n(a){return a.call?a():e[a]}a=a[k]?a:[a];var i=b&&b.call,j=i?b:d,l=i?a.join(""):b,m=a.length;c(function(){q(a,function(a){h[a]?(l&&(f[l]=1),o()):(h[a]=1,l&&(f[l]=1),t(s.path?s.path+a+".js":a,o))})},0);return s};s.get=t,s.ready=function(a,b,c){a=a[k]?a:[a];var d=[];!q(a,function(a){e[a]||d[k](a)})&&p(a,function(a){return e[a]})?b():!function(a){g[a]=g[a]||[],g[a][k](b),c&&c(d)}(a.join("|"));return s};var u=a.$script;s.noConflict=function(){a.$script=u;return this},typeof module!="undefined"&&module.exports?module.exports=s:a.$script=s}(this,document,setTimeout)
+
+    // load all of the dependencies asynchronously.
+    $script([
+      'bower_components/angular-messages/angular-messages.min.js',
+      'bower_components/angular-route/angular-route.min.js',
+      'bower_components/angular-resource/angular-resource.min.js',
+      'bower_components/angular-paging/dist/paging.min.js',
+      'bower_components/angular-jwt/dist/angular-jwt.min.js',
+      'bower_components/angular-simple-logger/dist/angular-simple-logger.min.js',
+      'bower_components/angular-validation-match/dist/angular-validation-match.min.js',
+      'bower_components/angular-animate/angular-animate.min.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+      'bower_components/socket.io-client/dist/socket.io.min.js',
+      'bower_components/angular-socket-io/socket.min.js',
+      'bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js',
+      'bower_components/pagedown/Markdown.Sanitizer.js',
+      'bower_components/pagedown/Markdown.Extra.js',
+      'bower_components/pagedown/Markdown.Editor.js',
+      'bower_components/angular-pagedown/angular-pagedown.min.js',
+      'js/app.js',
+      'js/coord-filter.js',
+      'js/admin-password-reset-controller.js',
+      'js/config-factory.js',
+      'js/itineraries-controller.js',
+      'js/itinerary-controller.js',
+      'js/itinerary-edit-controller.js',
+      'js/itinerary-factory.js',
+      'js/itinerary-map-controller.js',
+      'js/itinerary-sharing-controller.js',
+      'js/itinerary-sharing-report-controller.js',
+      'js/itinerary-wpt-controller.js',
+      'js/itinerary-route-name-controller.js',
+      'js/itinerary-track-name-controller.js',
+      'js/login-controller.js',
+      'js/map-controller.js',
+      'js/map-point-controller.js',
+      'js/shares-controller.js',
+      'js/socket-factory.js',
+      'js/state-service.js',
+      'js/storage-factory.js',
+      'js/system-status-controller.js',
+      'js/system-status-service.js',
+      'js/track-controller.js',
+      'js/track-factory.js',
+      'js/trackerinfo-controller.js',
+      'js/user-controller.js',
+      'js/user-edit-controller.js',
+      'js/user-factory.js',
+      'js/utils-factory.js',
+      'js/user-preferences-service.js',
+      'js/gpxdownload/gpxdownload-factory.js',
+      'js/gpxupload/gpxupload.js',
+      'js/gpxupload/gpxupload-directive.js',
+      'js/gpxupload/gpxupload-controller.js',
+      'js/gpxupload/gpxupload-service.js',
+      'js/version/version.js',
+      'js/version/version-directive.js',
+      'js/version/interpolate-filter.js'
+      // 'trip.min.js'
+    ], function() {
+      // when all is done, execute bootstrap angular application
+      angular.bootstrap(document, ['myApp'], {
+        strictDi: false
+      });
+    });
+  </script>
+</head>
+<body role="document">
+  <div id="wrapper">
+    <div id="header" ng-cloak>
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container div-body">
+          <div class="navbar-header">
+            <button type="button" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" class="navbar-toggle collapsed">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/tracks">TRIP</a>
+          </div>
+          <div id="navbar" uib-collapse="navCollapsed" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><a ng-click="navCollapsed=true" href="#/tracks">Tracking</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/tracker-info">Tracker Info</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/sharing">Sharing</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/itineraries">Itineraries</a></li>
+              <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/users">Users</a></li>
+              <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/status">Status</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/logout">Logout</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+    <div  id="template" ng-cloak>
+      <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <![endif]-->
+
+      <div class="div-view" ng-view></div>
+
+    </div>
+    <div id="footer">
+      <footer class="footer">
+        <div id="version" class="container" ng-cloak>
+          <p class="text-muted">TRIP: v<span app-version></span></p>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

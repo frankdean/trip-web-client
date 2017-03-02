@@ -1,0 +1,150 @@
+<div class="container">
+  <div id="ro-div" style="padding-bottom: 20px;">
+    <div id="system-error" ng-messages="ajaxRequestError"
+         ng-show="ajaxRequestError">
+      <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+        unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+          {{ajaxRequestError.status}}<span>
+      </div>
+    </div>
+    <div>
+      <h1 id="text-title">{{data.title}}</h1>
+      <div id="text-nickname" ng-show="data.shared_to_nickname !== null">
+        <p><span>Owned by: </span>{{data.owned_by_nickname}}</p>
+      </div>
+    </div>
+    <div id="text-date-range" ng-show="data.start || data.finish">
+      <hr/>
+      <p id="text-date"><b>Date<span ng-show="data.start && data.finish"> from</span><span ng-show="data.start">: </span></b>{{data.start | date:'EEE dd-MMM-yyyy'}} <span ng-show="data.finish">to: </span>{{data.finish | date:'EEE dd-MMM-yyyy'}}</p>
+    </div>
+    <div>
+      <hr ng-show="data.description"/>
+      <pagedown-viewer id="text-description"
+                       content="data.description"></pagedown-viewer>
+      <hr/>
+      <div id="div-view-raw" ng-show="showRaw">
+        <textarea id="raw-textarea" class="raw-markdown" ng-model="data.description" rows="12" readonly="" ></textarea>
+      </div>
+      <div id="div-edit-buttons" ng-show="data.shared_to_nickname === null">
+        <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-info">Edit</button>
+        <button id="btn-sharing" ng-click="sharing()" class="btn btn-lg btn-success">Sharing</button>
+        <button id="btn-upload" ng-click="upload()" class="btn btn-lg btn-success">GPX upload</button>
+      </div>
+      <div id="div-view-raw-options" ng-show="data.shared_to_nickname !== null">
+        <div id="div-view-raw-on" ng-show="!showRaw">
+          <button id="btn-view-raw" ng-click="showRaw = true" class="btn btn-lg btn-info">View raw Markdown</button>
+          <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">What is Markdown?</a>
+        </div>
+        <div id="div-view-raw-off" ng-show="showRaw">
+          <button id="btn-view-raw" ng-click="showRaw = false" class="btn btn-lg btn-info">Hide raw Markdown</button>
+          <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">What is Markdown?</a>
+        </div>
+      </div>
+      <div>
+        <button id="btn-close" ng-click="close()" class="btn btn-lg btn-danger">Close</button>
+      </div>
+    </div>
+  </div>
+  <div id="downloads" ng-show="waypoints.length > 0 || routeNames.length > 0 || trackNames.length > 0">
+    <form name="downloads" class="css-form" novalidate>
+      <div id="select-all" ng-show="waypoints.length + routeNames.length + trackNames.length > 1">
+        <input id="input-select-all" ng-click="selectAllGeoItems()" type="checkbox"
+               ng-model="selection.allGeoItemsSelected" />
+        <label for="input-select-all" class="select-all-option">Select all</label>
+      </div>
+      <uib-accordion close-others="false">
+        <div id="routes">
+          <div uib-accordion-group class="panel-default" heading="Routes" is-open="status.routesOpen" is-disabled="routeNames.length === 0">
+            <table id="table-routes" class="itinerary-route-table wide-table table table-striped">
+              <tr ng-show="routeNames.length > 1">
+                <th colspan="7">
+                  <input id="input-select-all-routes" ng-click="selectAllRoutes()" type="checkbox" ng-model="selection.allRoutesSelected" />
+                  <label for="input-select-all-routes" class="select-all-option">Select all routes</label>
+                </th>
+              </tr>
+              <tr ng-repeat="route in routeNames">
+                <td>
+                  <input id="input-route-{{route.id}}" type="checkbox" ng-model="route.selected" />
+                  <label for="input-route-{{route.id}}"><span ng-show="!route.name">ID: {{route.id}}</span>{{route.name}}</label>
+                </td>
+                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance | number:1}} km</span></td>
+                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance / 1.609344 | number:1}} mi</span></td>
+                <td><span ng-show="route.highest">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span></td>
+                <td><span ng-show="route.highest">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+                <td><span ng-show="route.highest">{{route.highest | number:0}}⇅{{route.lowest | number:0}}&nbsp;m</span></td>
+                <td><span ng-show="route.highest">{{route.highest / 0.0254 / 12 | number:0}}&#x21c5;{{route.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div id="waypoints">
+          <div uib-accordion-group class="panel-default" heading="Waypoints" is-open="status.waypointsOpen" is-disabled="waypoints.length === 0">
+            <table id="table-waypoints" class="itinerary-waypoint-table wide-table table table-striped">
+              <tr ng-show="waypoints.length > 1">
+                <th colspan="4">
+                  <input id="input-select-all-waypoints" ng-click="selectAllWaypoints()" type="checkbox" ng-model="selection.allWaypointsSelected" />
+                  <label for="input-select-all-waypoints" class="select-all-option">Select all waypoints</label>
+                </th>
+              </tr>
+              <tr ng-repeat="waypoint in waypoints">
+                <td>
+                  <input id="input-waypoints-{{waypoint.id}}" type="checkbox" ng-model="waypoint.selected" />
+                  <label for="input-waypoints-{{waypoint.id}}"><span ng-show="!waypoint.name">ID: {{waypoint.id}}</span>{{waypoint.name}}</label>
+                </td>
+                <td>{{waypoint.symbol}}</td>
+                <td>{{waypoint.comment}}</td>
+                <td>{{waypoint.type}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div id="tracks">
+          <div uib-accordion-group class="panel-default" heading="Tracks" is-open="status.tracksOpen" is-disabled="trackNames.length === 0">
+            <table id="tracks-table" class="itinerary-track-table wide-table table table-striped">
+              <tr ng-show="trackNames.length > 1">
+                <th colspan="8">
+                  <input id="input-select-all-tracks" ng-click="selectAllTracks()" type="checkbox" ng-model="selection.allTracksSelected" />
+                  <label for="input-select-all-tracks" class="select-all-option">Select all tracks</label>
+                </th>
+              </tr>
+              <tr ng-repeat="track in trackNames">
+                <td>
+                  <input id="input-track-{{track.id}}" type="checkbox" ng-model="track.selected" />
+                  <label for="input-track-{{track.id}}"><span ng-show="!track.name">ID:
+                      {{track.id}}</span>{{track.name}}</label>
+                </td>
+                <td>{{track.color}}</td>
+                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance | number:1}} km</span></td>
+                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance / 1.609344 | number:1}} mi</span></td>
+                <td><span ng-show="track.highest">↗︎{{track.ascent | number:0}}&nbsp;m ↘︎{{track.descent | number:0}}&nbsp;m</span></td>
+                <td><span ng-show="track.highest">↗︎{{track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+                <td><span ng-show="track.highest">{{track.highest | number:0}}⇅{{track.lowest | number:0}}&nbsp;m</span></td>
+                <td><span ng-show="track.highest">{{track.highest / 0.0254 / 12 | number:0}}&#x21c5;{{track.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </uib-accordion>
+      <div ng-messages="formError">
+        <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+             ng-message="editOnlyOne">
+          Select only one item for edit.</div>
+      </div>
+      <div style="margin-top: 20px;">
+        <button id="btn-download" ng-click="download(downloads)" type="button" class="btn btn-lg btn-success">GPX download</button>
+        <button id="btn-edit-selected" ng-click="editSelected(downloads)"
+                class="btn btn-lg btn-info"
+                ng-show="data.shared_to_nickname === null">Edit selected</button>
+        <button id="btn-delete-gpx" ng-click="deleteUploads(downloads)"
+                type="button" class="btn btn-lg btn-danger"
+                ng-show="data.shared_to_nickname === null">Delete selected items</button>
+      </div>
+    </form>
+  </div>
+  <div id="extra-actions">
+    <button id="btn-map" ng-click="showMap(downloads)" type="button" class="btn btn-lg btn-primary">Show map</button>
+    <button id="btn-new-waypoint" ng-click="createWaypoint(downloads)"
+            class="btn btn-lg btn-warning"
+            ng-show="data.shared_to_nickname === null">Add waypoint</button>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="container">
+  <div>
+    <form id="form" class="well">
+      <div>
+        <p>Select the GPX file to be uploaded using the browse button, then
+          click the upload button.</p>
+        <input id="btn-file-upload" style="margin-bottom: 15px;" gpx-upload type="file" name="file" class="btn btn-lg btn-primary" />
+      </div>
+      <div>
+        <button id="btn-upload" ng-click="upload()" class="btn btn-lg btn-success">Upload</button>
+        <button id="btn-cancel" ng-click="cancel()" type="button" class="btn btn-lg btn-danger">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div class="well">
+    <p><strong>Note: </strong>After the file has been uploaded, there may be a
+      delay before processing is completed, resulting in a partial display of
+      some results.  It may be necessary to refresh your screen after a few
+      seconds to see the complete results.
+    </p>
+  </div>
+</div>

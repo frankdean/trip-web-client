@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Shares Report</h1>
+    <div id="system-error" ng-messages="ajaxRequestError"
+         ng-show="ajaxRequestError">
+      <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+        unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+          {{ajaxRequestError.status}}<span>
+      </div>
+    </div>
+    <div class="alert alert-info" ng-show="itineraries.length === 0">
+      <p>You are not currently sharing any itineraries</p>
+    </div>
+    <div ng-show="itineraries.length > 0">
+      <table id="table-itineraries" class="wide-table table table-striped">
+        <tr>
+          <th>Start Date</th>
+          <th>Title</th>
+          <th>Sharing with</th>
+        </tr>
+        <tr ng-repeat="itinerary in itineraries">
+          <td>{{itinerary.start | date :'EEE dd-MMM-yyyy'}}</td>
+          <td><a href="#/itinerary-sharing?id={{itinerary.id}}">{{itinerary.title}}</a></td>
+          <td><span ng-repeat="nickname in itinerary.shares">{{nickname}} </span></td>
+        </tr>
+      </table>
+      <div id="div-paging">
+        <paging
+          class="small"
+          page="page"
+          page-size="pageSize"
+          total="totalCount"
+          hide-if-empty="true"
+          show-prev-next="true"
+          show-first-last="true"
+          paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+        </paging>
+      </div>
+    </div>
+  </div>
+</div>

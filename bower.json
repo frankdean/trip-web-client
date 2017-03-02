@@ -1,0 +1,35 @@
+{
+  "name": "TRIP",
+  "description": "Trip Recording and Itinerary Planner",
+  "version": "0.0.0",
+  "license": "GPL-3.0+",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.5.6",
+    "angular-messages": "~1.5.6",
+    "angular-mocks": "~1.5.6",
+    "angular-route": "~1.5.6",
+    "angular-resource": "~1.5.6",
+    "angular-loader": "~1.5.6",
+    "bootstrap": "^3.3.6",
+    "html5-boilerplate": "^5.3.0",
+    "angular-paging": "^2.2.2",
+    "angular-jwt": "^0.1.7",
+    "angular-validation-match": "^1.9.0",
+    "angular-animate": "~1.5.6",
+    "angular-bootstrap": "^2.2.0",
+    "angular-i18n": "~1.5.6",
+    "angular-socket-io": "^0.7.0",
+    "socket.io-client": "^1.7.2",
+    "angular-file-saver": "^1.1.2",
+    "angular-pagedown": "0.4.3",
+    "ui-leaflet": "^1.0.0",
+    "ui-leaflet-draw": "^0.0.3",
+    "leaflet-draw": "Leaflet/Leaflet.draw#^0.4.9"
+  },
+  "resolutions": {
+    "angular": "~1.5.6",
+    "leaflet-draw": "^0.4.9",
+    "leaflet": "^1.0.0"
+  }
+}

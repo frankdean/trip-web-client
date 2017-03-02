@@ -1,0 +1,140 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Track Sharing</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div id="shares" ng-show="shares.payload.length > 0">
+    <table id="table-shares" class="shares wide-table table table-striped">
+      <tr>
+        <th>Nickname</th>
+        <th>Recent Limit</th>
+        <th>Maximum Limit</th>
+        <th>Active</th>
+        <th><input type="checkbox" ng-model="selectAllCheckbox" ng-change="markAllShares()" /></th>
+      </tr>
+      <tr ng-repeat="share in shares.payload" ng-show="!share.deleted">
+        <td>{{share.nickname}}</td>
+        <td>{{share.recentLimit}}</td>
+        <td>{{share.maximumLimit}}</td>
+        <td>{{share.active ? '\u2713' : ''}}</td>
+        <td><input type="checkbox" ng-model="share.selected" ng-change="clearSelectAllCheckbox()" /></td>
+      </tr>
+    </table>
+    <div id="div-paging">
+      <paging
+        class="small"
+        page="page"
+        page-size="pageSize"
+        total="totalCount"
+        hide-if-empty="true"
+        show-prev-next="true"
+        show-first-last="true"
+        paging-action="DoPagingAction('Paging Clicked', page, pageSize, total)">
+      </paging>
+      <div id="div-buttons">
+        <button id="btn-activate" ng-click="activate()" class="btn btn-lg btn-success">Activate</button>
+        <button id="btn-deactivate" ng-click="deactivate()" class="btn btn-lg btn-primary">Deactivate</button>
+        <button id="btn-delete" ng-click="delete()" class="btn btn-lg btn-danger">Delete selected</button>
+        <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-info">Edit selected</button>
+        <button id="btn-new" ng-click="new(form)" class="btn btn-lg btn-warning">New</button>
+      </div>
+    </div>
+    <hr/>
+  </div>
+  <div id="div-edit">
+    <div ng-messages="ajaxRequestError">
+      <div id="error-invalid-nickname" class="alert alert-danger" role="alert"
+           ng-message="invalidNickname">The nickname does not exist.  Note that
+        nicknames are case-significant.</div>
+    </div>
+    <div ng-messages="formError">
+      <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+           ng-message="editOnlyOne">
+        Select only one nickname for edit.</div>
+    </div>
+    <form name="form" class="css-form" novalidate>
+      <div ng-show="form.$submitted || form.nickname.$touched">
+        <div id="error-nickname-required"
+             ng-show="form.nickname.$error.required" class="alert alert-warning" role="alert">
+          Enter the nickname of the person you wish to share your location
+          with
+        </div>
+      </div>
+      <div id="div-nickname" class="well">
+        <label for="input-nickname">Share location with nickname:</label>
+        <input id="input-nickname" name="nickname" ng-disabled="!data.state.new"
+               type="text" size="32" ng-maxlength="120" ng-model="data.nickname"
+               required=""/>
+      </div>
+      <div ng-show="form.$submitted || form.recentDays.$touched || form.recentHours.$touched || form.recentMinutes.$touched">
+        <div id="error-recent-days-min" class="alert alert-warning" role="alert"
+             ng-show="form.recentDays.$error.min">Recent days must be greater than
+          zero or blank</div>
+        <div id="error-recent-days-max" class="alert alert-warning" role="alert"
+             ng-show="form.recentDays.$error.max">Recent days must be less than or equal to 99999</div>
+        <div id="error-recent-hours" class="alert alert-warning" role="alert"
+             ng-show="form.recentHours.$error.min || form.recentHours.$error.max">
+          Recent hours must be between 0 and 23 or blank
+        </div>
+        <div id="error-recent-minutes" class="alert alert-warning" role="alert"
+             ng-show="form.recentMinutes.$error.min || form.recentMinutes.$error.max">
+          Recent minutes must be between 0 and 59 or blank
+        </div>
+      </div>
+      <div id="div-recent-time" class="well">
+        Share locations within last
+        <input id="input-days" name="recentDays" type="number" min="0"
+               size="4" max="99999" ng-model="data.recentDays" class="days"/>
+        <label for="input-days">days</label>
+        <input id="input-hours" name="recentHours" type="number" min="0"
+               max="23" size="3" maxlength="2" ng-model="data.recentHours" class="hours"/>
+        <label for="input-hours">hours</label> and
+        <input id="input-minutes" name="recentMinutes" type="number" min="0"
+               max="59" size="2" maxlength="2" ng-model="data.recentMinutes" class="minutes"/>
+        <label for="input-minutes">minutes</label>
+        of most recently logged location (Set to zero or leave blank for no restriction)
+      </div>
+      <div ng-show="form.$submitted || form.maxDays.$touched || form.maxHours.$touched || form.maxMinutes.$touched">
+        <div id="error-max-days-min" class="alert alert-warning" role="alert"
+             ng-show="form.maxDays.$error.min">Max days must be greater than
+          zero or blank</div>
+        <div id="error-max-days-max" class="alert alert-warning" role="alert"
+             ng-show="form.maxDays.$error.max">Max days must be less than or equal to 99999</div>
+        <div id="error-max-hours" class="alert alert-warning" role="alert"
+             ng-show="form.maxHours.$error.min || form.maxHours.$error.max">
+          Max hours must be between 0 and 23 or blank
+        </div>
+        <div id="error-max-minutes" class="alert alert-warning" role="alert"
+             ng-show="form.maxMinutes.$error.min || form.maxMinutes.$error.max">
+          Max minutes must be between 0 and 59 or blank
+        </div>
+      </div>
+      <div id="div-max-time" class="well">
+        Limit sharing to a maximum period of
+        <input id="input-max-days" name="maxDays" type="number" min="0"
+               size="4" max="99999" ng-model="data.maxDays" class="days"/>
+        <label for="input-max-days">days</label>
+        <input id="input-max-hours" name="maxHours" type="number" min="0"
+               max="23" size="3" maxlength="2" ng-model="data.maxHours" class="hours"/>
+        <label for="input-max-hours">hours</label> and
+        <input id="input-max-minutes" name="maxMinutes" type="number" min="0"
+               max="59" size="2" maxlength="2" ng-model="data.maxMinutes" class="minutes"/>
+        <label for="input-max-minutes">minutes</label>
+        in any event. (Set to zero, or leave blank for no restriction)
+      </div>
+      <div id="div-active" class="well">
+        <label for="input-active">Active:</label><input id="input-active" type="checkbox" ng-model="data.active" />
+      </div>
+      <div id="div-form-buttons">
+        <button id="btn-save" ng-click="save(form)" class="btn btn-lg btn-primary">Save</button>
+        <button id="btn-reset" ng-click="reset(form)" value="Reset" class="btn btn-lg btn-danger">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div id="system-error" class="map-page-div" ng-messages="ajaxRequestError"
+     ng-show="ajaxRequestError">
+  <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+    unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+      {{ajaxRequestError.status}}<span>
+  </div>
+</div>
+<leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" markers="map.markers" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
+<div class="map-page-div" ng-show="status.showMap && (status.connected || (status.withinTimeSpan && status.liveupdate))">
+  <label for="auto-update">Auto-centre on live update:</label>
+  <input id="auto-update" type="checkbox" ng-model="autocenter" />
+</div>
+<div class="map-page-div well" ng-show="distance || highest">
+  <span ng-show="distance">{{distance | number:1}}&nbsp;km</span>
+  <span ng-show="highest">↗︎{{ascent | number:0}}&nbsp;m ↘︎{{descent | number:0}}&nbsp;m</span>
+  <span ng-show="highest">{{highest | number:0}}⇅{{lowest | number:0}}&nbsp;m</span>
+<br/>
+  <span ng-show="distance">{{distance / 1.609344 | number:1}}&nbsp;mi</span>
+  <span ng-show="highest">↗︎{{ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+  <span ng-show="highest">{{highest / 0.0254 / 12 | number:0}}&#x21c5;{{lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+
+</div>
+<div class="map-page-div" ng-show="status.showMap && !status.liveupdate && !status.hideWarning">
+  <p ng-show="data.nicknameSelect" class="alert alert-warning" role="alert">
+    <span ng-show="!status.connected && status.withinTimeSpan">Live update has disconnected. </span>
+    <span ng-show="status.connected && !status.withinTimeSpan">Live update is connected, but updates will be ignored until the requested start time of {{data.dateFrom | date:'HH:mm:ss EEE dd-MMM-yyyy'}}. </span>
+    <span ng-show="!status.connected && !status.withinTimeSpan">Live update is off as the current time is outside the requested time period from {{data.dateFrom | date:'HH:mm:ss EEE dd-MMM-yyyy'}} to {{data.dateTo | date:'HH:mm:ss EEE dd-MMM-yyyy'}}.</span>
+  </p>
+</div>

@@ -1,0 +1,107 @@
+/**
+ * @license TRIP - Trip Recording and Itinerary Planning application.
+ * (c) 2016, 2017 Frank Dean <frank@fdsd.co.uk>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+'use strict';
+
+describe('itinerary sharing', function() {
+  // Just needs to be the ID of an existing itinerary that we will modify
+  var testItineraryId = 929;
+
+  beforeEach(function() {
+    browser.get('app/index.html#itinerary-sharing?id=' + testItineraryId);
+  });
+
+  describe('create itinerary shares', function() {
+    var list = element.all(by.repeater('share in shares.payload'));
+
+    describe('should create itinerary shares', function() {
+
+      beforeEach(function() {
+        // Click the new button if it is displayed
+        element(by.id('btn-new')).isDisplayed().then(function(isDisplaying) {
+          if (isDisplaying) {
+            element(by.id('btn-new')).click();
+          }
+        });
+      });
+
+      it('should save a share for an existing nickname', function() {
+        element(by.id('input-nickname')).sendKeys('secret');
+        element(by.id('input-active')).click();
+        element(by.id('btn-save')).click();
+      });
+
+      it('should save another share for an existing nickname', function() {
+        element(by.id('input-nickname')).sendKeys('Adam');
+        element(by.id('input-active')).click();
+        element(by.id('btn-save')).click();
+      });
+
+      it('should show an error when nickname is empty', function() {
+        element(by.id('btn-save')).click();
+        expect(element(by.id('error-nickname-required')).isDisplayed()).toBeTruthy();
+      });
+
+      it('should show an error when the nickname does not exist', function() {
+        element(by.id('input-nickname')).sendKeys('This nickname should not exist');
+        element(by.id('btn-save')).click();
+        expect(element(by.id('error-invalid-nickname')).isDisplayed()).toBeTruthy();
+      });
+
+    });
+
+    describe('select all operations', function() {
+
+      beforeEach(function() {
+        element(by.id('input-select-all')).click();
+      });
+
+      it('should de-activate all shares', function() {
+        element(by.id('btn-deactivate')).click();
+        expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('');
+      });
+
+      it('should activate all shares', function() {
+        element(by.id('btn-activate')).click();
+        expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
+      });
+
+      it('should not allow edit of multiple items', function() {
+        element(by.id('btn-edit')).click();
+        expect(element(by.id('error-edit-only-one')).isDisplayed()).toBeTruthy();
+      });
+
+      it('should allow edit of a single itinerary share', function() {
+        element(by.id('input-select-all')).click();
+        list.first().all(by.model('share.selected')).first().click();
+        element(by.id('btn-edit')).click();
+        expect(element(by.id('form')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('input-nickname')).getAttribute('disabled')).toEqual('true');
+        expect(element(by.id('input-active')).isDisplayed()).toBeTruthy();
+      });
+
+      it('should allow delete of multiple items', function() {
+        element(by.id('btn-delete')).click();
+        browser.switchTo().alert().accept();
+        expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
+      });
+
+    });
+
+  });
+
+});
