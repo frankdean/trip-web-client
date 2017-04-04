@@ -24,16 +24,21 @@ angular.module('myApp.admin.system.status.controller', [])
     ['$scope',
      '$log',
      'SystemStatusService',
-     function($scope, $log, SystemStatusService) {
+     '$location',
+     function($scope, $log, SystemStatusService, $location) {
        $scope.data = {};
        SystemStatusService.get({})
          .$promise.then(function(status) {
            angular.extend($scope.data, status);
          }).catch(function(response) {
-           $log.error('Failure getting system status');
-           $scope.ajaxRequestError = {
-             error: true,
-             status: response.status
-           };
+           if (response.status === 401) {
+             $location.path('/login');
+           } else {
+             $log.error('Failure getting system status');
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+           }
          });
      }]);

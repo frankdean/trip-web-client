@@ -9,7 +9,7 @@
         {{ajaxRequestError.status}}<span>
     </div>
   </div>
-  <div class="well">
+  <div id="tile-usage" class="well" ng-show="!ajaxRequestError">
     <div ng-show="data.tileUsage">
       <p>Fetched {{data.tileUsage.count}} tiles, as at
         {{data.tileUsage.time | date: 'HH:mm EEE dd-MMM-yyyy'}}</p>

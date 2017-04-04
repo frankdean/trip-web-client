@@ -810,4 +810,17 @@ describe('User management', function() {
 
   });
 
+  describe('System status', function() {
+
+    beforeEach(function() {
+      browser.get('app/index.html#status');
+    });
+
+    it('should display the system status page', function() {
+      expect(browser.getLocationAbsUrl()).toMatch(/\/status$/);
+      expect(element(by.id('tile-usage')).isDisplayed()).toBeTruthy();
+    });
+
+  });
+
 });
