@@ -54,7 +54,7 @@
       </div>
       <uib-accordion close-others="false">
         <div id="routes">
-          <div uib-accordion-group class="panel-default" heading="Routes" is-open="status.routesOpen" is-disabled="routeNames.length === 0">
+          <div uib-accordion-group class="panel-default" heading="Routes{{routeNames.length > 0 ? ' (' + routeNames.length + ')': ''}}" is-open="status.routesOpen" is-disabled="routeNames.length === 0">
             <table id="table-routes" class="itinerary-route-table wide-table table table-striped">
               <tr ng-show="routeNames.length > 1">
                 <th colspan="7">
@@ -78,7 +78,7 @@
           </div>
         </div>
         <div id="waypoints">
-          <div uib-accordion-group class="panel-default" heading="Waypoints" is-open="status.waypointsOpen" is-disabled="waypoints.length === 0">
+          <div uib-accordion-group class="panel-default" heading="Waypoints{{waypoints.length > 0 ? ' (' + waypoints.length + ')': ''}}" is-open="status.waypointsOpen" is-disabled="waypoints.length === 0">
             <table id="table-waypoints" class="itinerary-waypoint-table wide-table table table-striped">
               <tr ng-show="waypoints.length > 1">
                 <th colspan="4">
@@ -99,7 +99,7 @@
           </div>
         </div>
         <div id="tracks">
-          <div uib-accordion-group class="panel-default" heading="Tracks" is-open="status.tracksOpen" is-disabled="trackNames.length === 0">
+          <div uib-accordion-group class="panel-default" heading="Tracks{{trackNames.length > 0 ? ' (' + trackNames.length + ')': ''}}" is-open="status.tracksOpen" is-disabled="trackNames.length === 0">
             <table id="tracks-table" class="itinerary-track-table wide-table table table-striped">
               <tr ng-show="trackNames.length > 1">
                 <th colspan="8">
