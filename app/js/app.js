@@ -30,6 +30,7 @@ angular.module('myApp', [
   'ngRoute',
   'ngMessages',
   'ngAnimate',
+  'ngSanitize',
   'ngFileSaver',
   'ui.bootstrap',
   'bw.paging',

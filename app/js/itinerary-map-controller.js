@@ -22,6 +22,7 @@ angular.module('myApp.itinerary.map.controller', [])
   .controller(
     'ItineraryMapCtrl',
     ['$scope',
+     '$sanitize',
      '$routeParams',
      '$location',
      'ConfigService',
@@ -35,6 +36,7 @@ angular.module('myApp.itinerary.map.controller', [])
      'ItineraryRouteService',
      'ItinerarySelectionService',
      function($scope,
+              $sanitize,
               $routeParams,
               $location,
               ConfigService,
@@ -150,14 +152,18 @@ angular.module('myApp.itinerary.map.controller', [])
              {id: $scope.itineraryId,
               waypoints: choices.waypoints})
              .$promise.then(function(waypoints) {
-               var wptLatLngs = [], latlng, marker, time;
+               var wptLatLngs = [], latlng, time, mText;
                waypoints.forEach(function(w) {
                  time = w.time ? (new Date(w.time)).toLocaleString('en-GB') : undefined;
                  latlng =  {lat: parseFloat(w.lat, 10), lng: parseFloat(w.lng, 10), time: time};
                  wptLatLngs.push(latlng);
                  var lmarker = new L.Marker(latlng);
                  lmarker.tl_id = w.id;
-                 lmarker.bindPopup(w.name && w.name.length > 0 ? w.name : 'ID: ' + w.id);
+                 mText = '';
+                 mText = w.name && w.name.length > 0 ? '<b>' + _.escape(w.name) + '</b>' : '';
+                 mText += w.name && w.name.length > 0 && w.comment && w.comment.length > 0 ? '</br>' : '';
+                 mText += w.comment && w.comment.length > 0 ? _.escape(w.comment) : '';
+                 lmarker.bindPopup(mText && mText.length > 0 ? $sanitize(mText) : 'ID: ' + w.id);
                  drawnItems.addLayer(lmarker);
                });
                if (myBounds) {

@@ -22,6 +22,7 @@
     "it": false,
 	"xit": false,
     "module": false,
-	"L": false
+	"L": false,
+	"_": false
   }
 }
