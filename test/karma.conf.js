@@ -24,6 +24,7 @@ module.exports = function(config){
       'app/bower_components/socket.io-client/dist/socket.io.min.js',
       'app/bower_components/angular-socket-io/socket.js',
       'app/bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js',
+      'app/bower_components/open-location-code/js/src/openlocationcode.min.js',
       'app/bower_components/pagedown/Markdown.Converter.js',
       'app/bower_components/pagedown/Markdown.Sanitizer.js',
       'app/bower_components/pagedown/Markdown.Extra.js',
@@ -39,6 +40,14 @@ module.exports = function(config){
 
     _browsers : ['Chrome', 'Firefox', 'Safari'],
     browsers : ['Firefox'],
+
+    logLevel: config.LOG_INFO,
+
+    browserConsoleLogOptions: {
+      level: 'debug',
+      format: '%b [%T] %m',
+      terminal: true
+    },
 
     plugins : [
             'karma-chrome-launcher',

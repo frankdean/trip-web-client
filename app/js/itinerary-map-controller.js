@@ -163,7 +163,7 @@ angular.module('myApp.itinerary.map.controller', [])
                  mText = w.name && w.name.length > 0 ? '<b>' + _.escape(w.name) + '</b>' : '';
                  mText += w.name && w.name.length > 0 && w.comment && w.comment.length > 0 ? '</br>' : '';
                  mText += w.comment && w.comment.length > 0 ? _.escape(w.comment) : '';
-                 lmarker.bindPopup(mText && mText.length > 0 ? $sanitize(mText) : 'ID: ' + w.id);
+                 lmarker.bindPopup(mText && mText.length > 0 ? $sanitize(mText) : '<b>ID: ' + w.id + '</b>');
                  drawnItems.addLayer(lmarker);
                });
                if (myBounds) {

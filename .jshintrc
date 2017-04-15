@@ -1,6 +1,7 @@
 {
   "globalstrict": true,
   "globals": {
+  "OpenLocationCode": false,
 	"FormData" : false,
 	"Buffer": false,
 	"browser": false,

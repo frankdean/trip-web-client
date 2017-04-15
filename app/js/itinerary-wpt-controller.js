@@ -194,7 +194,11 @@ angular.module('myApp.itinerary.wpt.controller', [])
           if (value) {
             myElement = element;
             format = value;
-            element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
+            if (format === 'plus+code') {
+              element.text(UtilsService.plusCodeFormat({lat: scope.$eval(attrs.lat), lng: scope.$eval(attrs.lng)}));
+            } else {
+              element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
+            }
             scope.$emit('TL_COORD_FORMAT_CHANGED', format);
           } else {
             element.text('');
@@ -203,7 +207,9 @@ angular.module('myApp.itinerary.wpt.controller', [])
         scope.$watch(attrs.positionFormat, function(value) {
           if (value) {
             formatPosition = value;
-            element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
+            if (format !== 'plus+code') {
+              element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
+            }
             scope.$emit('TL_POSITION_FORMAT_CHANGED', formatPosition);
           } else {
             element.text('');
@@ -216,7 +222,11 @@ angular.module('myApp.itinerary.wpt.controller', [])
         controller : ['$scope', function($scope) {
           $scope.$on('TL_POSITION_UPDATED', function(e, data) {
             if (myElement && format && formatPosition) {
-              myElement.text(UtilsService.formatPosition(coordFilter(data.lat, format, 'lat'), coordFilter(data.lng, format, 'lng'), formatPosition));
+              if (format === 'plus+code') {
+                myElement.text(UtilsService.plusCodeFormat(data));
+              } else {
+                myElement.text(UtilsService.formatPosition(coordFilter(data.lat, format, 'lat'), coordFilter(data.lng, format, 'lng'), formatPosition));
+              }
             }
           });
         }],

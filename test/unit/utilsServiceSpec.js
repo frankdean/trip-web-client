@@ -198,6 +198,25 @@ describe('UtilsService', function() {
       expect(utilsService.formatPosition('lat', 'lng', 'lng,lat')).toEqual('lng,lat');
     });
 
+    it('should format a lat/lng as an Open Location Code (aka plus+code)', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.plusCodeFormat({lat: 48.8583625, lng: 2.2944843750000024})).toEqual('8FW4V75V+8QX');
+    });
+
+    it('should clip with bad values when formatting an Open Location Code (aka plus+code)', function() {
+      expect(utilsService.plusCodeFormat({lat: -90, lng: -180})).toEqual('22222222+222');
+      expect(utilsService.plusCodeFormat({lat: -110, lng: -200})).toEqual('22222222+222');
+    });
+
+    it('should clip with bad values when formatting an Open Location Code (aka plus+code)', function() {
+      expect(utilsService.plusCodeFormat({lat: 90, lng: 180})).toEqual('C2X2X2X2+X2R');
+      expect(utilsService.plusCodeFormat({lat: 110, lng: 200})).toEqual('C2X2X2X2+X2R');
+    });
+
+    it('should cope with bad values when formatting an Open Location Code (aka plus+code)', function() {
+      expect(utilsService.plusCodeFormat({lat: 'abc', lng: 'xyz'})).toBeUndefined();
+    });
+
   });
 
   describe('GIS text parsing', function() {
@@ -358,20 +377,45 @@ describe('UtilsService', function() {
       expect(utilsService.parseGeoLocation('I am here N 48 51 29.599 E 2d17 40.2')).toEqual({lat: {deg: 48, min: 51, sec: 29.599, c: 'N'}, lng: {deg: 2, min: 17, sec: 40.2, c: 'E'}});
     });
 
-    it('should parse a clipboard share from GPS Status ap in DM+ format', function() {
+    it('should parse a clipboard share from GPS Status app in DM+ format', function() {
       expect(utilsService.parseGeoLocation('I am here: 48 51.49332 N 2 17.67 E http://maps.google.com/maps?q=48.858222,2.2945')).toEqual({lat: {deg: 48.858222}, lng: {deg: 2.2945}});
     });
 
-    it('should parse a clipboard share from GPS Status ap in DMS+ format', function() {
+    it('should parse a clipboard share from GPS Status app in DMS+ format', function() {
       expect(utilsService.parseGeoLocation('I am here: 48 51 29.599N 2 17 40.2E http://maps.google.com/maps?q=48.858222,2.2945')).toEqual({lat: {deg: 48.858222}, lng: {deg: 2.2945}});
     });
 
-    it('should parse a clipboard share from GPS Status ap in Ordnance Survey format', function() {
+    it('should parse a clipboard share from GPS Status app in Ordnance Survey format', function() {
       expect(utilsService.parseGeoLocation('I am here: NN 4678 4321 http://maps.google.com/maps?q=48.858222,2.2945')).toEqual({lat: {deg: 48.858222}, lng: {deg: 2.2945}});
     });
 
-    it('should', function() {
+    it('should parse a space separated code with a trailing space', function() {
       expect(utilsService.parseGeoLocation('N48 51.49332 E2 17.67 ')).toEqual({lat: {deg: 48, min: 51.49332, sec: NaN, c:'N'}, lng: {deg: 2, min: 17.67, sec: NaN, c:'E'}});
+    });
+
+    it('should parse a 10 digit Open Location Code (aka plus+code)', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.parseGeoLocation('8FW4V75V+8Q')).toEqual({lat: {deg: 48.8583125}, lng: {deg: 2.294437500000001}});
+    });
+
+    it('should parse an 11 digit Open Location Code (aka plus+code)', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.parseGeoLocation('8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+    });
+
+    it('should parse an Open Location Code (aka plus+code) URL', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.parseGeoLocation('https://plus.codes/8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+    });
+
+    it('should parse an Open Location Code (aka plus+code) URL allowing lower case', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.parseGeoLocation('https://plus.codes/8fw4v75v+8qx')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+    });
+
+    it('should cope with bad values for an Open Location Code (aka plus+code)', function() {
+      // https://en.wikipedia.org/wiki/Open_Location_Code
+      expect(utilsService.parseGeoLocation('https://plus.codes/XXXXXXXX+XX')).toEqual({lat: {}, lng: {}});
     });
 
   });
@@ -424,6 +468,7 @@ describe('UtilsService', function() {
     it('should convert values using all supported formats across a range of test values', function() {
       for (var i = 0, n = supportedFormats.length; i < n; ++i) {
         //  var i = 21;
+        // $log.debug('Format', supportedFormats[i]);
         for (var x = 0, z = testPoints.length; x < z; ++x) {
           var testLat = testPoints[x].lat, testLng = testPoints[x].lng;
           var t = utilsService.formatPosition(coordFilter(testLat, supportedFormats[i], 'lat'), coordFilter(testLng, supportedFormats[i], 'lng'));

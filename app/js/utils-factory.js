@@ -132,17 +132,21 @@ angular.module('myApp.utils.factory', [])
          case 'lng,lat':
            r = lng + ',' + lat;
            break;
-         // case 'lat-lng':
-         default:
+         case undefined:
+         case 'lat-lng':
            r = lat + ' ' + lng;
+           break;
+         default:
+           r = lat + lng;
            break;
          }
          return r;
        };
 
        var parseGeoLocation = function(text) {
-         var lat = {}, lng = {};
+         var lat = {}, lng = {}, found, coord;
          var formats = [
+           {name: 'plus+code', regex: /^(?:https?:\/\/.*\/)?([23456789CFGHJMPQRVWXcfghjmpqrvwx]{8}\+[23456789CFGHJMPQRVWXcfghjmpqrvwx]{2,3})$/},
            {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
            {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
@@ -154,18 +158,31 @@ angular.module('myApp.utils.factory', [])
          ];
          // $log.debug('text:', text);
          for (var i = 0, n = formats.length; i < n; ++i) {
-           var found = text.match(formats[i].regex);
+           found = text.match(formats[i].regex);
            if (found) {
              // $log.debug('Matches with:', formats[i].name);
              // $log.debug('Matches:', found);
-             if (formats[i].latd) lat.deg = Number.parseFloat(found[formats[i].latd]);
-             if (formats[i].latm) lat.min = Number.parseFloat(found[formats[i].latm]);
-             if (formats[i].lats) lat.sec = Number.parseFloat(found[formats[i].lats]);
-             if (formats[i].latc) lat.c = found[formats[i].latc];
-             if (formats[i].lngd) lng.deg = Number.parseFloat(found[formats[i].lngd]);
-             if (formats[i].lngm) lng.min = Number.parseFloat(found[formats[i].lngm]);
-             if (formats[i].lngs) lng.sec = Number.parseFloat(found[formats[i].lngs]);
-             if (formats[i].lngc) lng.c = found[formats[i].lngc];
+             if (formats[i].name === 'plus+code') {
+               // $log.debug('Converting plus+code ', found[1]);
+               try {
+                 coord = OpenLocationCode.decode(found[1]);
+               } catch(ex) {
+                 $log.error(ex);
+               }
+               if (coord) {
+                 lat.deg = coord.latitudeCenter;
+                 lng.deg = coord.longitudeCenter;
+               }
+             } else {
+               if (formats[i].latd) lat.deg = Number.parseFloat(found[formats[i].latd]);
+               if (formats[i].latm) lat.min = Number.parseFloat(found[formats[i].latm]);
+               if (formats[i].lats) lat.sec = Number.parseFloat(found[formats[i].lats]);
+               if (formats[i].latc) lat.c = found[formats[i].latc];
+               if (formats[i].lngd) lng.deg = Number.parseFloat(found[formats[i].lngd]);
+               if (formats[i].lngm) lng.min = Number.parseFloat(found[formats[i].lngm]);
+               if (formats[i].lngs) lng.sec = Number.parseFloat(found[formats[i].lngs]);
+               if (formats[i].lngc) lng.c = found[formats[i].lngc];
+             }
              break;
            }
          }
@@ -189,6 +206,27 @@ angular.module('myApp.utils.factory', [])
 
        var parseTextAsDegrees = function(text) {
          return convertDmsCoordsToDegreeCoords(parseGeoLocation(text));
+       };
+
+       var plusCodeFormat = function(latlng) {
+         var retval;
+         // clip illegal numeric values
+         if (latlng.lng < -180) {
+           latlng.lng = -180;
+         } else if (latlng.lng > 180) {
+           latlng.lng = 180;
+         }
+         if (latlng.lat < -90) {
+           latlng.lat = -90;
+         } else if (latlng.lat > 90) {
+           latlng.lat = 90;
+         }
+         try {
+           retval = OpenLocationCode.encode(latlng.lat, latlng.lng, OpenLocationCode.CODE_PRECISION_EXTRA);
+         } catch(ex) {
+           $log.error(ex);
+         }
+         return retval;
        };
 
        var convertMapAttributesToHtml = function(attrs) {
@@ -243,6 +281,7 @@ angular.module('myApp.utils.factory', [])
          parseGeoLocation: parseGeoLocation,
          convertDmsCoordsToDegreeCoords: convertDmsCoordsToDegreeCoords,
          parseTextAsDegrees: parseTextAsDegrees,
+         plusCodeFormat: plusCodeFormat,
          convertMapAttributesToHtml: convertMapAttributesToHtml,
          createMapLayers: createMapLayers
        };
