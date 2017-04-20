@@ -229,6 +229,10 @@ describe('UtilsService', function() {
       expect(utilsService.convertToFormat(60.74476977561496, -0.877612332500198, 'osgb36')).toEqual('HP 61292 07379 - 461292 1207379');
     });
 
+    it('should convert a lat/lng to a northerly OSGB 1936 grid reference', function() {
+      expect(utilsService.convertToFormat(57.04754634,-5.29877771, 'osgb36')).toEqual('NH 00000 00000 - 200000 800000');
+    });
+
   });
 
   describe('GIS text parsing', function() {
