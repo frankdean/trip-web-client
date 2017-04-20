@@ -18,11 +18,11 @@
       </div>
       <div>
         <label for="input-position">Position:</label>
-        <input id="input-position" ng-model="data.position" name="position" type="text" size="30" required="" position/>
+        <input id="input-position" ng-model="data.position" name="position" type="text" size="30" required="" ng-model-options="{debounce: 250}" position/>
         <div ng-show="form.$submitted || form.position.$touched">
           <div id="position-required" class="alert alert-warning" role="alert" ng-show="form.position.$error.required">Enter the position for the itinerary waypoint</div>
         </div>
-        <div id="position-invalid" class="alert alert-warning" role="alert" ng-show="form.position.$error.position">Invalid latitude/longitude.  Many common formats are recognised, but try entering numeric only values, separated by a comma, e.g. 51.3,-2.3 for N5.31&deg; W2.3&deg;.  Then look at the various supported formats by changing the Display position format below.  You can use a letter 'd' instead of the &deg; symbol.  Single and double quotes are accepted for minutes and seconds.</div>
+        <div id="position-invalid" class="alert alert-warning" role="alert" ng-show="form.position.$error.position">Invalid latitude/longitude.  Many common formats are recognised, but try entering numeric only values, separated by a comma, e.g. 51.3,-2.3 for N5.31&deg; W2.3&deg;.  Then look at the various supported formats by changing the Display position format below.  You can use a letter 'd' instead of the &deg; symbol.  Single and double quotes are accepted for minutes and seconds.  Latitudes must be between -90 and 90 degrees.  Longitudes must be between -180 and 180 degrees.</div>
       </div>
       <div>
         <label for="input-coord-format">Display position format:</label>

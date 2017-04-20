@@ -146,7 +146,7 @@ angular.module('myApp.itinerary.wpt.controller', [])
         ctrl.$asyncValidators.position = function(modelValue, viewValue) {
           var def = $q.defer();
           var coord = UtilsService.parseTextAsDegrees(modelValue);
-          if (isFinite(coord.lat) && isFinite(coord.lng)) {
+          if (isFinite(coord.lat) && isFinite(coord.lng) && coord.lat >= -90 && coord.lat <= 90 && coord.lng >= -180 && coord.lng <= 180) {
             def.resolve();
           } else {
             def.reject();

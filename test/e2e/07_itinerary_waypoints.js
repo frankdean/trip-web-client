@@ -17,7 +17,7 @@
  */
 'use strict';
 
-describe('Itinerary Waypoints', function() {
+fdescribe('Itinerary Waypoints', function() {
 
   var eleName, elePosition, eleCoordFormat, elePositionFormat, eleAltitude,
       eleSymbol, eleTime, eleComment, eleDescription, eleType, eleColor,
@@ -69,10 +69,46 @@ describe('Itinerary Waypoints', function() {
       expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
     });
 
+    it('should show an error message if the latitude is less than -90', function() {
+      elePosition.clear();
+      elePosition.sendKeys('-90.01,180');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
+    });
+
+    it('should show an error message if the latitude is greater than 90', function() {
+      elePosition.clear();
+      elePosition.sendKeys('90.01,180');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
+    });
+
+    it('should show an error message if the longitude is less than -180', function() {
+      elePosition.clear();
+      elePosition.sendKeys('90,-180.01');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
+    });
+
+    it('should show an error message if the longitude is greater than 180', function() {
+      elePosition.clear();
+      elePosition.sendKeys('-90,180.01');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
+    });
+
     it('should display the position in the default format if the position is valid', function() {
       elePosition.clear();
       elePosition.sendKeys('51.5125,-3.5125');
       expect(element(by.id('position-text')).getText()).toMatch(/51.30.45.N\s3.30.45.W/);
+    });
+
+    it('should not show an error message if the latitude and longitude are -90,-180', function() {
+      elePosition.clear();
+      elePosition.sendKeys('-90,-180');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeFalsy();
+    });
+
+    it('should not show an error message if the latitude and longitude are 90,180', function() {
+      elePosition.clear();
+      elePosition.sendKeys('90,180');
+      expect(element(by.id('position-invalid')).isDisplayed()).toBeFalsy();
     });
 
     it('should not display an error message if other fields are left blank', function() {
