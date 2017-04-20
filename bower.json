@@ -28,7 +28,8 @@
     "ui-leaflet-draw": "^0.0.3",
     "leaflet-draw": "Leaflet/Leaflet.draw#^0.4.9",
     "lodash": "^4.17.4",
-    "open-location-code": "google/open-location-code#^1.0.1"
+    "open-location-code": "google/open-location-code#^1.0.1",
+    "proj4": "^2.4.3"
   },
   "resolutions": {
     "angular": "~1.5.6",

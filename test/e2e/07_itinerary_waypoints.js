@@ -17,7 +17,7 @@
  */
 'use strict';
 
-fdescribe('Itinerary Waypoints', function() {
+describe('Itinerary Waypoints', function() {
 
   var eleName, elePosition, eleCoordFormat, elePositionFormat, eleAltitude,
       eleSymbol, eleTime, eleComment, eleDescription, eleType, eleColor,

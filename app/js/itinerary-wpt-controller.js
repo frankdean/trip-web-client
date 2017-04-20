@@ -194,11 +194,7 @@ angular.module('myApp.itinerary.wpt.controller', [])
           if (value) {
             myElement = element;
             format = value;
-            if (format === 'plus+code') {
-              element.text(UtilsService.plusCodeFormat({lat: scope.$eval(attrs.lat), lng: scope.$eval(attrs.lng)}));
-            } else {
-              element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
-            }
+            element.text(UtilsService.convertToFormat(scope.$eval(attrs.lat), scope.$eval(attrs.lng), format, formatPosition));
             scope.$emit('TL_COORD_FORMAT_CHANGED', format);
           } else {
             element.text('');
@@ -207,8 +203,8 @@ angular.module('myApp.itinerary.wpt.controller', [])
         scope.$watch(attrs.positionFormat, function(value) {
           if (value) {
             formatPosition = value;
-            if (format !== 'plus+code') {
-              element.text(UtilsService.formatPosition(coordFilter(scope.$eval(attrs.lat), format, 'lat'), coordFilter(scope.$eval(attrs.lng), format, 'lng'), formatPosition));
+            if (format) {
+              element.text(UtilsService.convertToFormat(scope.$eval(attrs.lat), scope.$eval(attrs.lng), format, formatPosition));
             }
             scope.$emit('TL_POSITION_FORMAT_CHANGED', formatPosition);
           } else {
@@ -221,12 +217,8 @@ angular.module('myApp.itinerary.wpt.controller', [])
         restrict : 'A',
         controller : ['$scope', function($scope) {
           $scope.$on('TL_POSITION_UPDATED', function(e, data) {
-            if (myElement && format && formatPosition) {
-              if (format === 'plus+code') {
-                myElement.text(UtilsService.plusCodeFormat(data));
-              } else {
-                myElement.text(UtilsService.formatPosition(coordFilter(data.lat, format, 'lat'), coordFilter(data.lng, format, 'lng'), formatPosition));
-              }
+            if (myElement && format) {
+              myElement.text(UtilsService.convertToFormat(data.lat, data.lng, format, formatPosition));
             }
           });
         }],

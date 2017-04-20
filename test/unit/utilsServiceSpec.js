@@ -200,21 +200,33 @@ describe('UtilsService', function() {
 
     it('should format a lat/lng as an Open Location Code (aka plus+code)', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
-      expect(utilsService.plusCodeFormat({lat: 48.8583625, lng: 2.2944843750000024})).toEqual('8FW4V75V+8QX');
+      expect(utilsService.convertToFormat(48.8583625, 2.2944843750000024, 'plus+code')).toEqual('8FW4V75V+8QX');
     });
 
     it('should clip with bad values when formatting an Open Location Code (aka plus+code)', function() {
-      expect(utilsService.plusCodeFormat({lat: -90, lng: -180})).toEqual('22222222+222');
-      expect(utilsService.plusCodeFormat({lat: -110, lng: -200})).toEqual('22222222+222');
+      expect(utilsService.convertToFormat(-90, -180, 'plus+code')).toEqual('22222222+222');
+      expect(utilsService.convertToFormat(-110, -200, 'plus+code')).toEqual('22222222+222');
     });
 
     it('should clip with bad values when formatting an Open Location Code (aka plus+code)', function() {
-      expect(utilsService.plusCodeFormat({lat: 90, lng: 180})).toEqual('C2X2X2X2+X2R');
-      expect(utilsService.plusCodeFormat({lat: 110, lng: 200})).toEqual('C2X2X2X2+X2R');
+      expect(utilsService.convertToFormat(90, 180, 'plus+code')).toEqual('C2X2X2X2+X2R');
+      expect(utilsService.convertToFormat(110, 200, 'plus+code')).toEqual('C2X2X2X2+X2R');
     });
 
     it('should cope with bad values when formatting an Open Location Code (aka plus+code)', function() {
-      expect(utilsService.plusCodeFormat({lat: 'abc', lng: 'xyz'})).toBeUndefined();
+      expect(utilsService.convertToFormat('abc', 'xyz', 'plus+code')).toBeUndefined();
+    });
+
+    it('should convert to an OSGB 1936 format', function() {
+      expect(utilsService.convertToFormat(50.54958847324303, -3.9961614650592727, 'osgb36')).toEqual('SX 58676 74106 - 258676 074106');
+    });
+
+    it('should convert a lat/lng the is outside OSGB 1936 area', function() {
+      expect(utilsService.convertToFormat(48.85825, 2.2945, 'osgb36')).toEqual('715066 -106948');
+    });
+
+    it('should convert a lat/lng to a northerly OSGB 1936 grid reference', function() {
+      expect(utilsService.convertToFormat(60.74476977561496, -0.877612332500198, 'osgb36')).toEqual('HP 61292 07379 - 461292 1207379');
     });
 
   });
@@ -416,6 +428,34 @@ describe('UtilsService', function() {
     it('should cope with bad values for an Open Location Code (aka plus+code)', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
       expect(utilsService.parseGeoLocation('https://plus.codes/XXXXXXXX+XX')).toEqual({lat: {}, lng: {}});
+    });
+
+    it('should convert a valid OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('SX 58676 74106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid 12 digit OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('258676 074106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid 2 letter and 10 digit OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('SX5867674106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid 2 letter and 6 digit OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('SX 587 741')).toEqual({lat: {deg: 50.54954035378619}, lng: {deg: -3.995820643785337}});
+    });
+
+    it('should convert a valid 6 digit OSGB 1936 grid reference without spaces', function() {
+      expect(utilsService.parseGeoLocation('SX587741')).toEqual({lat: {deg: 50.54954035378619}, lng: {deg: -3.995820643785337}});
+    });
+
+    it('should convert a valid northerly OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('HP 61292 07379')).toEqual({lat: {deg: 60.74476977561496}, lng: {deg: -0.877612332500198}});
+    });
+
+    it('should convert a valid northerly OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('461292 1207379')).toEqual({lat: {deg: 60.74476977561496}, lng: {deg: -0.877612332500198}});
     });
 
   });

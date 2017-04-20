@@ -143,10 +143,28 @@ angular.module('myApp.utils.factory', [])
          return r;
        };
 
+       var bngMap = {
+         HP: 'N42',
+         HT: 'N31', HU: 'N41',
+         HW: 'N10', HX: 'N20', HY: 'N30', HZ: 'N40',
+         NA: '09', NB: '19', NC: '29', ND: '39',
+         NF: '08', NG: '18', NH: '28', NJ: '38', NK:  '48',
+         NL: '07', NM: '17', NN: '27', NO: '37',
+         NR: '16', NS: '26', NT: '36', NU: '46',
+         NW: '15', NX: '25', NY: '35', NZ: '45',
+         SC: '24', SD: '34', SE: '44', TA: '54',
+         SH: '23', SJ: '33', SK: '43', TF: '53', TG: '63',
+         SM: '12', SN: '22', SO: '32', SP: '42', TL: '52', TM: '62',
+         SR: '11', SS: '21', ST: '31', SU: '41', TQ: '51', TR: '61',
+         SV: '00', SW: '10', SX: '20', SY: '30', SZ: '40', TV: '50'
+       };
+       proj4.defs("EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs");
+
        var parseGeoLocation = function(text) {
-         var lat = {}, lng = {}, found, coord;
+         var lat = {}, lng = {}, found, coord, x, y;
          var formats = [
            {name: 'plus+code', regex: /^(?:https?:\/\/.*\/)?([23456789CFGHJMPQRVWXcfghjmpqrvwx]{8}\+[23456789CFGHJMPQRVWXcfghjmpqrvwx]{2,3})$/},
+           {name: 'osgb36', regex: /^(?:(HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NF|NG|NG|NJ|NK|NL|NM|NN|NO|NR|NS|NT|NU|NW|NX|NY|NZ|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY|SZ|TV)\s*(\d{3,5})\s*(\d{3,5})|(\d{6})\s+(\d{6,7}))$/},
            {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
            {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
@@ -162,7 +180,8 @@ angular.module('myApp.utils.factory', [])
            if (found) {
              // $log.debug('Matches with:', formats[i].name);
              // $log.debug('Matches:', found);
-             if (formats[i].name === 'plus+code') {
+             switch (formats[i].name) {
+             case 'plus+code':
                // $log.debug('Converting plus+code ', found[1]);
                try {
                  coord = OpenLocationCode.decode(found[1]);
@@ -173,7 +192,32 @@ angular.module('myApp.utils.factory', [])
                  lat.deg = coord.latitudeCenter;
                  lng.deg = coord.longitudeCenter;
                }
-             } else {
+               break;
+             case 'osgb36':
+               if (bngMap[found[1]]) {
+                 // $log.debug('Grid map:', found[1], bngMap[found[1]]);
+                 if (bngMap[found[1]].length === 3) {
+                   x = Number(found[2].padEnd(5, '0')) + Number(bngMap[found[1]].charAt(1)) * 100000;
+                   y = Number(found[3].padEnd(5, '0')) + Number(bngMap[found[1]].charAt(2)) * 100000 + 1000000;
+                 } else {
+                   x = Number(found[2].padEnd(5, '0')) + Number(bngMap[found[1]].charAt(0)) * 100000;
+                   y = Number(found[3].padEnd(5, '0')) + Number(bngMap[found[1]].charAt(1)) * 100000;
+                 }
+               } else if (found[4] && found[5]) {
+                 x = Number(found[4]);
+                 y = Number(found[5]);
+               }
+               // $log.debug('x,y:', x, y);
+               try {
+                 var p4 = proj4('EPSG:27700', 'WGS84', [x, y]);
+                 // $log.debug('p4:', p4);
+                 lat.deg = p4[1];
+                 lng.deg = p4[0];
+               } catch(ex) {
+                 $log.error(ex);
+               }
+               break;
+             default:
                if (formats[i].latd) lat.deg = Number.parseFloat(found[formats[i].latd]);
                if (formats[i].latm) lat.min = Number.parseFloat(found[formats[i].latm]);
                if (formats[i].lats) lat.sec = Number.parseFloat(found[formats[i].lats]);
@@ -182,6 +226,7 @@ angular.module('myApp.utils.factory', [])
                if (formats[i].lngm) lng.min = Number.parseFloat(found[formats[i].lngm]);
                if (formats[i].lngs) lng.sec = Number.parseFloat(found[formats[i].lngs]);
                if (formats[i].lngc) lng.c = found[formats[i].lngc];
+               break;
              }
              break;
            }
@@ -208,23 +253,66 @@ angular.module('myApp.utils.factory', [])
          return convertDmsCoordsToDegreeCoords(parseGeoLocation(text));
        };
 
-       var plusCodeFormat = function(latlng) {
-         var retval;
+       var convertToFormat = function(lat, lng, format, positionFormat) {
+         var retval, x, y, i, grid;
+         // $log.debug('Format:', format);
          // clip illegal numeric values
-         if (latlng.lng < -180) {
-           latlng.lng = -180;
-         } else if (latlng.lng > 180) {
-           latlng.lng = 180;
+         if (lng < -180) {
+           lng = -180;
+         } else if (lng > 180) {
+           lng = 180;
          }
-         if (latlng.lat < -90) {
-           latlng.lat = -90;
-         } else if (latlng.lat > 90) {
-           latlng.lat = 90;
+         if (lat < -90) {
+           lat = -90;
+         } else if (lat > 90) {
+           lat = 90;
          }
-         try {
-           retval = OpenLocationCode.encode(latlng.lat, latlng.lng, OpenLocationCode.CODE_PRECISION_EXTRA);
-         } catch(ex) {
-           $log.error(ex);
+         switch(format) {
+         case 'plus+code':
+           try {
+             retval = OpenLocationCode.encode(lat, lng, OpenLocationCode.CODE_PRECISION_EXTRA);
+           } catch(ex) {
+             $log.error(ex);
+           }
+           break;
+         case 'osgb36':
+           retval = '';
+           // $log.debug('lat:', lat, 'lng:', lng);
+           if (lat && lng) {
+             try {
+               var p4 = proj4('WGS84', 'EPSG:27700', [lng, lat]);
+               // $log.debug('proj4:', p4);
+               if (p4 && p4[0] && p4[1]) {
+                 x = '' + Math.round(p4[0]);
+                 y = '' + Math.round(p4[1]);
+                 x = x.padStart(6, '0');
+                 y = y.padStart(6, '0');
+                 if (y >= 100000) {
+                   i = 'N' + x[0] + y[1];
+                 } else {
+                   i = x[0] + y[0];
+                 }
+                 // $log.debug('Index:', i);
+                 grid = Object.keys(bngMap).find(function(e) {
+                   return bngMap[e] === i;
+                 });
+                 if (grid) {
+                   retval = grid + ' ' + x.slice(1) + ' ' + (y >= 100000 ? y.slice(2) : y.slice(1)) + ' - ';
+                 }
+               }
+               // $log.debug('proj4:', i, x, y);
+               retval += x + ' ' + y;
+               // $log.debug('retval:', retval);
+             } catch(ex) {
+               $log.error(ex);
+               retval = 'Error';
+             }
+           }
+           break;
+         default:
+           positionFormat = positionFormat ? positionFormat : 'lat,lng';
+           retval = formatPosition(formatCoordinates(lat, format, 'lat'), formatCoordinates(lng, format, 'lng'), positionFormat);
+           break;
          }
          return retval;
        };
@@ -281,7 +369,7 @@ angular.module('myApp.utils.factory', [])
          parseGeoLocation: parseGeoLocation,
          convertDmsCoordsToDegreeCoords: convertDmsCoordsToDegreeCoords,
          parseTextAsDegrees: parseTextAsDegrees,
-         plusCodeFormat: plusCodeFormat,
+         convertToFormat: convertToFormat,
          convertMapAttributesToHtml: convertMapAttributesToHtml,
          createMapLayers: createMapLayers
        };
