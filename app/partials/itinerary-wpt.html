@@ -30,7 +30,7 @@
           <option ng-repeat="format in georefFormats" value="{{format.key}}">{{format.value}}</option>
         </select>
       </div>
-      <div ng-show="coordFormat !== 'plus+code' && coordFormat !== 'osgb36'">
+      <div ng-show="coordFormat !== 'plus+code' && coordFormat !== 'osgb36' && coordFormat !== 'IrishGrid' && coordFormat !== 'ITM'">
         <label for="position-separator">Position ordering and separator:</label>
         <select id="position-separator" ng-model="positionFormat">
           <option value="lat-lng">lat lng</option>
