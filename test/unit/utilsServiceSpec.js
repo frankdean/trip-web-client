@@ -233,6 +233,10 @@ describe('UtilsService', function() {
       expect(utilsService.convertToFormat(57.04754634,-5.29877771, 'osgb36')).toEqual('NH 00000 00000 / OSGB36 200000, 800000');
     });
 
+    it('should', function() {
+      expect(utilsService.convertToFormat(53.34972601713503, -6.2602736935201975, 'IrishGrid')).toEqual('O 15838 34688 / IG 315838, 234688');
+    });
+
   });
 
   describe('GIS text parsing', function() {
@@ -476,6 +480,22 @@ describe('UtilsService', function() {
 
     it('should convert a valid northerly OSGB 1936 grid reference', function() {
       expect(utilsService.parseGeoLocation('461292 1207379')).toEqual({lat: {deg: 60.74476977561496}, lng: {deg: -0.877612332500198}});
+    });
+
+    it('should convert a valid 10 digit 1 letter prefixed Irish Grid reference', function() {
+      expect(utilsService.parseGeoLocation('O1583834688')).toEqual({lat: {deg: 53.34972601713503}, lng: {deg: -6.2602736935201975}});
+    });
+
+    it('should convert a valid 6 digit 1 letter prefixed Irish Grid reference', function() {
+      expect(utilsService.parseGeoLocation('O189347')).toEqual({lat: {deg: 53.34915475439802}, lng: {deg: -6.21430635883986}});
+    });
+
+    it('should convert a valid 6 digit 1 letter prefixed Irish Grid reference prefixed with IG', function() {
+      expect(utilsService.parseGeoLocation('IG O189347')).toEqual({lat: {deg: 53.34915475439802}, lng: {deg: -6.21430635883986}});
+    });
+
+    it('should convert a valid 12 digit Irish Grid reference', function() {
+      expect(utilsService.parseGeoLocation('IG 315838, 234688')).toEqual({lat: {deg: 53.34972601713503}, lng: {deg: -6.2602736935201975}});
     });
 
   });

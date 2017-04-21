@@ -157,14 +157,30 @@ angular.module('myApp.utils.factory', [])
          SM: '12', SN: '22', SO: '32', SP: '42', TL: '52', TM: '62',
          SR: '11', SS: '21', ST: '31', SU: '41', TQ: '51', TR: '61',
          SV: '00', SW: '10', SX: '20', SY: '30', SZ: '40', TV: '50'
-       };
-       proj4.defs("EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs");
+       },
+           irishGridMap = {
+             A: '04', B: '14', C: '24', D: '34', E: '44',
+             F: '03', G: '13', H: '23', J: '33', K: '43',
+             L: '02', M: '12', N: '22', O: '32', P: '42',
+             Q: '01', R: '11', S: '21', T: '31', U: '41',
+             V: '00', W: '10', X: '20', Y: '30', Z: '40'
+           };
+
+       proj4.defs([
+         // OSGB 1936 / British National Grid
+         ["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs"],
+         // TM65 / Irish Grid
+         ["EPSG:29902", "+proj=tmerc +lat_0=53.5 +lon_0=-8 +k=1.000035 +x_0=200000 +y_0=250000 +a=6377340.189 +b=6356034.447938534 +units=m +no_defs"],
+         // Irish Transverse Mercator
+         ["EPSG:2157", "+proj=tmerc +lat_0=53.5 +lon_0=-8 +k=0.99982 +x_0=600000 +y_0=750000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"]
+       ]);
 
        var parseGeoLocation = function(text) {
-         var lat = {}, lng = {}, found, coord, x, y;
+         var lat = {}, lng = {}, found, coord, p4, x, y;
          var formats = [
            {name: 'plus+code', regex: /^(?:https?:\/\/.*\/)?([23456789CFGHJMPQRVWXcfghjmpqrvwx]{8}\+[23456789CFGHJMPQRVWXcfghjmpqrvwx]{2,3})$/},
            {name: 'osgb36', regex: /^(?:BNG|OSGB|OSGB36)?\s*(?:(HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NF|NG|NH|NJ|NK|NL|NM|NN|NO|NR|NS|NT|NU|NW|NX|NY|NZ|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY|SZ|TV)\s*(\d{3,5})\s*(\d{3,5})|(\d{6})[,\s]+(\d{6,7}))$/},
+           {name: 'IrishGrid', regex: /^(?:ING|IG|TM65)?\s*(?:([A-HJ-Z]{1})\s*(\d{3,5})\s*(\d{3,5})|(?:ING|IG|TM65)\s*(\d{6})[,\s]+(\d{6}))$/},
            {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
            {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
@@ -209,7 +225,26 @@ angular.module('myApp.utils.factory', [])
                }
                // $log.debug('x,y:', x, y);
                try {
-                 var p4 = proj4('EPSG:27700', 'WGS84', [x, y]);
+                 p4 = proj4('EPSG:27700', 'WGS84', [x, y]);
+                 // $log.debug('p4:', p4);
+                 lat.deg = p4[1];
+                 lng.deg = p4[0];
+               } catch(ex) {
+                 $log.error(ex);
+               }
+               break;
+             case 'IrishGrid':
+               if (irishGridMap[found[1]]) {
+                 // $log.debug('Grid map:', found[1], irishGridMap[found[1]]);
+                 x = Number(found[2].padEnd(5, '0')) + Number(irishGridMap[found[1]].charAt(0)) * 100000;
+                 y = Number(found[3].padEnd(5, '0')) + Number(irishGridMap[found[1]].charAt(1)) * 100000;
+               } else if (found[4] && found[5]) {
+                 x = Number(found[4]);
+                 y = Number(found[5]);
+               }
+               // $log.debug('x,y:', x, y);
+               try {
+                 p4 = proj4('EPSG:29902', 'WGS84', [x, y]);
                  // $log.debug('p4:', p4);
                  lat.deg = p4[1];
                  lng.deg = p4[0];
@@ -254,7 +289,7 @@ angular.module('myApp.utils.factory', [])
        };
 
        var convertToFormat = function(lat, lng, format, positionFormat) {
-         var retval, x, y, i, grid;
+         var retval, p4, x, y, i, grid;
          // $log.debug('Format:', format);
          // clip illegal numeric values
          if (lng < -180) {
@@ -280,7 +315,7 @@ angular.module('myApp.utils.factory', [])
            // $log.debug('lat:', lat, 'lng:', lng);
            if (lat && lng) {
              try {
-               var p4 = proj4('WGS84', 'EPSG:27700', [lng, lat]);
+               p4 = proj4('WGS84', 'EPSG:27700', [lng, lat]);
                // $log.debug('proj4:', p4);
                if (p4 && p4[0] && p4[1]) {
                  x = '' + Math.round(p4[0]);
@@ -298,6 +333,38 @@ angular.module('myApp.utils.factory', [])
                  });
                  if (grid) {
                    retval = grid + ' ' + x.slice(1) + ' ' + (y >= 1000000 ? y.slice(2) : y.slice(1)) + ' / OSGB36 ';
+                 }
+               }
+               // $log.debug('proj4:', i, x, y);
+               retval += x + ', ' + y;
+               // $log.debug('retval:', retval);
+             } catch(ex) {
+               $log.error(ex);
+               retval = 'Error';
+             }
+           }
+           break;
+         case 'IrishGrid':
+           retval = '';
+           // $log.debug('lat:', lat, 'lng:', lng);
+           if (lat && lng) {
+             try {
+               p4 = proj4('WGS84', 'EPSG:29902', [lng, lat]);
+               // $log.debug('proj4:', p4);
+               if (p4 && p4[0] && p4[1]) {
+                 x = '' + Math.round(p4[0]);
+                 y = '' + Math.round(p4[1]);
+                 x = x.padStart(6, '0');
+                 y = y.padStart(6, '0');
+                 i = x[0] + y[0];
+                 // $log.debug('Index:', i);
+                 grid = Object.keys(irishGridMap).find(function(e) {
+                   return irishGridMap[e] === i;
+                 });
+                 if (grid) {
+                   retval = grid + ' ' + x.slice(1) + ' ' + (y >= 1000000 ? y.slice(2) : y.slice(1)) + ' / IG ';
+                 } else {
+                   retval = 'IG ';
                  }
                }
                // $log.debug('proj4:', i, x, y);
