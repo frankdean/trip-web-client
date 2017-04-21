@@ -164,7 +164,7 @@ angular.module('myApp.utils.factory', [])
          var lat = {}, lng = {}, found, coord, x, y;
          var formats = [
            {name: 'plus+code', regex: /^(?:https?:\/\/.*\/)?([23456789CFGHJMPQRVWXcfghjmpqrvwx]{8}\+[23456789CFGHJMPQRVWXcfghjmpqrvwx]{2,3})$/},
-           {name: 'osgb36', regex: /^(?:(HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NF|NG|NH|NJ|NK|NL|NM|NN|NO|NR|NS|NT|NU|NW|NX|NY|NZ|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY|SZ|TV)\s*(\d{3,5})\s*(\d{3,5})|(\d{6})\s+(\d{6,7}))$/},
+           {name: 'osgb36', regex: /^(?:BNG|OSGB|OSGB36)?\s*(?:(HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NF|NG|NH|NJ|NK|NL|NM|NN|NO|NR|NS|NT|NU|NW|NX|NY|NZ|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY|SZ|TV)\s*(\d{3,5})\s*(\d{3,5})|(\d{6})[,\s]+(\d{6,7}))$/},
            {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
            {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
@@ -297,11 +297,11 @@ angular.module('myApp.utils.factory', [])
                    return bngMap[e] === i;
                  });
                  if (grid) {
-                   retval = grid + ' ' + x.slice(1) + ' ' + (y >= 1000000 ? y.slice(2) : y.slice(1)) + ' - ';
+                   retval = grid + ' ' + x.slice(1) + ' ' + (y >= 1000000 ? y.slice(2) : y.slice(1)) + ' / OSGB36 ';
                  }
                }
                // $log.debug('proj4:', i, x, y);
-               retval += x + ' ' + y;
+               retval += x + ', ' + y;
                // $log.debug('retval:', retval);
              } catch(ex) {
                $log.error(ex);

@@ -218,19 +218,19 @@ describe('UtilsService', function() {
     });
 
     it('should convert to an OSGB 1936 format', function() {
-      expect(utilsService.convertToFormat(50.54958847324303, -3.9961614650592727, 'osgb36')).toEqual('SX 58676 74106 - 258676 074106');
+      expect(utilsService.convertToFormat(50.54958847324303, -3.9961614650592727, 'osgb36')).toEqual('SX 58676 74106 / OSGB36 258676, 074106');
     });
 
     it('should convert a lat/lng the is outside OSGB 1936 area', function() {
-      expect(utilsService.convertToFormat(48.85825, 2.2945, 'osgb36')).toEqual('715066 -106948');
+      expect(utilsService.convertToFormat(48.85825, 2.2945, 'osgb36')).toEqual('715066, -106948');
     });
 
     it('should convert a lat/lng to a northerly OSGB 1936 grid reference', function() {
-      expect(utilsService.convertToFormat(60.74476977561496, -0.877612332500198, 'osgb36')).toEqual('HP 61292 07379 - 461292 1207379');
+      expect(utilsService.convertToFormat(60.74476977561496, -0.877612332500198, 'osgb36')).toEqual('HP 61292 07379 / OSGB36 461292, 1207379');
     });
 
     it('should convert a lat/lng to a northerly OSGB 1936 grid reference', function() {
-      expect(utilsService.convertToFormat(57.04754634,-5.29877771, 'osgb36')).toEqual('NH 00000 00000 - 200000 800000');
+      expect(utilsService.convertToFormat(57.04754634,-5.29877771, 'osgb36')).toEqual('NH 00000 00000 / OSGB36 200000, 800000');
     });
 
   });
@@ -438,8 +438,24 @@ describe('UtilsService', function() {
       expect(utilsService.parseGeoLocation('SX 58676 74106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
     });
 
+    it('should convert a valid OSGB 1936 grid reference with a prefix of BNG', function() {
+      expect(utilsService.parseGeoLocation('BNG SX 58676 74106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid OSGB 1936 grid reference with a prefix of OSGB36', function() {
+      expect(utilsService.parseGeoLocation('OSGB36 SX 58676 74106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
     it('should convert a valid 12 digit OSGB 1936 grid reference', function() {
       expect(utilsService.parseGeoLocation('258676 074106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid 12 digit comma-space separted OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('258676, 074106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
+    });
+
+    it('should convert a valid 12 digit comma separated OSGB 1936 grid reference', function() {
+      expect(utilsService.parseGeoLocation('258676,074106')).toEqual({lat: {deg: 50.54958847324303}, lng: {deg: -3.9961614650592727}});
     });
 
     it('should convert a valid 2 letter and 10 digit OSGB 1936 grid reference', function() {
