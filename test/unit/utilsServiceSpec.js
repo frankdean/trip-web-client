@@ -233,8 +233,12 @@ describe('UtilsService', function() {
       expect(utilsService.convertToFormat(57.04754634,-5.29877771, 'osgb36')).toEqual('NH 00000 00000 / OSGB36 200000, 800000');
     });
 
-    it('should', function() {
+    it('should convert a lat/lng to an Irish Grid reference', function() {
       expect(utilsService.convertToFormat(53.34972601713503, -6.2602736935201975, 'IrishGrid')).toEqual('O 15838 34688 / IG 315838, 234688');
+    });
+
+    it('should convert a lat/lng to an ITM reference', function() {
+      expect(utilsService.convertToFormat(53.34972222,-6.26027778, 'ITM')).toEqual('ITM 715828, 734689');
     });
 
   });
@@ -496,6 +500,18 @@ describe('UtilsService', function() {
 
     it('should convert a valid 12 digit Irish Grid reference', function() {
       expect(utilsService.parseGeoLocation('IG 315838, 234688')).toEqual({lat: {deg: 53.34972601713503}, lng: {deg: -6.2602736935201975}});
+    });
+
+    it('should convert a valid 12 digit ITM reference', function() {
+      expect(utilsService.parseGeoLocation('ITM 715828, 734689')).toEqual({lat: {deg: 53.349722487390345}, lng: {deg: -6.260280723910758}});
+    });
+
+    it('should convert a valid 12 digit ITM reference without spaces', function() {
+      expect(utilsService.parseGeoLocation('ITM715828,734689')).toEqual({lat: {deg: 53.349722487390345}, lng: {deg: -6.260280723910758}});
+    });
+
+    it('should convert a fully specified ITM reference', function() {
+      expect(utilsService.parseGeoLocation('ITM E 709885.081m, N 736167.699m')).toEqual({lat: {deg: 53.36427343603036}, lng: {deg: -6.348987346570671}});
     });
 
   });

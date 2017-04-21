@@ -181,6 +181,8 @@ angular.module('myApp.utils.factory', [])
            {name: 'plus+code', regex: /^(?:https?:\/\/.*\/)?([23456789CFGHJMPQRVWXcfghjmpqrvwx]{8}\+[23456789CFGHJMPQRVWXcfghjmpqrvwx]{2,3})$/},
            {name: 'osgb36', regex: /^(?:BNG|OSGB|OSGB36)?\s*(?:(HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NF|NG|NH|NJ|NK|NL|NM|NN|NO|NR|NS|NT|NU|NW|NX|NY|NZ|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY|SZ|TV)\s*(\d{3,5})\s*(\d{3,5})|(\d{6})[,\s]+(\d{6,7}))$/},
            {name: 'IrishGrid', regex: /^(?:ING|IG|TM65)?\s*(?:([A-HJ-Z]{1})\s*(\d{3,5})\s*(\d{3,5})|(?:ING|IG|TM65)\s*(\d{6})[,\s]+(\d{6}))$/},
+           // Irish Transverse Mercator
+           {name: 'ITM', regex: /^ITM\s*(?:E\s)?(\d{6}(?:\.\d{0,3})?)m?[,\s]+(?:N\s)?(\d{6}(?:\.\d{0,3})?)m?$/},
            {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
            {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
@@ -245,6 +247,19 @@ angular.module('myApp.utils.factory', [])
                // $log.debug('x,y:', x, y);
                try {
                  p4 = proj4('EPSG:29902', 'WGS84', [x, y]);
+                 // $log.debug('p4:', p4);
+                 lat.deg = p4[1];
+                 lng.deg = p4[0];
+               } catch(ex) {
+                 $log.error(ex);
+               }
+               break;
+             case 'ITM':
+               x = Number(found[1]);
+               y = Number(found[2]);
+               // $log.debug('x,y:', x, y);
+               try {
+                 p4 = proj4('EPSG:2157', 'WGS84', [x, y]);
                  // $log.debug('p4:', p4);
                  lat.deg = p4[1];
                  lng.deg = p4[0];
@@ -366,6 +381,29 @@ angular.module('myApp.utils.factory', [])
                  } else {
                    retval = 'IG ';
                  }
+               }
+               // $log.debug('proj4:', i, x, y);
+               retval += x + ', ' + y;
+               // $log.debug('retval:', retval);
+             } catch(ex) {
+               $log.error(ex);
+               retval = 'Error';
+             }
+           }
+           break;
+         case 'ITM':
+           retval = '';
+           // $log.debug('lat:', lat, 'lng:', lng);
+           if (lat && lng) {
+             try {
+               p4 = proj4('WGS84', 'EPSG:2157', [lng, lat]);
+               // $log.debug('proj4:', p4);
+               if (p4 && p4[0] && p4[1]) {
+                 x = '' + Math.round(p4[0]);
+                 y = '' + Math.round(p4[1]);
+                 x = x.padStart(6, '0');
+                 y = y.padStart(6, '0');
+                 retval = 'ITM ';
                }
                // $log.debug('proj4:', i, x, y);
                retval += x + ', ' + y;
