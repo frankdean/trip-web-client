@@ -328,13 +328,9 @@ angular.module('myApp.itinerary.map.controller', [])
            payload.leafletEvent.layer._latlngs.forEach(function(v, k, a) {
              // Allow some editing around 180 degrees of longitude
              if (v.lng > 180) {
-               $log.debug('Converting', v.lng);
                v.lng -= 360;
-               $log.debug('Converted to', v.lng);
              } else if (v.lng < -180) {
-               $log.debug('Converting', v.lng);
                v.lng += 360;
-               $log.debug('Converted to', v.lng);
              }
            });
            if (UtilsService.validateCoordinates(payload.leafletEvent.layer._latlngs)) {
@@ -406,13 +402,9 @@ angular.module('myApp.itinerary.map.controller', [])
                // Allow some editing around 180 degrees of longitude
                layer.getLatLngs().forEach(function(v, k, a) {
                  if (v.lng > 180) {
-                   $log.debug('Converting', v.lng);
                    v.lng -= 360;
-                   $log.debug('Converted to', v.lng);
                  } else if (v.lng < -180) {
-                   $log.debug('Converting', v.lng);
                    v.lng += 360;
-                   $log.debug('Converted to', v.lng);
                  }
                });
                if (UtilsService.validateCoordinates(layer.getLatLngs())) {
