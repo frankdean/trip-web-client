@@ -1,4 +1,17 @@
 <div class="container">
+  <div id="system-error" class="map-page-div" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}<span>
+    </div>
+  </div>
+  <div id="system-error" class="map-page-div" ng-messages="fileTooBigError"
+       ng-show="fileTooBigError">
+    <div class="alert alert-danger" role="alert" ng-message="error">
+      The upload has been rejected as too big.
+    </div>
+  </div>
   <div>
     <form id="form" class="well">
       <div>

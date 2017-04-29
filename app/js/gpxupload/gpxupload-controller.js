@@ -28,6 +28,8 @@ angular.module('myApp.gpxupload.gpxupload-controller', [])
         $location.search({id: encodeURIComponent($scope.itineraryId)});
       };
       $scope.upload = function() {
+        $scope.ajaxRequestError =  {error: false};
+        $scope.fileTooBigError = {error: false};
         $log.debug('itineraryId:', $scope.itineraryId);
         gpxUploadService.save({id: $scope.itineraryId},
                               $scope.formData
@@ -39,6 +41,10 @@ angular.module('myApp.gpxupload.gpxupload-controller', [])
                                 $log.debug('Upload failed', response.status);
                                 if (response.status === 401) {
                                   $location.path('/login');
+                                } else if (response.status === 413) {
+                                  $scope.fileTooBigError = {error: true};
+                                } else {
+                                  $scope.ajaxRequestError = {error: true, status: response.status};
                                 }
                               });
       };
