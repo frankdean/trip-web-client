@@ -95,6 +95,10 @@ angular.module('myApp.map.controller', [])
              }
            });
            $scope.status.showMap = true;
+         })
+         .catch(function(error) {
+           $log.error('Failed to get the map layer configuration: ', error);
+           $scope.mapLayersError = {error: error};
          });
 
        // Only do live updates when viewing other nicknames

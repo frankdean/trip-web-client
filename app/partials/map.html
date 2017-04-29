@@ -5,6 +5,9 @@
       {{ajaxRequestError.status}}<span>
   </div>
 </div>
+<div id="map-layers-error" class="map-page-div" ng-messages="mapLayersError">
+  <div class="alert alert-danger" role="alert" ng-message="error">Unable to display the map.  There was an error when attempting to fetching the map configuration.</div>
+</div>
 <leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" markers="map.markers" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
 <div class="map-page-div" ng-show="status.showMap && (status.connected || (status.withinTimeSpan && status.liveupdate))">
   <label for="auto-update">Auto-centre on live update:</label>

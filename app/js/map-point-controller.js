@@ -63,6 +63,10 @@ angular.module('myApp.map.point.controller', [])
              }
            });
            $scope.status.showMap = true;
+         })
+         .catch(function(error) {
+           $log.error('Failed to get the map layer configuration: ', error);
+           $scope.mapLayersError = {error: error};
          });
 
        lat = parseFloat(decodeURIComponent($routeParams.lat));

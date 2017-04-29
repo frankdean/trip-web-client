@@ -85,7 +85,7 @@ angular.module('myApp.config.factory', [])
                  deferred.resolve(layers);
                }).catch(function(response) {
                  $log.error('Failure fetching map attribution config', response);
-                 deferred.reject('Failure fetching map attribution config ' + response);
+                 deferred.reject('Failure fetching map attribution config');
                });
 
            }
