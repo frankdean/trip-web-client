@@ -6,6 +6,18 @@
         {{ajaxRequestError.status}}<span>
     </div>
   </div>
+  <div id="marker-error" class="map-page-div" ng-messages="invalidMarkerError"
+       ng-show="invalidMarkerError">
+    <div class="alert alert-danger" role="alert" ng-message="error">
+      The marker's position is invalid ({{invalidMarkerError.lat}}, {{invalidMarkerError.lng}})
+    </div>
+  </div>
+  <div id="route-error" class="map-page-div" ng-messages="invalidRouteError"
+       ng-show="invalidRouteError">
+    <div class="alert alert-danger" role="alert" ng-message="error">
+      One or more of the route's coordinates is out of range.  (-90 <= lat <= 90, -180 <= lng <= 180)
+    </div>
+  </div>
   <div id="map-layers-error" class="map-page-div" ng-messages="mapLayersError">
     <div class="alert alert-danger" role="alert" ng-message="error">Unable to display the map.  There was an error when attempting to fetching the map configuration.</div>
   </div>

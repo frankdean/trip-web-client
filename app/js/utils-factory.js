@@ -40,6 +40,27 @@ angular.module('myApp.utils.factory', [])
          return r;
        };
 
+       var validateCoordinate = function(lat, lng) {
+         return (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180);
+       };
+
+       var validateCoordinates = function(coords) {
+         var retval = true;
+         if (Array.isArray(coords)) {
+           coords.forEach(function(v, k, a) {
+             // $log.debug(k, ' => ', v);
+             if (!validateCoordinate(v.lat, v.lng)) {
+               $log.warn('Invalid lat/lng', v.lat, v.lng);
+               retval = false;
+             }
+           });
+         } else {
+           $log.error('coords is not an array');
+           retval = false;
+         }
+         return retval;
+       };
+
        var formatCoordinates = function(v, format, latOrLng) {
          var r = '',
              dms,
@@ -472,6 +493,8 @@ angular.module('myApp.utils.factory', [])
        };
 
        return {
+         validateCoordinate: validateCoordinate,
+         validateCoordinates: validateCoordinates,
          formatCoordinates: formatCoordinates,
          formatPosition: formatPosition,
          parseGeoLocation: parseGeoLocation,

@@ -198,7 +198,7 @@ angular.module('myApp.itinerary.map.controller', [])
 
        angular.extend($scope, {
          status: {
-           // Delay construciton of map object until attribution fetched from server
+           // Delay construction of map object until attribution fetched from server
            showMap: false
          },
          map: {
@@ -284,83 +284,118 @@ angular.module('myApp.itinerary.map.controller', [])
        }
        $scope.$on('leafletDirectiveDraw.draw:created', function(e, payload) {
          $scope.ajaxRequestError = {error: false};
+         $scope.invalidMarkerError = {error: false};
+         $scope.invalidRouteError = {error: false};
          if (payload.leafletEvent.layerType === 'marker') {
            if (!payload.leafletEvent.layer.tl_id) {
              // Create a new marker
-             ItineraryWaypointService.save({},
-                                           {id: $scope.itineraryId,
+             if (UtilsService.validateCoordinate(payload.leafletEvent.layer._latlng.lat,
+                                                 payload.leafletEvent.layer._latlng.lng)) {
+               ItineraryWaypointService.save({},
+                                             {id: $scope.itineraryId,
+                                              lat: payload.leafletEvent.layer._latlng.lat,
+                                              lng: payload.leafletEvent.layer._latlng.lng,
+                                              time: new Date()
+                                             })
+                 .$promise.then(function(result) {
+                   payload.leafletEvent.layer.tl_id = result.id;
+                   payload.leafletEvent.layer.bindPopup('ID: ' + result.id);
+                   drawnItems.addLayer(payload.leafletEvent.layer);
+                 }).catch(function(response) {
+                   $log.error('Save waypoint failed', response);
+                   $scope.ajaxRequestError = {
+                     error: true,
+                     status: response.status
+                   };
+                 });
+             } else {
+               $log.warn('Invalid marker position',
+                         payload.leafletEvent.layer._latlng.lat,
+                         payload.leafletEvent.layer._latlng.lng);
+               $scope.invalidMarkerError = {error: true,
                                             lat: payload.leafletEvent.layer._latlng.lat,
-                                            lng: payload.leafletEvent.layer._latlng.lng,
-                                            time: new Date()
-                                           })
+                                            lng: payload.leafletEvent.layer._latlng.lng
+                                           };
+             }
+           }
+         } else if (payload.leafletEvent.layerType === 'polyline') {
+           if (UtilsService.validateCoordinates(payload.leafletEvent.layer._latlngs)) {
+             ItineraryRouteService.save({},
+                                        {id: $scope.itineraryId,
+                                         points: payload.leafletEvent.layer._latlngs
+                                        })
                .$promise.then(function(result) {
                  payload.leafletEvent.layer.tl_id = result.id;
-                 payload.leafletEvent.layer.bindPopup('ID: ' + result.id);
+                 angular.extend(
+                   payload.leafletEvent.layer.options, {
+                     color: 'Fuchsia', opacity: 0.5, weight: 4
+                   });
                  drawnItems.addLayer(payload.leafletEvent.layer);
                }).catch(function(response) {
-                 $log.error('Save waypoint failed', response);
+                 $log.error('Save route failed', response);
                  $scope.ajaxRequestError = {
                    error: true,
                    status: response.status
                  };
                });
+           } else {
+             $log.error('Create Route. One or more coordinates are out of range: -90 <= lat <= 90, -180 <= lng <= 180');
+             $scope.invalidRouteError = {error: true};
            }
-         } else if (payload.leafletEvent.layerType === 'polyline') {
-           ItineraryRouteService.save({},
-                                      {id: $scope.itineraryId,
-                                       points: payload.leafletEvent.layer._latlngs
-                                      })
-             .$promise.then(function(result) {
-               payload.leafletEvent.layer.tl_id = result.id;
-               angular.extend(
-                 payload.leafletEvent.layer.options, {
-                   color: 'Fuchsia', opacity: 0.5, weight: 4
-                 });
-               drawnItems.addLayer(payload.leafletEvent.layer);
-             }).catch(function(response) {
-               $log.error('Save route failed', response);
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
-             });
          } else {
            drawnItems.addLayer(payload.leafletEvent.layer);
          }
        });
        $scope.$on('leafletDirectiveDraw.draw:edited', function(e, payload) {
          $scope.ajaxRequestError = {error: false};
+         $scope.invalidMarkerError = {error: false};
+         $scope.invalidRouteError = {error: false};
          var layers = payload.leafletEvent.layers;
          layers.eachLayer(function (layer) {
            if (layer instanceof L.Marker) {
              if (layer.tl_id) {
-               ItineraryWaypointService.move({},
-                                             {id: $scope.itineraryId,
-                                              wptId: layer.tl_id,
+               if (UtilsService.validateCoordinate(
+                 layer.getLatLng().lat,
+                 layer.getLatLng().lng)) {
+                 ItineraryWaypointService.move({},
+                                               {id: $scope.itineraryId,
+                                                wptId: layer.tl_id,
+                                                lat: layer.getLatLng().lat,
+                                                lng: layer.getLatLng().lng
+                                               })
+                   .$promise.catch(function(response) {
+                     $scope.ajaxRequestError = {
+                       error: true,
+                       status: response.status
+                     };
+                   });
+               } else {
+                 $log.warn('Invalid marker position', layer.getLatLng().lat, layer.getLatLng().lng);
+                 $scope.invalidMarkerError = {error: true,
                                               lat: layer.getLatLng().lat,
                                               lng: layer.getLatLng().lng
-                                             })
-                 .$promise.catch(function(response) {
-                   $scope.ajaxRequestError = {
-                     error: true,
-                     status: response.status
-                   };
-                 });
+                                              };
+               }
              }
            } else if (layer instanceof L.Polyline) {
              if (layer.tl_id) {
-               ItineraryRouteService.update({},
-                                            {id: $scope.itineraryId,
-                                             routeId: layer.tl_id,
-                                             points: layer.getLatLngs()
-                                            })
-                 .$promise.catch(function(response) {
-                   $log.error('Update route failed', response);
-                   $scope.ajaxRequestError = {
-                     error: true,
-                     status: response.status
-                   };
-                 });
+               if (UtilsService.validateCoordinates(layer.getLatLngs())) {
+                 ItineraryRouteService.update({},
+                                              {id: $scope.itineraryId,
+                                               routeId: layer.tl_id,
+                                               points: layer.getLatLngs()
+                                              })
+                   .$promise.catch(function(response) {
+                     $log.error('Update route failed', response);
+                     $scope.ajaxRequestError = {
+                       error: true,
+                       status: response.status
+                     };
+                   });
+               } else {
+                 $log.error('One or more coordinates are out of range: -90 <= lat <= 90, -180 <= lng <= 180');
+                 $scope.invalidRouteError = {error: true};
+               }
              } else {
                $log.error('Polyline edited without having an ID');
              }
@@ -371,6 +406,8 @@ angular.module('myApp.itinerary.map.controller', [])
        });
        $scope.$on('leafletDirectiveDraw.draw:deleted', function(e, payload) {
          $scope.ajaxRequestError = {error: false};
+         $scope.invalidMarkerError = {error: false};
+         $scope.invalidRouteError = {error: false};
          payload.leafletEvent.layers.eachLayer(function (layer) {
            if (layer instanceof L.Marker) {
              if (layer.tl_id) {
