@@ -289,6 +289,12 @@ angular.module('myApp.itinerary.map.controller', [])
          if (payload.leafletEvent.layerType === 'marker') {
            if (!payload.leafletEvent.layer.tl_id) {
              // Create a new marker
+             // Allow some editing around 180 degrees of longitude
+             if (payload.leafletEvent.layer._latlng.lng > 180) {
+               payload.leafletEvent.layer._latlng.lng -= 360;
+             } else if (payload.leafletEvent.layer._latlng.lng < -180) {
+               payload.leafletEvent.layer._latlng.lng += 360;
+             }
              if (UtilsService.validateCoordinate(payload.leafletEvent.layer._latlng.lat,
                                                  payload.leafletEvent.layer._latlng.lng)) {
                ItineraryWaypointService.save({},
@@ -319,6 +325,18 @@ angular.module('myApp.itinerary.map.controller', [])
              }
            }
          } else if (payload.leafletEvent.layerType === 'polyline') {
+           payload.leafletEvent.layer._latlngs.forEach(function(v, k, a) {
+             // Allow some editing around 180 degrees of longitude
+             if (v.lng > 180) {
+               $log.debug('Converting', v.lng);
+               v.lng -= 360;
+               $log.debug('Converted to', v.lng);
+             } else if (v.lng < -180) {
+               $log.debug('Converting', v.lng);
+               v.lng += 360;
+               $log.debug('Converted to', v.lng);
+             }
+           });
            if (UtilsService.validateCoordinates(payload.leafletEvent.layer._latlngs)) {
              ItineraryRouteService.save({},
                                         {id: $scope.itineraryId,
@@ -354,6 +372,12 @@ angular.module('myApp.itinerary.map.controller', [])
          layers.eachLayer(function (layer) {
            if (layer instanceof L.Marker) {
              if (layer.tl_id) {
+               // Allow some editing around 180 degrees of longitude
+               if (layer.getLatLng().lng > 180) {
+                 layer.getLatLng().lng -= 360;
+               } else if (layer.getLatLng().lng < -180) {
+                 layer.getLatLng().lng += 360;
+               }
                if (UtilsService.validateCoordinate(
                  layer.getLatLng().lat,
                  layer.getLatLng().lng)) {
@@ -379,6 +403,18 @@ angular.module('myApp.itinerary.map.controller', [])
              }
            } else if (layer instanceof L.Polyline) {
              if (layer.tl_id) {
+               // Allow some editing around 180 degrees of longitude
+               layer.getLatLngs().forEach(function(v, k, a) {
+                 if (v.lng > 180) {
+                   $log.debug('Converting', v.lng);
+                   v.lng -= 360;
+                   $log.debug('Converted to', v.lng);
+                 } else if (v.lng < -180) {
+                   $log.debug('Converting', v.lng);
+                   v.lng += 360;
+                   $log.debug('Converted to', v.lng);
+                 }
+               });
                if (UtilsService.validateCoordinates(layer.getLatLngs())) {
                  ItineraryRouteService.update({},
                                               {id: $scope.itineraryId,
