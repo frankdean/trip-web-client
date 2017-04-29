@@ -24,13 +24,16 @@ angular.module('myApp.itinerary.sharing.report.controller', [])
     ['$scope',
      '$log',
      '$location',
+     'StateService',
      'ItinerarySharingReportService',
      function($scope,
               $log,
               $location,
+              StateService,
               ItinerarySharingReportService) {
+       $scope.page = StateService.getItinerarySharingReportPage();
        $scope.pageSize = 10;
-       $scope.offset = 0;
+       $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;
        $scope.totalCount = 0;
        $scope.listItineraries = function() {
          $scope.ajaxRequestError = {error: false};
@@ -40,6 +43,32 @@ angular.module('myApp.itinerary.sharing.report.controller', [])
            .$promise.then(function(result) {
              $scope.itineraries = result.payload;
              $scope.totalCount = result.count;
+             // Workaround to value being lost on returning to the page
+             $scope.page = Math.floor($scope.offset / $scope.pageSize + 1);
+             if (result.payload.length === 0) {
+               // Suggests page number is now higher than the number of results
+               // Reset so that at least the next query will be correct
+               $scope.offset = 0;
+               $scope.page = 1;
+               StateService.saveItinerarySharingReportPage(1);
+               if (result.count > 0) {
+                 // Repeat the query to get the first page
+                 ItinerarySharingReportService.query(
+                   {page_size: $scope.pageSize,
+                    offset: $scope.offset})
+                   .$promise.then(function(result) {
+                     $scope.itineraries = result.payload;
+                     $scope.totalCount = result.count;
+                   }).catch(function(response) {
+                     $scope.ajaxRequestError = {error: true, status: response.status};
+                     if (response.status === 400) {
+                       $log.warn('Invalid request fetching itinerary sharing report', response.statusText);
+                     } else {
+                       $log.warn('Error fetching itinerary sharing report:', response.status, response.statusText);
+                     }
+                   });
+               } // end query second attempt
+             }
            }).catch(function(response) {
              $scope.ajaxRequestError = {error: true, status: response.status};
              if (response.status === 401) {
@@ -53,6 +82,7 @@ angular.module('myApp.itinerary.sharing.report.controller', [])
        };
        $scope.doPagingAction = function(text, page, pageSize, total) {
          $scope.offset = pageSize * (page - 1);
+         StateService.saveItinerarySharingReportPage(page);
          $scope.listItineraries();
        };
        $scope.listItineraries();

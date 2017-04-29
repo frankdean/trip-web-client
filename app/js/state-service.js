@@ -28,6 +28,7 @@ angular.module('myApp.state.service', [] )
          this.tracksSearch = undefined;
          this.tracksPage = 1;
          this.itinerariesPage = 1;
+         this.itinerarySharingReportPage = 1;
          this.admin = undefined;
        };
        this.reset();
@@ -59,6 +60,13 @@ angular.module('myApp.state.service', [] )
        };
        this.getItinerariesPage = function() {
          return this.itinerariesPage;
+       };
+
+       this.saveItinerarySharingReportPage = function(page) {
+         this.itinerarySharingReportPage = page;
+       };
+       this.getItinerarySharingReportPage = function() {
+         return this.itinerarySharingReportPage;
        };
 
      }]);

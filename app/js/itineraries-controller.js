@@ -39,14 +39,35 @@ angular.module('myApp.itineries.controller', [])
            function(data) {
              $scope.itineraries = data;
              $scope.totalCount = $scope.itineraries.count;
+             // Workaround to value being lost on returning to the page
+             $scope.page = Math.floor($scope.offset / $scope.pageSize + 1);
              if (data.payload.length === 0) {
                // Suggests page number is now higher than the number of results
                // Reset so that at least the next query will be correct
+               $scope.offset = 0;
+               $scope.page = 1;
                StateService.saveItinerariesPage(1);
+               if (data.count > 0) {
+                 // Repeat the query to get the first page
+                 $scope.ajaxRequestError = {error: false};
+                 ItineraryService.query(
+                   {page_size: $scope.pageSize,
+                    offset: $scope.offset},
+                   function(data) {
+                     $scope.itineraries = data;
+                     $scope.totalCount = $scope.itineraries.count;
+                   },
+                   function(response) {
+                     $scope.ajaxRequestError = {error: true};
+                     if (response.status === 400) {
+                       $log.warn('Invalid request fetching itineraries', response.statusText);
+                     } else {
+                       $log.warn('Error fetching itineraries:', response.status, response.statusText);
+                     }
+                   }
+                 );
+               } // end query second attempt
              }
-             // Workaround to value being lost on returning to the page
-             $scope.page = Math.floor($scope.offset / $scope.pageSize + 1);
-             $scope.ajaxRequestError = {error: false};
            },
            function(response) {
              $scope.ajaxRequestError = {error: true};

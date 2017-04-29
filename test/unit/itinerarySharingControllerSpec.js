@@ -21,7 +21,7 @@ describe('ItinerarySharingCtrl', function() {
 
   beforeEach(module('myApp'));
 
-  var $httpBackend, scope, createController, $location, confirmDialog,
+  var $httpBackend, scope, controller, createController, $location, confirmDialog,
       itinerarySharingService, saveNicknameRequestHandler, saveShareRequestHandler;
   var routeParams = {id: 42};
   var mockValidForm = {$valid: true,
@@ -60,6 +60,7 @@ describe('ItinerarySharingCtrl', function() {
                         return /{"updateType":"(delete|activeStateChange)".*/.test(data);
                       }).respond(null);
     scope = $rootScope;
+    controller = $controller;
     createController = function () {
       return $controller('ItinerarySharingCtrl', {
         $scope: scope,
@@ -206,6 +207,8 @@ describe('ItinerarySharingCtrl', function() {
 
     beforeEach(function() {
       $httpBackend.when('GET', /itinerary\/share(\/\d+)?\?offset=\d+&page_size=\d+$/).respond(testShares2);
+      spyOn($location, 'path').and.stub();
+      spyOn($location, 'search').and.stub();
     });
 
     it('should populate the form when the edit button is clicked', function() {
@@ -215,6 +218,36 @@ describe('ItinerarySharingCtrl', function() {
       expect(scope.data.state.new).toBeFalsy();
       expect(scope.data.nickname).toEqual(testShares2.payload[1].nickname);
       expect(scope.data.active).toEqual(testShares2.payload[1].active);
+    });
+
+    it('should display the itineary list when the "show itineary" button is clicked', function() {
+      createController();
+      $httpBackend.flush();
+      scope.cancel();
+      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
+      expect($location.search.calls.argsFor(0)).toEqual([{id: '' + routeParams.id}]);
+    });
+
+    it('should display the itineary list when the cancel/back button is clicked', function() {
+      createController();
+      $httpBackend.flush();
+      scope.cancel();
+      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
+      expect($location.search.calls.argsFor(0)).toEqual([{id: '' + routeParams.id}]);
+    });
+
+    it('should display the itineary sharing report when the cancel/back button is clicked when routing parameter is set', function() {
+      controller('ItinerarySharingCtrl', {
+        $scope: scope,
+        $routeParams: {id: routeParams.id,
+                       routing: 'itinerary-sharing-report'},
+        $location: $location,
+        $modalDialog: confirmDialog
+      });
+      $httpBackend.flush();
+      scope.cancel();
+      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary-sharing-report']);
+      expect($location.search.calls.argsFor(0)).toEqual(['']);
     });
 
   });

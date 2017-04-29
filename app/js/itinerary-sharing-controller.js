@@ -29,6 +29,7 @@ angular.module('myApp.itinerary.sharing.controller', [])
      'ItinerarySharingService',
      function($scope, $routeParams, $log, $location, modalDialog, ItinerarySharingService) {
        $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
+       $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
        $scope.data = {};
        $scope.master = {};
        $scope.selectAllCheckbox = false;
@@ -69,6 +70,15 @@ angular.module('myApp.itinerary.sharing.controller', [])
        };
        $scope.listItineraryShares();
        $scope.cancel = function(form) {
+         if ($scope.routing === 'itinerary-sharing-report') {
+           $location.path('/itinerary-sharing-report');
+           $location.search('');
+         } else {
+           $location.path('/itinerary');
+           $location.search({id: encodeURIComponent($scope.itineraryId)});
+         }
+       };
+       $scope.showItinerary = function(form) {
          $location.path('/itinerary');
          $location.search({id: encodeURIComponent($scope.itineraryId)});
        };

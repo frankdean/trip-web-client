@@ -64,6 +64,19 @@ describe('itinerary sharing', function() {
 
     });
 
+    describe('Back button', function() {
+
+      it('should not display the "itinerary" button', function() {
+        expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeFalsy();
+      });
+
+      it('should show the itinerary list when the close/back button is clicked', function() {
+        element(by.id('btn-close')).click();
+        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      });
+
+    });
+
     describe('select all operations', function() {
 
       beforeEach(function() {

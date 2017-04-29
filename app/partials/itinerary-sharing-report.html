@@ -20,7 +20,7 @@
         </tr>
         <tr ng-repeat="itinerary in itineraries">
           <td>{{itinerary.start | date :'EEE dd-MMM-yyyy'}}</td>
-          <td><a href="#/itinerary-sharing?id={{itinerary.id}}">{{itinerary.title}}</a></td>
+          <td><a href="#/itinerary-sharing?id={{itinerary.id}}&routing=itinerary-sharing-report">{{itinerary.title}}</a></td>
           <td><span ng-repeat="nickname in itinerary.shares">{{nickname}} </span></td>
         </tr>
       </table>
