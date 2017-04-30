@@ -21,7 +21,7 @@ describe('ItinerarySharingCtrl', function() {
 
   beforeEach(module('myApp'));
 
-  var $httpBackend, scope, controller, createController, $location, confirmDialog,
+  var $httpBackend, scope, controller, createController, $location,
       itinerarySharingService, saveNicknameRequestHandler, saveShareRequestHandler;
   var routeParams = {id: 42};
   var mockValidForm = {$valid: true,
@@ -48,7 +48,6 @@ describe('ItinerarySharingCtrl', function() {
                              $rootScope,
                              $controller,
                              _$location_,
-                             modalDialog,
                              ItinerarySharingService) {
     $httpBackend = _$httpBackend_;
     saveNicknameRequestHandler = $httpBackend.when('PUT', /itinerary\/share\/\d+/,
@@ -65,12 +64,10 @@ describe('ItinerarySharingCtrl', function() {
       return $controller('ItinerarySharingCtrl', {
         $scope: scope,
         $routeParams: routeParams,
-        $location: $location,
-        $modalDialog: confirmDialog
+        $location: $location
       });
     };
     $location = _$location_;
-    confirmDialog = modalDialog;
     itinerarySharingService = ItinerarySharingService;
     scope.form = mockValidForm;
   }));
@@ -169,7 +166,6 @@ describe('ItinerarySharingCtrl', function() {
     it('should delete the selected itinerary shares', function() {
       createController();
       $httpBackend.flush();
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       scope.itineraryId = 42;
       scope.delete();
       $httpBackend.flush();
@@ -178,7 +174,6 @@ describe('ItinerarySharingCtrl', function() {
     it('should show an error when deleting the selected itinerary shares fails', function() {
       createController();
       $httpBackend.flush();
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       scope.itineraryId = 42;
       scope.delete();
       saveShareRequestHandler.respond(500, '');
@@ -241,8 +236,7 @@ describe('ItinerarySharingCtrl', function() {
         $scope: scope,
         $routeParams: {id: routeParams.id,
                        routing: 'itinerary-sharing-report'},
-        $location: $location,
-        $modalDialog: confirmDialog
+        $location: $location
       });
       $httpBackend.flush();
       scope.cancel();

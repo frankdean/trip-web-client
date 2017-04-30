@@ -24,9 +24,8 @@ angular.module('myApp.shares.controller', [])
     ['$scope',
      '$log',
      '$location',
-     'modalDialog',
      'SharesService',
-     function($scope, $log, $location, modalDialog, SharesService) {
+     function($scope, $log, $location, SharesService) {
        $scope.data = {};
        $scope.master = {};
        $scope.selectAllCheckbox = false;
@@ -108,16 +107,14 @@ angular.module('myApp.shares.controller', [])
        $scope.delete = function() {
          var dirty = false;
          $scope.ajaxRequestError = {error: false};
-         if (modalDialog.confirm('Delete the selected location shares?') === true) {
-           $scope.shares.payload.forEach(function(item, index, array) {
-             if (item.selected) {
-               item.deleted = true;
-               dirty = true;
-             }
-           });
-           if (dirty) {
-             $scope.saveShares('delete');
+         $scope.shares.payload.forEach(function(item, index, array) {
+           if (item.selected) {
+             item.deleted = true;
+             dirty = true;
            }
+         });
+         if (dirty) {
+           $scope.saveShares('delete');
          }
        };
        $scope.activate = function() {

@@ -407,6 +407,7 @@ describe('User management', function() {
 
         it('should not allow delete of multiple users', function() {
           element(by.id('btn-delete')).click();
+          element.all((by.css('.confirm-button'))).get(0).click();
           expect(element(by.id('error-edit-only-one')).isDisplayed()).toBeTruthy();
         });
 
@@ -474,7 +475,7 @@ describe('User management', function() {
       it('should allow deleting a single user', function() {
         if (browser.privateConfig.browserName !== 'safari') {
           element(by.id('btn-delete')).click();
-          browser.switchTo().alert().accept();
+          element.all((by.css('.confirm-button'))).get(0).click();
         }
       });
 
@@ -636,7 +637,7 @@ describe('User management', function() {
           it('should reset all the values if the alert is accepted', function() {
             if (browser.privateConfig.browserName !== 'safari') {
               element(by.id('btn-reset')).click();
-              browser.switchTo().alert().accept();
+              element.all((by.css('.confirm-button'))).get(1).click();
               expect(element(by.model('data.nickname')).getAttribute('value')).toEqual(testUser1.nickname);
               expect(element(by.model('data.email')).getAttribute('value')).toEqual(testUser1.email);
               expect(element(by.model('data.firstname')).getAttribute('value')).toEqual(testUser1.firstname);
@@ -647,7 +648,7 @@ describe('User management', function() {
           it('should NOT reset all the values if the alert is dismissed', function() {
             if (browser.privateConfig.browserName !== 'safari') {
               element(by.id('btn-reset')).click();
-              browser.switchTo().alert().dismiss();
+              element.all((by.css('.cancel-button'))).get(1).click();
               expect(element(by.model('data.nickname')).getAttribute('value')).toEqual(testUser2.nickname);
               expect(element(by.model('data.email')).getAttribute('value')).toEqual(testUser2.email);
               expect(element(by.model('data.firstname')).getAttribute('value')).toEqual(testUser2.firstname);
@@ -724,6 +725,7 @@ describe('User management', function() {
 
         beforeEach(function() {
           element(by.id('btn-cancel')).click();
+          element.all((by.css('.confirm-button'))).get(0).click();
         });
 
         it('should display the user search page', function() {
@@ -738,7 +740,7 @@ describe('User management', function() {
           if (browser.privateConfig.browserName !== 'safari') {
             fillInUserEditForm(testUser2);
             element(by.id('btn-cancel')).click();
-            browser.switchTo().alert().accept();
+            element.all((by.css('.confirm-button'))).get(0).click();
           }
         });
 
@@ -805,6 +807,7 @@ describe('User management', function() {
 
     it('should not submit the form when cancelled', function() {
       element(by.id('btn-cancel')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
     });
 

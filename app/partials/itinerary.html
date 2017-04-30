@@ -131,12 +131,25 @@
           Select only one item for edit.</div>
       </div>
       <div style="margin-top: 20px;">
-        <button id="btn-download" ng-click="download(downloads)" type="button" class="btn btn-lg btn-success">GPX download</button>
+        <button id="btn-download"
+                type="button"
+                class="btn btn-lg btn-success"
+                mwl-confirm
+                title="GPX Download"
+                message="Download waypoints, routes and tracks?" 
+                on-confirm="download(downloads)"
+                confirm-button-type="success"
+                >GPX download</button>
         <button id="btn-edit-selected" ng-click="editSelected(downloads)"
                 class="btn btn-lg btn-info"
                 ng-show="data.shared_to_nickname === null">Edit selected</button>
-        <button id="btn-delete-gpx" ng-click="deleteUploads(downloads)"
-                type="button" class="btn btn-lg btn-danger"
+        <button id="btn-delete-gpx"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Delete the selected waypoints, routes and tracks?"
+                on-confirm="deleteUploads(downloads)"
                 ng-show="data.shared_to_nickname === null">Delete selected items</button>
       </div>
     </form>

@@ -61,6 +61,7 @@ describe('Itinerary Route Name', function() {
 
     it('should cancel the form when there are no changes', function() {
       element(by.id('btn-cancel')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -68,7 +69,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -76,13 +77,14 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/itinerary-route-name\?itineraryId=\d+&routeId=\d+/);
     });
 
     it('should not reset the form when there are no changes', function() {
       var before = element(by.id('input-name')).getAttribute('value');
       element(by.id('btn-reset')).click();
+      element.all((by.css('.cancel-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual(before);
     });
 
@@ -91,7 +93,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('test do reset');
       element(by.id('btn-reset')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual(before);
     });
 
@@ -99,7 +101,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('test do not reset');
       element(by.id('btn-reset')).click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('test do not reset');
     });
 

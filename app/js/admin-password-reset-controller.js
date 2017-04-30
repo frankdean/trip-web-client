@@ -24,11 +24,10 @@ angular.module('myApp.admin.password.reset.controller', [])
     ['$scope',
      '$location',
      '$routeParams',
-     'modalDialog',
      'UserService',
      'PasswordService',
      '$log',
-     function($scope, $location, $routeParams, modalDialog, UserService, PasswordService, $log) {
+     function($scope, $location, $routeParams, UserService, PasswordService, $log) {
        $scope.data = {};
        $scope.master = {};
        var id = $routeParams !== undefined ? decodeURIComponent($routeParams.id) : undefined;
@@ -76,9 +75,7 @@ angular.module('myApp.admin.password.reset.controller', [])
          }
        };
        $scope.cancelEdit = function(form) {
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $location.path('/users');
-           $location.search('');
-         }
+         $location.path('/users');
+         $location.search('');
        };
      }]);

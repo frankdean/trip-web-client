@@ -64,7 +64,7 @@ describe('Itinerary management', function() {
       // cleanup
       element(by.id('btn-edit')).click();
       element(by.id('btn-delete')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
     });
 
     it('should create a new itinerary if only the title field is entered', function() {
@@ -76,7 +76,7 @@ describe('Itinerary management', function() {
       // cleanup
       element(by.id('btn-edit')).click();
       element(by.id('btn-delete')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
     });
 
     it('should show an error when the title is blank', function() {
@@ -111,7 +111,7 @@ describe('Itinerary management', function() {
         }
         elemDescription.sendKeys('# Test Itinerary\r\r## Lorem ipsum\r');
         element(by.id('btn-reset')).click();
-        browser.switchTo().alert().accept();
+        element.all((by.css('.confirm-button'))).get(2).click();
         expect(elemTitle.getAttribute('value')).toEqual('');
         expect(elemStartDate.getAttribute('value')).toEqual('');
         expect(elemDescription.getAttribute('value')).toEqual('');
@@ -125,7 +125,7 @@ describe('Itinerary management', function() {
       // cleanup
       element(by.id('btn-edit')).click();
       element(by.id('btn-delete')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
     });
 
     it('should delete an itinerary when the delete button is clicked', function() {
@@ -134,7 +134,7 @@ describe('Itinerary management', function() {
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
       element(by.id('btn-edit')).click();
       elemDelete.click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itineraries/);
     });
 
@@ -274,7 +274,7 @@ describe('Itinerary management', function() {
                                  '## Lorem ipsum modified too',
                                  protractor.Key.ENTER);
         elemReset.click();
-        browser.switchTo().alert().accept();
+        element.all((by.css('.confirm-button'))).get(2).click();
         expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
         expect(elemTitle.getAttribute('value')).toEqual(titleBefore);
         expect(elemStartDate.getAttribute('value')).toEqual(startDateBefore);

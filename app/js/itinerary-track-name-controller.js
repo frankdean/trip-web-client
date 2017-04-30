@@ -27,14 +27,12 @@ angular.module('myApp.itinerary.track.name.controller', [])
      'ItineraryTrackNameService',
      'TrackColorService',
      '$log',
-     'modalDialog',
      function($scope,
               $routeParams,
               $location,
               ItineraryTrackNameService,
               TrackColorService,
-              $log,
-              modalDialog) {
+              $log) {
        $scope.data = {};
        $scope.master = {};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
@@ -93,17 +91,13 @@ angular.module('myApp.itinerary.track.name.controller', [])
          }
        };
        $scope.cancel = function(form) {
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $location.path('/itinerary');
-           $location.search({id: encodeURIComponent($scope.itineraryId)});
-         }
+         $location.path('/itinerary');
+         $location.search({id: encodeURIComponent($scope.itineraryId)});
        };
        $scope.reset = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (form && form.$dirty && modalDialog.confirm('Reset changes?')) {
-           form.$setPristine();
-           form.$setUntouched();
-           $scope.data = angular.copy($scope.master);
-         }
+         form.$setPristine();
+         form.$setUntouched();
+         $scope.data = angular.copy($scope.master);
        };
      }]);

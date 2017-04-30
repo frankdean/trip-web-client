@@ -109,7 +109,7 @@ describe('itinerary sharing', function() {
 
       it('should allow delete of multiple items', function() {
         element(by.id('btn-delete')).click();
-        browser.switchTo().alert().accept();
+        element.all((by.css('.confirm-button'))).get(0).click();
         expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
       });
 

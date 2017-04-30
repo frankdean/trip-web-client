@@ -87,7 +87,14 @@
       Select only one user.</div>
   </div>
   <div id="div-choice-buttons">
-    <button id="btn-delete" ng-click="delete(form)" class="btn btn-lg btn-danger"ng-show="users.payload.length > 0 && !state.edit">Delete</button>
+    <button id="btn-delete"
+            class="btn btn-lg btn-danger"
+            mwl-confirm
+            title="Confirm"
+            message="Delete the selected user?"
+            on-confirm="delete(form)"
+            ng-show="users.payload.length > 0 && !state.edit"
+            >Delete</button>
     <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-default"ng-show="users.payload.length > 0 && !state.edit">Edit</button>
     <button id="btn-edit-password" ng-click="editPassword(form)" class="btn btn-lg btn-info" ng-show="users.payload.length > 0 && !state.edit">Password reset</button>
     <button id="btn-new" ng-click="showNewUserForm()"
@@ -144,9 +151,27 @@
         <div id="error-lastname-required" class="alert alert-warning" role="alert" ng-show="form.lastname.$error.required">Enter the user's last name</div>
       </div>
       <div>
-        <button id="btn-cancel" type="button" ng-click="cancelEdit(form)" class="btn btn-lg btn-danger">Cancel</button>
+        <button id="btn-cancel"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Cancel?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="cancelEdit(form)"
+                >Cancel</button>
         <button id="btn-submit" type="submit" ng-click="saveUser(form)" class="btn btn-lg btn-success">Save</button>
-        <button id="btn-reset" ng-click="reset(form)" class="btn btn-lg btn-danger" ng-show="!state.new">Reset</button>
+        <button id="btn-reset"
+                class="btn btn-lg btn-danger"
+                ng-show="!state.new"
+                mwl-confirm
+                title="Reset"
+                message="Reset changes?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="reset(form)"
+                >Reset</button>
       </div>
     </form>
   </div>

@@ -369,7 +369,8 @@ describe('Track Sharing page', function() {
     if (browser.privateConfig.browserName !== 'safari') {
       element(by.model('selectAllCheckbox')).click();
       element(by.id('btn-delete')).click();
-      browser.switchTo().alert().accept();
+      element(by.css('.confirm-button')).click();
+      // element.all((by.css('.confirm-button'))).get(1).click();
       expect(sharesList.all(by.tagName('td')).first().getText()).toEqual('oswald5');
       // and just the one left
       expect(sharesList.count()).toBe(2);
@@ -384,7 +385,7 @@ describe('Track Sharing page', function() {
       // sharesList.all(by.model('share.selected')).first().click();
       element(by.model('selectAllCheckbox')).click();
       element(by.id('btn-delete')).click();
-      browser.switchTo().alert().accept();
+      element(by.css('.confirm-button')).click();
       expect(element(by.id('div-paging')).isDisplayed()).toBeFalsy();
     }
   });

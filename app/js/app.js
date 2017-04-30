@@ -33,6 +33,7 @@ angular.module('myApp', [
   'ngSanitize',
   'ngFileSaver',
   'ui.bootstrap',
+  'mwl.confirm',
   'bw.paging',
   'angular-jwt',
   'nemLogging',
@@ -193,8 +194,9 @@ angular.module('myApp', [
      }])
 
   .run(
-    ['$rootScope', 'Storage', 'jwtHelper',
-     function($rootScope, Storage, jwtHelper) {
+    ['$rootScope', 'Storage', 'jwtHelper', 'confirmationPopoverDefaults',
+     function($rootScope, Storage, jwtHelper, confirmationPopoverDefaults) {
+       confirmationPopoverDefaults.confirmButtonType = "danger";
        var jwtToken = Storage.getItem('id_token');
        if (jwtToken) {
          var token = jwtHelper.decodeToken(jwtToken);

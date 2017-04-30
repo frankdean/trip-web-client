@@ -26,7 +26,6 @@ angular.module('myApp.itinerary.edit.controller', [])
      '$log',
      '$location',
      '$window',
-     'modalDialog',
      'ItineraryService',
      'UtilsService',
      function ($scope,
@@ -34,7 +33,6 @@ angular.module('myApp.itinerary.edit.controller', [])
                $log,
                $location,
                $window,
-               modalDialog,
                ItineraryService,
                UtilsService) {
        $scope.data = {};
@@ -72,26 +70,22 @@ angular.module('myApp.itinerary.edit.controller', [])
            });
        }
        $scope.cancel = function(form) {
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           // It we're creating a new itinerary, return to the itineraries list page
-           if (!$scope.itineraryId) {
-             $location.path('/itineraries');
-             $location.search('');
-           } else {
-             $location.path('/itinerary');
-             $location.search({id: encodeURIComponent($scope.data.id)});
-           }
+         // It we're creating a new itinerary, return to the itineraries list page
+         if (!$scope.itineraryId) {
+           $location.path('/itineraries');
+           $location.search('');
+         } else {
+           $location.path('/itinerary');
+           $location.search({id: encodeURIComponent($scope.data.id)});
          }
        };
        $scope.reset = function(form) {
-         if (modalDialog.confirm('Reset form to original state, losing all your changes')) {
-           if (form) {
-             form.$setPristine();
-             form.$setUntouched();
-           }
-           $scope.data = angular.copy($scope.master);
-           $scope.formError = {editOnlyOne: false};
+         if (form) {
+           form.$setPristine();
+           form.$setUntouched();
          }
+         $scope.data = angular.copy($scope.master);
+         $scope.formError = {editOnlyOne: false};
        };
        $scope.saveItinerary = function(data) {
          $scope.ajaxRequestError = {error: false};
@@ -131,14 +125,12 @@ angular.module('myApp.itinerary.edit.controller', [])
        };
        $scope.delete = function(data) {
          $scope.formError = {editOnlyOne: false};
-         if (modalDialog.confirm('Delete this itinerary and ALL uploaded GPX items?') === true) {
-           ItineraryService.delete({}, {id: data.id}).$promise.then(function() {
-             // success;
-             $location.path('/itineraries');
-             $location.search('');
-           }).catch(function(response) {
-             $log.warn('Delete failed');
-           });
-         }
+         ItineraryService.delete({}, {id: data.id}).$promise.then(function() {
+           // success;
+           $location.path('/itineraries');
+           $location.search('');
+         }).catch(function(response) {
+           $log.warn('Delete failed');
+         });
        };
      }]);

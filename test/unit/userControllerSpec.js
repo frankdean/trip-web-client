@@ -22,7 +22,7 @@ describe('UserCtrl', function() {
   beforeEach(module('myApp'));
 
   var scope, $httpBackend, createController, userListRequestHandler, userServiceRequestHandler,
-      $location, userService, passwordResetService, confirmDialog, testUser, testUser2,
+      $location, userService, passwordResetService, testUser, testUser2,
       userList, passwordResetHandler;
   var testUserId = 42;
   var testUserId2 = 43;
@@ -48,13 +48,11 @@ describe('UserCtrl', function() {
                              $controller,
                              _$location_,
                              UserService,
-                             PasswordResetService,
-                             modalDialog) {
+                             PasswordResetService) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     userService = UserService;
     passwordResetService = PasswordResetService;
-    confirmDialog = modalDialog;
     scope = $rootScope;
     createController = function() {
       return $controller('UserCtrl', {$scope: scope});
@@ -295,7 +293,6 @@ describe('UserCtrl', function() {
         scope.form.id = undefined;
         scope.users = userList;
         spyOn(userService, 'delete').and.callThrough();
-        spyOn(confirmDialog, 'confirm').and.returnValue(true);
         createController();
         scope.delete(scope.form);
         $httpBackend.flush();
@@ -316,7 +313,6 @@ describe('UserCtrl', function() {
 
         it('should not delete multiple users', function() {
           spyOn(userService, 'delete').and.callThrough();
-          spyOn(confirmDialog, 'confirm').and.returnValue(true);
           createController();
           scope.delete(scope.form);
           expect(userService.delete).not.toHaveBeenCalled();
@@ -324,7 +320,6 @@ describe('UserCtrl', function() {
 
         it('should not delete multiple users', function() {
           spyOn(userService, 'delete').and.callThrough();
-          spyOn(confirmDialog, 'confirm').and.returnValue(true);
           createController();
           scope.delete(scope.form);
           expect(userService.delete).not.toHaveBeenCalled();
@@ -348,21 +343,6 @@ describe('UserCtrl', function() {
           expect($location.search).not.toHaveBeenCalled();
         });
 
-      });
-
-    });
-
-    describe('Cancelled delete', function() {
-
-      it('should NOT delete an existing user when form submition is cancelled', function() {
-        var testUpdateUser = expectedUser;
-        testUpdateUser.id = testUserId;
-        scope.form.id = testUserId;
-        spyOn(userService, 'delete').and.callThrough();
-        spyOn(confirmDialog, 'confirm').and.returnValue(false);
-        createController();
-        scope.delete(scope.form);
-        expect(userService.delete).not.toHaveBeenCalled();
       });
 
     });

@@ -26,7 +26,6 @@ angular.module('myApp.itinerary.controller', [])
      '$log',
      '$location',
      '$window',
-     'modalDialog',
      'ItineraryService',
      'ItineraryWaypointService',
      'ItineraryRouteService',
@@ -40,7 +39,6 @@ angular.module('myApp.itinerary.controller', [])
                $log,
                $location,
                $window,
-               modalDialog,
                ItineraryService,
                ItineraryWaypointService,
                ItineraryRouteService,
@@ -286,22 +284,20 @@ angular.module('myApp.itinerary.controller', [])
              tracks.push(v.id);
            }
          });
-         if (modalDialog.confirm('Download waypoints, routes and tracks?') === true) {
-           InitGpxDownload.downloadItineraryGpx(
-             { id: $scope.itineraryId,
-               waypoints: waypoints,
-               routes: routes,
-               tracks: tracks
-             }).$promise.then(function(response) {
-               SaveAs(response.data, 'trip.gpx');
-             }).catch(function(response) {
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
-               $log.warn('GPX itinerary download failed', response.status);
-             });
-         }
+         InitGpxDownload.downloadItineraryGpx(
+           { id: $scope.itineraryId,
+             waypoints: waypoints,
+             routes: routes,
+             tracks: tracks
+           }).$promise.then(function(response) {
+             SaveAs(response.data, 'trip.gpx');
+           }).catch(function(response) {
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+             $log.warn('GPX itinerary download failed', response.status);
+           });
        };
        $scope.deleteUploads = function(form) {
          $scope.ajaxRequestError = {error: false};
@@ -322,28 +318,26 @@ angular.module('myApp.itinerary.controller', [])
              tracks.push(v.id);
            }
          });
-         if (modalDialog.confirm('Delete the selected waypoints, routes and tracks?') === true) {
-           InitGpxDownload.deleteItineraryGpx(
-             { id: $scope.itineraryId,
-               waypoints: waypoints,
-               routes: routes,
-               tracks: tracks
-             }).$promise.then(function(response) {
-               $scope.selection.allGeoItemsSelected = false;
-               $scope.selectAllGeoItems();
-               $scope.updateWaypoints();
-               $scope.updateRouteNames();
-               $scope.updateTrackNames();
-             }).catch(function(response) {
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
-               $log.warn('GPX itinerary delete failed', response.status);
-               $scope.updateWaypoints();
-               $scope.updateRouteNames();
-               $scope.updateTrackNames();
-             });
-         }
+         InitGpxDownload.deleteItineraryGpx(
+           { id: $scope.itineraryId,
+             waypoints: waypoints,
+             routes: routes,
+             tracks: tracks
+           }).$promise.then(function(response) {
+             $scope.selection.allGeoItemsSelected = false;
+             $scope.selectAllGeoItems();
+             $scope.updateWaypoints();
+             $scope.updateRouteNames();
+             $scope.updateTrackNames();
+           }).catch(function(response) {
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+             $log.warn('GPX itinerary delete failed', response.status);
+             $scope.updateWaypoints();
+             $scope.updateRouteNames();
+             $scope.updateTrackNames();
+           });
        };
      }]);

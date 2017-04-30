@@ -31,7 +31,7 @@ describe('ItineraryCtrl', function() {
                         };
 
   describe('view', function() {
-    var scope, form, $location, $httpBackend, confirmDialog, requestHandler,
+    var scope, form, $location, $httpBackend, requestHandler,
         getWaypointNamesRequestHandler, getRouteNamesRequestHandler, getTrackNamesRequestHandler,
         deleteRequestHandler, createController, gpxDownloadService, itineraryService;
     var routeParams = {id: '42'};
@@ -58,7 +58,6 @@ describe('ItineraryCtrl', function() {
     beforeEach(inject(function(_$httpBackend_,
                                $rootScope,
                                $controller,
-                               modalDialog,
                                _$location_,
                                ItineraryService,
                                ItineraryRouteService,
@@ -71,7 +70,6 @@ describe('ItineraryCtrl', function() {
       getRouteNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/routes\/names$/).respond(expectedRouteNames);
       getTrackNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/tracks\/names$/).respond(expectedTrackNames);
       deleteRequestHandler = $httpBackend.when('PUT', /\/download\/itinerary\/\d+\/delete-gpx$/).respond(null);
-      confirmDialog = modalDialog;
       $location = _$location_;
       gpxDownloadService = InitGpxDownload;
       itineraryService = ItineraryService;
@@ -105,7 +103,6 @@ describe('ItineraryCtrl', function() {
     });
 
     it('should deleting an itinerary', function() {
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       spyOn(gpxDownloadService, 'deleteItineraryGpx').and.callThrough();
       createController();
       $httpBackend.flush();
@@ -120,7 +117,6 @@ describe('ItineraryCtrl', function() {
     });
 
     it('should show an error when deleting an itinerary fails', function() {
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       createController();
       scope.data = {};
       scope.waypoints = [];

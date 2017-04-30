@@ -166,6 +166,7 @@ describe('Itinerary Waypoints', function() {
 
     it('should not ask for confirmation before cancelling an unmodified form', function() {
       btnCancel.click();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -173,7 +174,7 @@ describe('Itinerary Waypoints', function() {
       eleName.clear();
       eleName.sendKeys('test');
       btnCancel.click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -181,7 +182,7 @@ describe('Itinerary Waypoints', function() {
       eleName.clear();
       eleName.sendKeys('test');
       btnCancel.click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
     });
 
@@ -195,7 +196,7 @@ describe('Itinerary Waypoints', function() {
       eleName.clear();
       eleName.sendKeys('test');
       btnReset.click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual(nameBefore);
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
     });
@@ -204,7 +205,7 @@ describe('Itinerary Waypoints', function() {
       eleName.clear();
       eleName.sendKeys('test');
       btnReset.click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual('test');
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
     });
@@ -294,7 +295,7 @@ describe('Itinerary Waypoints', function() {
     it('should delete waypoints that were created', function() {
       element(by.id('input-select-all-waypoints')).click();
       element(by.id('btn-delete-gpx')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(1).click();
     });
 
   });

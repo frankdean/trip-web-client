@@ -25,9 +25,8 @@ angular.module('myApp.itinerary.sharing.controller', [])
      '$routeParams',
      '$log',
      '$location',
-     'modalDialog',
      'ItinerarySharingService',
-     function($scope, $routeParams, $log, $location, modalDialog, ItinerarySharingService) {
+     function($scope, $routeParams, $log, $location, ItinerarySharingService) {
        $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
        $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
        $scope.data = {};
@@ -84,15 +83,13 @@ angular.module('myApp.itinerary.sharing.controller', [])
        };
        $scope.cancelEdit = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           form.$setPristine();
-           form.$setUntouched();
-           if ($scope.data.state.new && ($scope.shares === undefined || $scope.shares.count === '0')) {
-             // There is nothing to display, so close the form.
-             $scope.cancel();
-           } else {
-             $scope.clearForm();
-           }
+         form.$setPristine();
+         form.$setUntouched();
+         if ($scope.data.state.new && ($scope.shares === undefined || $scope.shares.count === '0')) {
+           // There is nothing to display, so close the form.
+           $scope.cancel();
+         } else {
+           $scope.clearForm();
          }
        };
        $scope.reset = function(form) {
@@ -184,16 +181,14 @@ angular.module('myApp.itinerary.sharing.controller', [])
          var dirty = false;
          $scope.ajaxRequestError = {error: false};
          $scope.formError = {editOnlyOne: false};
-         if (modalDialog.confirm('Delete the selected itinerary shares?') === true) {
-           $scope.shares.payload.forEach(function(item, index, array) {
-             if (item.selected) {
-               item.deleted = true;
-               dirty = true;
-             }
-           });
-           if (dirty) {
-             $scope.saveShares('delete');
+         $scope.shares.payload.forEach(function(item, index, array) {
+           if (item.selected) {
+             item.deleted = true;
+             dirty = true;
            }
+         });
+         if (dirty) {
+           $scope.saveShares('delete');
          }
        };
        $scope.activate = function() {

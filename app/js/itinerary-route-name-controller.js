@@ -27,8 +27,7 @@ angular.module('myApp.itinerary.route.name.controller', [])
      'ItineraryRouteNameService',
      'ItineraryRouteService',
      '$log',
-     'modalDialog',
-     function($scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, $log, modalDialog) {
+     function($scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, $log) {
        $scope.data = {};
        $scope.data.reverse = true;
        $scope.master = {};
@@ -113,17 +112,14 @@ angular.module('myApp.itinerary.route.name.controller', [])
          }
        };
        $scope.cancel = function(form) {
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $location.path('/itinerary');
-           $location.search({id: encodeURIComponent($scope.itineraryId)});
-         }
+         $scope.ajaxRequestError = {error: false};
+         $location.path('/itinerary');
+         $location.search({id: encodeURIComponent($scope.itineraryId)});
        };
        $scope.reset = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (form && form.$dirty && modalDialog.confirm('Reset changes?')) {
-           form.$setPristine();
-           form.$setUntouched();
-           $scope.data = angular.copy($scope.master);
-         }
+         form.$setPristine();
+         form.$setUntouched();
+         $scope.data = angular.copy($scope.master);
        };
      }]);

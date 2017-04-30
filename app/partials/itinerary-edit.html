@@ -38,9 +38,35 @@
       </div>
       <div id="div-form-buttons" style="margin-top: 20px;">
         <button id="btn-save" ng-click="saveItinerary(data)" class="btn btn-lg btn-success">Save</button>
-        <button id="btn-delete" ng-click="delete(data)" type="button" class="btn btn-lg btn-danger" ng-show="data.id">Delete</button>
-        <button id="btn-cancel" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
-        <button id="btn-reset" ng-click="reset(form)" type="button" class="btn btn-lg btn-danger">Reset</button>
+        <button id="btn-delete"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Delete this itinerary and ALL uploaded GPX items?"
+                on-confirm="delete(data)"
+                ng-show="data.id"
+                >Delete</button>
+        <button id="btn-cancel"
+                class="btn btn-lg btn-danger"
+                type="button"
+                mwl-confirm
+                title="Confirm"
+                message="Cancel"
+                confirm-button-text="Yes"
+                cancel-button-text="No"
+                on-confirm="cancel(form)"
+                >Cancel</button>
+        <button id="btn-reset"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Reset form to original state, losing all your changes"
+                confirm-button-text="Yes"
+                cancel-button-text="No"
+                on-confirm="reset(form)"
+                >Reset</button>
       </div>
     </form>
   </div>

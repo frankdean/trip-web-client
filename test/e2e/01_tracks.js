@@ -394,7 +394,7 @@ describe('TRIP app', function() {
         // We expect this to select 'test2' from the list of nicknames
         nicknameSelect.sendKeys('t\t');
         element(by.id('btn-download')).click();
-        browser.switchTo().alert().accept();
+        element(by.css('.confirm-button')).click();
         browser.driver.wait(function() {
           var retval = fs.existsSync(filename);
           return retval;
@@ -435,7 +435,7 @@ describe('TRIP app', function() {
           elemDateTo.sendKeys('12120020151059');
         }
         element(by.id('btn-download')).click();
-        browser.switchTo().alert().accept();
+        element(by.css('.confirm-button')).click();
         browser.driver.wait(function() {
           var retval = fs.existsSync(filename);
           return retval;

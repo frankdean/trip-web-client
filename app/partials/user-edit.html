@@ -46,9 +46,31 @@
         <input id="input-admin" type="checkbox" ng-model="data.admin" />
       </div>
       <div>
-        <button id="btn-cancel" type="button" ng-click="cancelEdit(form)" class="btn btn-lg btn-danger">Cancel</button>
-        <button id="btn-submit" type="submit" ng-click="saveUser(form)" class="btn btn-lg btn-success">Save</button>
-        <button id="btn-reset" ng-click="reset(form)" class="btn btn-lg btn-danger" ng-show="!state.new">Reset</button>
+        <button id="btn-cancel"
+                type="button"
+                mwl-confirm
+                title="Confirm"
+                message="Cancel?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="cancelEdit(form)"
+                class="btn btn-lg btn-danger"
+                >Cancel</button>
+        <button id="btn-submit"
+                type="submit"
+                class="btn btn-lg btn-success"
+                ng-click="saveUser(form)"
+                >Save</button>
+        <button id="btn-reset"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Reset"
+                message="Reset changes?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="reset(form)"
+                ng-show="!state.new"
+                >Reset</button>
       </div>
     </form>
   </div>

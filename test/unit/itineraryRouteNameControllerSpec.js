@@ -54,7 +54,6 @@ describe('ItineraryRouteNameCtrl', function() {
       },
       itineraryRouteService,
       itineraryRouteNameService,
-      confirmDialog,
       expectedRoute,
       itineraryRouteParams = {itineraryId: '99', routeId: testRoute.id},
       mockValidForm = {$valid: true,
@@ -66,13 +65,12 @@ describe('ItineraryRouteNameCtrl', function() {
                          $setUntouched: function() {}
                         };
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, _$location_, ItineraryRouteService, ItineraryRouteNameService, modalDialog) {
+  beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, _$location_, ItineraryRouteService, ItineraryRouteNameService) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     scope = $rootScope;
     itineraryRouteService = ItineraryRouteService;
     itineraryRouteNameService = ItineraryRouteNameService;
-    confirmDialog = modalDialog;
     getRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/route\/name\/\d+$/).respond(testRoute);
     getRouteRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/route\/\d+$/).respond(testRoute2);
     saveRequestHandler = $httpBackend.when('POST', /itinerary\/\d+\/route\/name\/\d+$/,
@@ -101,7 +99,6 @@ describe('ItineraryRouteNameCtrl', function() {
   }));
 
   it('should redirect after save to the login page if the user is not authorised', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     saveRequestHandler = $httpBackend.when('POST').respond(401, '');
     createController(itineraryRouteParams);
     $httpBackend.flush();
@@ -113,13 +110,11 @@ describe('ItineraryRouteNameCtrl', function() {
     expect($location.path.calls.argsFor(0)).toEqual(['/login']);
     expect($location.search.calls.argsFor(0)).toEqual([]);
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
-    expect(confirmDialog.confirm).not.toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
   });
 
   it('should set an error flag when the backend call fails to save the name change', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     saveRequestHandler = $httpBackend.when('POST').respond(400, '');
     createController(itineraryRouteParams);
     $httpBackend.flush();
@@ -131,7 +126,6 @@ describe('ItineraryRouteNameCtrl', function() {
     expect($location.path).not.toHaveBeenCalled();
     expect($location.search).not.toHaveBeenCalled();
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
-    expect(confirmDialog.confirm).not.toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
   });
@@ -165,14 +159,12 @@ describe('ItineraryRouteNameCtrl', function() {
   });
 
   it('should save the specified route name', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     createController(itineraryRouteParams);
     $httpBackend.flush();
     expectedRoute = '{"itineraryId":"99","routeId":"42","name":"route name"}';
     scope.save(mockValidForm);
     $httpBackend.flush();
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
-    expect(confirmDialog.confirm).not.toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
   });
@@ -206,7 +198,6 @@ describe('ItineraryRouteNameCtrl', function() {
   });
 
   it('should show an error when saving the specified route name fails', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     createController(itineraryRouteParams);
     $httpBackend.flush();
     scope.save(mockValidForm);
@@ -229,62 +220,32 @@ describe('ItineraryRouteNameCtrl', function() {
   });
 
   it('should not save an invalid form', function() {
-    spyOn(confirmDialog, 'confirm').and.stub();
     createController(itineraryRouteParams);
     $httpBackend.flush();
     scope.save(mockInvalidForm);
     expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect(confirmDialog.confirm).not.toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
   });
 
   it('should cancel the form after confirmation', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     createController(itineraryRouteParams);
     $httpBackend.flush();
     mockValidForm.$dirty = true;
     scope.cancel(mockValidForm);
     expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect(confirmDialog.confirm).toHaveBeenCalled();
     expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
     expect($location.search.calls.argsFor(0)).toEqual([{id: '99'}]);
   });
 
-  it('should not cancel the form after confirmation is declined', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(false);
-    createController(itineraryRouteParams);
-    $httpBackend.flush();
-    mockValidForm.$dirty = true;
-    scope.cancel(mockValidForm);
-    expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect(confirmDialog.confirm).toHaveBeenCalled();
-    expect($location.path).not.toHaveBeenCalled();
-    expect($location.search).not.toHaveBeenCalled();
-  });
-
   it('should reset the form after cancellation', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(true);
     createController(itineraryRouteParams);
     $httpBackend.flush();
     mockValidForm.$dirty = true;
     scope.reset(mockValidForm);
     expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect(confirmDialog.confirm).toHaveBeenCalled();
     expect(mockValidForm.$setPristine).toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).toHaveBeenCalled();
-  });
-
-  it('should not reset the form after cancellation is declined', function() {
-    spyOn(confirmDialog, 'confirm').and.returnValue(false);
-    createController(itineraryRouteParams);
-    $httpBackend.flush();
-    mockValidForm.$dirty = true;
-    scope.reset(mockValidForm);
-    expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect(confirmDialog.confirm).toHaveBeenCalled();
-    expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
-    expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
   });
 
 });

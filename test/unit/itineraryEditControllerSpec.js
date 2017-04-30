@@ -104,9 +104,9 @@ describe('ItineraryEditCtrl', function() {
   });
 
   describe('edit', function() {
-    var scope, form, $location, $httpBackend, confirmDialog, requestHandler,
+    var scope, form, $location, $httpBackend, requestHandler,
         saveRequestHandler, createController, itineraryService,
-        itineraryWaypointService, itineraryRouteService, itineraryTrackService, modalDialog;
+        itineraryWaypointService, itineraryRouteService, itineraryTrackService;
     var routeParams = {id: '42'};
     var expected = {id: routeParams.id,
                     start: new Date('2016-06-05T00:00:00Z'),
@@ -124,7 +124,6 @@ describe('ItineraryEditCtrl', function() {
     beforeEach(inject(function(_$httpBackend_,
                                $rootScope,
                                $controller,
-                               modalDialog,
                                _$location_,
                                ItineraryService,
                                ItineraryWaypointService,
@@ -135,7 +134,6 @@ describe('ItineraryEditCtrl', function() {
       requestHandler = $httpBackend.when('GET', /\/itinerary\/\d+$/).respond(expected);
       $httpBackend.when('POST', /\/download\/itinerary\/\d+\/gpx(\?.*)?/).respond(null);
       saveRequestHandler = $httpBackend.when('POST', /\/itinerary\/\d+$/).respond(null);
-      confirmDialog = modalDialog;
       $location = _$location_;
       itineraryService = ItineraryService;
       createController = function() {
@@ -168,7 +166,6 @@ describe('ItineraryEditCtrl', function() {
 
     it('should update an itinerary when the form is submitted', function() {
       spyOn(itineraryService, 'save').and.callThrough();
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       spyOn(mockValidForm, '$setPristine').and.callThrough();
       spyOn(mockValidForm, '$setUntouched').and.callThrough();
       createController();
@@ -247,29 +244,13 @@ describe('ItineraryEditCtrl', function() {
     it('should reset the form after confirmation', function() {
       scope.data = {};
       scope.master = expected;
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       spyOn(mockValidForm, '$setPristine').and.callThrough();
       spyOn(mockValidForm, '$setUntouched').and.callThrough();
       createController();
       scope.reset(mockValidForm);
-      expect(confirmDialog.confirm).toHaveBeenCalled();
       expect(mockValidForm.$setPristine).toHaveBeenCalled();
       expect(mockValidForm.$setUntouched).toHaveBeenCalled();
       expect(scope.data).toEqual(scope.master);
-    });
-
-    it('should not reset the form if confirmation is cancelled', function() {
-      scope.data = {};
-      scope.master = expected;
-      spyOn(confirmDialog, 'confirm').and.returnValue(false);
-      spyOn(mockValidForm, '$setPristine').and.callThrough();
-      spyOn(mockValidForm, '$setUntouched').and.callThrough();
-      createController();
-      scope.reset(mockValidForm);
-      expect(confirmDialog.confirm).toHaveBeenCalled();
-      expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
-      expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
-      expect(scope.data).toEqual({});
     });
 
     it('should show an error when there is a backend failure', function() {
@@ -284,7 +265,6 @@ describe('ItineraryEditCtrl', function() {
       createController();
       scope.itineraryId = 42;
       $httpBackend.flush();
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       scope.waypointSelected = true;
       scope.routeNames = [{id: 1, name: 'test1', selected: true}];
       scope.download(mockValidForm);
@@ -294,7 +274,7 @@ describe('ItineraryEditCtrl', function() {
   });
 
   describe('delete', function() {
-    var scope, form, $location, $httpBackend, confirmDialog, requestHandler,
+    var scope, form, $location, $httpBackend, requestHandler,
         deleteRequestHandler, createController, itineraryService;
     var routeParams = {id: '42'};
     var expectedWaypoints = [{id: 234, name: 'wp234', symbol: 'Flag, Blue', comment: 'test234'}];
@@ -320,7 +300,6 @@ describe('ItineraryEditCtrl', function() {
     beforeEach(inject(function(_$httpBackend_,
                                $rootScope,
                                $controller,
-                               modalDialog,
                                _$location_,
                                ItineraryService,
                                ItineraryRouteService,
@@ -330,7 +309,6 @@ describe('ItineraryEditCtrl', function() {
       requestHandler = $httpBackend.when('GET', itineraryRegex).respond(expected);
       deleteRequestHandler =
         $httpBackend.when('DELETE', itineraryRegex).respond(null);
-      confirmDialog = modalDialog;
       $location = _$location_;
       itineraryService = ItineraryService;
       createController = function() {
@@ -341,14 +319,12 @@ describe('ItineraryEditCtrl', function() {
     }));
 
     it('should delete the itinerary after confirmation', function() {
-      spyOn(confirmDialog, 'confirm').and.returnValue(true);
       spyOn($location, 'path').and.stub();
       spyOn($location, 'search').and.stub();
       createController();
       $httpBackend.flush();
       scope.delete(testItinerary);
       $httpBackend.flush();
-      expect(confirmDialog.confirm).toHaveBeenCalled();
       expect($location.path).toHaveBeenCalled();
       expect($location.path.calls.argsFor(0)).toEqual(['/itineraries']);
       expect($location.search).toHaveBeenCalled();

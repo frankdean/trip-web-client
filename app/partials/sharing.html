@@ -40,7 +40,13 @@
       <div id="div-buttons">
         <button id="btn-activate" ng-click="activate()" class="btn btn-lg btn-success">Activate</button>
         <button id="btn-deactivate" ng-click="deactivate()" class="btn btn-lg btn-primary">Deactivate</button>
-        <button id="btn-delete" ng-click="delete()" class="btn btn-lg btn-danger">Delete selected</button>
+        <button id="btn-delete"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Delete the selected location shares?"
+                on-confirm="delete()"
+                >Delete selected</button>
         <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-info">Edit selected</button>
         <button id="btn-new" ng-click="new(form)" class="btn btn-lg btn-warning">New</button>
       </div>

@@ -24,10 +24,9 @@ angular.module('myApp.user.edit.controller', [])
     ['$scope',
      '$location',
      '$routeParams',
-     'modalDialog',
      'UserService',
      '$log',
-     function($scope, $location, $routeParams, modalDialog, UserService, $log) {
+     function($scope, $location, $routeParams, UserService, $log) {
        $scope.data = {};
        $scope.master = {};
        var id = $routeParams !== undefined ? decodeURIComponent($routeParams.id) : undefined;
@@ -82,17 +81,13 @@ angular.module('myApp.user.edit.controller', [])
        };
        $scope.cancelEdit = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $location.path('/users');
-           $location.search('');
-         }
+         $location.path('/users');
+         $location.search('');
        };
        $scope.reset = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (form && form.$dirty && modalDialog.confirm('Reset changes?')) {
-           form.$setPristine();
-           form.$setUntouched();
-           $scope.data = angular.copy($scope.master);
-         }
+         form.$setPristine();
+         form.$setUntouched();
+         $scope.data = angular.copy($scope.master);
        };
      }]);

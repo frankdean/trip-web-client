@@ -20,6 +20,7 @@ module.exports = function(config){
       'app/bower_components/angular-animate/angular-animate.js',
       'app/bower_components/angular-sanitize/angular-sanitize.min.js',
       'app/bower_components/angular-bootstrap/ui-bootstrap.min.js',
+      'app/bower_components/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
       'app/bower_components/lodash/dist/lodash.min.js',
       'app/bower_components/socket.io-client/dist/socket.io.min.js',
       'app/bower_components/angular-socket-io/socket.js',

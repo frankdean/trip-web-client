@@ -26,9 +26,27 @@
         </div>
       </div>
       <div id="wpt-buttons">
-        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success" ng-show="!ajaxRequestError">Save</button>
-        <button id="btn-cancel" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Cancel</button>
-        <button id="btn-reset" ng-click="reset(form)" type="button" class="btn btn-lg btn-danger">Reset</button>
+        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success" ng-show="!ajaxRequestError.error">Save</button>
+        <button id="btn-cancel"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Cancel?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="cancel(form)"
+                >Cancel</button>
+        <button id="btn-reset"
+                type="button"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Reset"
+                message="Reset changes?"
+                confirm-text="Yes"
+                cancel-text="No"
+                on-confirm="reset(form)"
+                >Reset</button>
       </div>
     </form>
   </div>

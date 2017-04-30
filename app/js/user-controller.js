@@ -24,10 +24,9 @@ angular.module('myApp.user.controller', [])
     ['$scope',
      '$log',
      '$location',
-     'modalDialog',
      'UserService',
      'PasswordResetService',
-     function($scope, $log, $location, modalDialog, UserService, PasswordResetService) {
+     function($scope, $log, $location, UserService, PasswordResetService) {
        $scope.data = {};
        $scope.master = {};
        $scope.search = {};
@@ -170,7 +169,7 @@ angular.module('myApp.user.controller', [])
        $scope.delete = function(form) {
          $scope.ajaxRequestError = {error: false};
          var selectedItem = getSelectedUser(form);
-         if (selectedItem && modalDialog.confirm('Delete the selected user?')) {
+         if (selectedItem) {
            UserService.delete({}, {id: selectedItem.id}).$promise.then(function() {
              $scope.listUsers();
            }).catch(function(response) {
@@ -201,22 +200,18 @@ angular.module('myApp.user.controller', [])
        $scope.cancelEdit = function(form) {
          $scope.ajaxRequestError = {error: false};
          $scope.formError = {editOnlyOne: false};
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $scope.state.edit = false;
-           $scope.clearForm();
-           if (form) {
-             form.$setPristine();
-             form.$setUntouched();
-           }
+         $scope.state.edit = false;
+         $scope.clearForm();
+         if (form) {
+           form.$setPristine();
+           form.$setUntouched();
          }
        };
        $scope.reset = function(form) {
          $scope.ajaxRequestError = {error: false};
          $scope.formError = {editOnlyOne: false};
-         if (form && form.$dirty && modalDialog.confirm('Reset changes?')) {
-           form.$setPristine();
-           form.$setUntouched();
-           $scope.data = angular.copy($scope.master);
-         }
+         form.$setPristine();
+         form.$setUntouched();
+         $scope.data = angular.copy($scope.master);
        };
      }]);

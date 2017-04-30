@@ -29,10 +29,9 @@ angular.module('myApp.itinerary.wpt.controller', [])
      'WaypointSymbolService',
      'GeorefFormatService',
      'ItineraryWaypointService',
-     'modalDialog',
      function ($scope, $routeParams, $location, $log, UserPreferencesService,
                WaypointSymbolService, GeorefFormatService,
-               itineraryWaypointService, modalDialog) {
+               itineraryWaypointService) {
        $scope.data = {};
        $scope.master = {};
        $scope.coordFormat = UserPreferencesService.getCoordFormat();
@@ -113,18 +112,14 @@ angular.module('myApp.itinerary.wpt.controller', [])
          }
        };
        $scope.cancel = function(form) {
-         if (!form.$dirty || modalDialog.confirm('Cancel?') === true) {
-           $location.path('/itinerary');
-           $location.search({id: encodeURIComponent($scope.itineraryId)});
-         }
+         $location.path('/itinerary');
+         $location.search({id: encodeURIComponent($scope.itineraryId)});
        };
        $scope.reset = function(form) {
          $scope.ajaxRequestError = {error: false};
-         if (form && form.$dirty && modalDialog.confirm('Reset changes?')) {
-           form.$setPristine();
-           form.$setUntouched();
-           $scope.data = angular.copy($scope.master);
-         }
+         form.$setPristine();
+         form.$setUntouched();
+         $scope.data = angular.copy($scope.master);
        };
        $scope.$on('TL_COORD_FORMAT_CHANGED', function(e, data) {
          if (data) {

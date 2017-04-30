@@ -21,8 +21,7 @@ describe('UserEditCtrl', function() {
 
   beforeEach(module('myApp'));
 
-  var $httpBackend, $location, userService, scope, createController,
-  confirmDialog;
+  var $httpBackend, $location, userService, scope, createController;
   var mockValidForm = {$valid: true,
                        $setPristine: function() {},
                        $setUntouched: function() {}
@@ -45,13 +44,11 @@ describe('UserEditCtrl', function() {
                              $rootScope,
                              $controller,
                              _$location_,
-                             UserService,
-                             modalDialog) {
+                             UserService) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     userService = UserService;
     scope = $rootScope;
-    confirmDialog = modalDialog;
     createController = function() {
       return $controller('UserEditCtrl', {$scope: scope, $location: $location, $routeParams: routeParams});
     };
@@ -120,67 +117,6 @@ describe('UserEditCtrl', function() {
         updateRequestHandler.respond(500, '');
         $httpBackend.flush();
         expect(scope.ajaxRequestError.error).toBeTruthy();
-      });
-
-    });
-
-    describe('Cancel save user', function() {
-
-      it('should cancel without confirmation if the form is not dirty', function() {
-        spyOn(confirmDialog, 'confirm').and.stub();
-        spyOn($location, 'path').and.stub();
-        spyOn($location, 'search').and.stub();
-        mockValidForm.$dirty = false;
-        createController();
-        $httpBackend.flush();
-        scope.cancelEdit(mockValidForm);
-        expect(confirmDialog.confirm).not.toHaveBeenCalled();
-        expect($location.path).toHaveBeenCalled();
-        expect($location.path.calls.argsFor(0)).toEqual(['/users']);
-        expect($location.search).toHaveBeenCalled();
-        expect($location.search.calls.argsFor(0)).toEqual(['']);
-      });
-
-      it('should confirm before cancelling if the form is dirty', function() {
-        spyOn(confirmDialog, 'confirm').and.returnValue(true);
-        spyOn($location, 'path').and.stub();
-        spyOn($location, 'search').and.stub();
-        mockValidForm.$dirty = true;
-        createController();
-        $httpBackend.flush();
-        scope.cancelEdit(mockValidForm);
-        expect(confirmDialog.confirm).toHaveBeenCalled();
-        expect($location.path).toHaveBeenCalled();
-        expect($location.path.calls.argsFor(0)).toEqual(['/users']);
-        expect($location.search).toHaveBeenCalled();
-        expect($location.search.calls.argsFor(0)).toEqual(['']);
-      });
-
-    });
-
-    describe('Reset update user', function() {
-
-      it('should require confirmation if the form is dirty', function() {
-        spyOn(confirmDialog, 'confirm').and.returnValue(true);
-        createController();
-        $httpBackend.flush();
-        expect(scope.data).toEqual(testUser);
-        scope.data = {};
-        mockValidForm.$dirty = true;
-        scope.reset(mockValidForm);
-        expect(confirmDialog.confirm).toHaveBeenCalled();
-        expect(scope.data).toEqual(testUser);
-      });
-
-      it('should do nothing if the form is not dirty', function() {
-        spyOn(confirmDialog, 'confirm').and.stub();
-        createController();
-        $httpBackend.flush();
-        expect(scope.data).toEqual(testUser);
-        mockValidForm.$dirty = false;
-        scope.reset(mockValidForm);
-        expect(confirmDialog.confirm).not.toHaveBeenCalled();
-        expect(scope.data).toEqual(testUser);
       });
 
     });

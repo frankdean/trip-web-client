@@ -504,14 +504,4 @@ angular.module('myApp.utils.factory', [])
          convertMapAttributesToHtml: convertMapAttributesToHtml,
          createMapLayers: createMapLayers
        };
-     }])
-
-  .factory(
-    'modalDialog',
-    ['$window', function($window) {
-      return {
-        confirm: function(message) {
-          return $window.confirm(message);
-        }
-      };
-    }]);
+     }]);

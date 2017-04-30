@@ -53,7 +53,6 @@ describe('SharesCtrl', function() {
   beforeEach(inject(function(_$httpBackend_,
                              $rootScope,
                              $controller,
-                             modalDialog,
                              SharesService,
                              _$location_) {
     $httpBackend = _$httpBackend_;
@@ -74,7 +73,6 @@ describe('SharesCtrl', function() {
       item.selected = false;
       item.deleted = false;
     });
-    spyOn(modalDialog, 'confirm').and.returnValue(true);
   }));
 
   it('should fetch a list of shares', function() {

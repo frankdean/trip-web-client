@@ -75,6 +75,7 @@ describe('Itinerary Track Name', function() {
 
     it('should cancel the form when there are no changes', function() {
       element(by.id('btn-cancel')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -83,7 +84,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('input-color')).sendKeys('b');
       element(by.id('btn-cancel')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -91,7 +92,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(0).click();
       expect(browser.getLocationAbsUrl()).toMatch(/itinerary-track-name\?itineraryId=\d+&trackId=\d+/);
     });
 
@@ -99,6 +100,7 @@ describe('Itinerary Track Name', function() {
       var nameBefore = element(by.id('input-name')).getAttribute('value');
       var colorBefore = element(by.id('input-color')).getAttribute('value');
       element(by.id('btn-reset')).click();
+      element.all((by.css('.cancel-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual(nameBefore);
       expect(element(by.id('input-color')).getAttribute('value')).toEqual(colorBefore);
     });
@@ -110,7 +112,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('test do reset');
       element(by.id('input-color')).sendKeys('r');
       element(by.id('btn-reset')).click();
-      browser.switchTo().alert().accept();
+      element.all((by.css('.confirm-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual(nameBefore);
       expect(element(by.id('input-color')).getAttribute('value')).toEqual(colorBefore);
     });
@@ -120,7 +122,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('name test do not reset');
       element(by.id('input-color')).sendKeys('r');
       element(by.id('btn-reset')).click();
-      browser.switchTo().alert().dismiss();
+      element.all((by.css('.cancel-button'))).get(1).click();
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('name test do not reset');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Red');
     });

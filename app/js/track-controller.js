@@ -24,7 +24,6 @@ angular.module('myApp.track.controller', [])
     ['$scope',
      '$log',
      '$location',
-     'modalDialog',
      'SharedLocationNickname',
      'RecentPoints',
      'InitGpxDownload',
@@ -32,7 +31,7 @@ angular.module('myApp.track.controller', [])
      'jwtHelper',
      'SaveAs',
      'StateService',
-     function($scope, $log, $location, modalDialog, SharedLocationNickname,
+     function($scope, $log, $location, SharedLocationNickname,
               RecentPoints, InitGpxDownload, Storage, jwtHelper, SaveAs, StateService) {
        $scope.data = {};
        $scope.master = {};
@@ -143,25 +142,23 @@ angular.module('myApp.track.controller', [])
        $scope.gpxDownload = function(parms) {
          if ($scope.form && $scope.form.$valid) {
            $scope.ajaxRequestError = {error: false};
-           if (modalDialog.confirm('Download tracks?') === true) {
-             $scope.master = angular.copy($scope.tracks.search);
-             InitGpxDownload.downloadTracks(
-               {nickname: $scope.tracks.search.nicknameSelect,
-                from: $scope.tracks.search.dateFrom,
-                to: $scope.tracks.search.dateTo,
-                max_hdop: $scope.tracks.search.hdop,
-                notesOnlyFlag: $scope.tracks.search.notesOnlyFlag
-               }).$promise.then(function(response) {
-                 StateService.saveSearch($scope.tracks.search);
-                 SaveAs(response.data, 'trip.gpx');
-               }).catch(function(response) {
-                 $log.warn('GPX tracks download failed', response.status);
-                 $scope.ajaxRequestError = {
-                   error: true,
-                   status: response.status
-                 };
-               });
-           }
+           $scope.master = angular.copy($scope.tracks.search);
+           InitGpxDownload.downloadTracks(
+             {nickname: $scope.tracks.search.nicknameSelect,
+              from: $scope.tracks.search.dateFrom,
+              to: $scope.tracks.search.dateTo,
+              max_hdop: $scope.tracks.search.hdop,
+              notesOnlyFlag: $scope.tracks.search.notesOnlyFlag
+             }).$promise.then(function(response) {
+               StateService.saveSearch($scope.tracks.search);
+               SaveAs(response.data, 'trip.gpx');
+             }).catch(function(response) {
+               $log.warn('GPX tracks download failed', response.status);
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+             });
          }
        };
        // Fetch first page of results using the initial default values

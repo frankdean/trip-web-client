@@ -21,8 +21,7 @@ describe('AdminPasswordResetCtrl', function() {
 
   beforeEach(module('myApp'));
 
-  var $httpBackend, $location, userService, scope, createController,
-      confirmDialog;
+  var $httpBackend, $location, userService, scope, createController;
   var mockValidForm = {$valid: true,
                        $setPristine: function() {},
                        $setUntouched: function() {}
@@ -44,13 +43,11 @@ describe('AdminPasswordResetCtrl', function() {
                              $rootScope,
                              $controller,
                              _$location_,
-                             UserService,
-                             modalDialog) {
+                             UserService) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     userService = UserService;
     scope = $rootScope;
-    confirmDialog = modalDialog;
     createController = function() {
       return $controller('AdminPasswordResetCtrl', {$scope: scope, $location: $location, $routeParams: routeParams});
     };

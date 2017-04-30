@@ -92,7 +92,14 @@
       </div>
       <button id="btn-tracks" ng-click="doListTracks()" value="Submit" class="btn btn-lg btn-success">List tracks</button>
       <button id="btn-map" ng-click="showMap(tracks.search)" value="Submit" class="btn btn-lg btn-primary">Show map</button>
-      <button id="btn-download" ng-click="gpxDownload(tracks.search)" value="Submit" class="btn btn-lg btn-primary">Download tracks</button>
+      <button id="btn-download"
+              class="btn btn-lg btn-primary"
+              mwl-confirm
+              title="GPX Download"
+              message="Download tracks?"
+              on-confirm="gpxDownload(tracks.search)"
+              confirm-button-type="success"
+              >Download tracks</button>
       <button id="btn-reset" ng-click="reset(form)" value="Reset" class="btn btn-lg btn-danger">Reset</button>
     </form>
   </div>

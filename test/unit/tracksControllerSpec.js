@@ -53,7 +53,6 @@ describe('TRIP controllers', function() {
     var testTrackSearchParams = {nicknameSelect: 'John & Smith', dateFrom: new Date('2016-01-22T16:30:24'), dateTo: new Date('2016-01-22T16:31:00'), hdop: '20', notesOnlyFlag: 'false'};
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller,
-                               modalDialog,
                                _$location_, RecentPoints, InitGpxDownload) {
       $httpBackend = _$httpBackend_;
       $location = _$location_;
@@ -65,7 +64,6 @@ describe('TRIP controllers', function() {
         respond(expectedLocations);
       downloadRequestHandler = $httpBackend.when('GET', /download\/tracks\/[\w\d&%]+\?/).respond(null);
       scope = $rootScope.$new();
-      spyOn(modalDialog, 'confirm').and.returnValue(true);
       spyOn($location, 'path').and.stub();
       spyOn($location, 'search').and.stub();
       createController = function() {
