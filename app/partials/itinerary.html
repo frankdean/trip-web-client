@@ -128,7 +128,7 @@
       <div ng-messages="formError">
         <div id="error-edit-only-one" class="alert alert-warning" role="alert"
              ng-message="editOnlyOne">
-          Select only one item for edit.</div>
+          Select only one item.</div>
       </div>
       <div style="margin-top: 20px;">
         <button id="btn-download"
@@ -143,6 +143,10 @@
         <button id="btn-edit-selected" ng-click="editSelected(downloads)"
                 class="btn btn-lg btn-info"
                 ng-show="data.shared_to_nickname === null">Edit selected</button>
+        <button id="view-selected" ng-click="viewSelected(downloads)"
+                class="btn btn-lg btn-info"
+                ng-show="data.shared_to_nickname !== null && waypoints.length > 0"
+                >View selected waypoint</button>
         <button id="btn-delete-gpx"
                 type="button"
                 class="btn btn-lg btn-danger"

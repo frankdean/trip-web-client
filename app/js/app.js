@@ -53,6 +53,7 @@ angular.module('myApp', [
   'myApp.itinerary.sharing.controller',
   'myApp.itinerary.sharing.report.controller',
   'myApp.itinerary.wpt.controller',
+  'myApp.itinerary.wpt.view.controller',
   'myApp.itinerary.route.name.controller',
   'myApp.itinerary.track.name.controller',
   'myApp.login.controller',
@@ -141,6 +142,10 @@ angular.module('myApp', [
          when('/itinerary-wpt-edit', {
            templateUrl: 'partials/itinerary-wpt-edit.html',
            controller: 'ItineraryWaypointCtrl'
+         }).
+         when('/itinerary-wpt', {
+           templateUrl: 'partials/itinerary-wpt.html',
+           controller: 'ItineraryWaypointViewCtrl'
          }).
          when('/itinerary-route-name', {
            templateUrl: 'partials/itinerary-route-name.html',

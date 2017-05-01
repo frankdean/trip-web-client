@@ -223,6 +223,40 @@ angular.module('myApp.itinerary.controller', [])
            $scope.formError = {editOnlyOne: true};
          }
        };
+       $scope.viewSelected = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         var selectedCount = 0,
+             waypoints = [], routes = [], tracks = [];
+         $scope.waypoints.forEach(function(v) {
+           if (v.selected) {
+             waypoints.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.routeNames.forEach(function(v) {
+           if (v.selected) {
+             routes.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             tracks.push(v.id);
+             selectedCount++;
+          }
+         });
+         if (selectedCount === 1) {
+           if (waypoints.length === 1) {
+             $location.path('/itinerary-wpt');
+             $location.search({
+               itineraryId: encodeURIComponent($scope.data.id),
+               waypointId: encodeURIComponent(waypoints[0])
+             });
+           }
+         } else {
+           $scope.formError = {editOnlyOne: true};
+         }
+       };
        $scope.createWaypoint = function(form) {
          $location.path('/itinerary-wpt-edit');
          $location.search({

@@ -150,5 +150,8 @@ input.days, input.minutes, input.hours {
 .raw-markdown {
 	width: 100%;
 }
+.view-label {
+	font-weight: bold;
+}
 /* Fix for href attributes inside accordion etc. http://angular-ui.github.io/bootstrap/versioned-docs/2.4.0/ */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="page-header">
+    <h1>View Itinerary Waypoint</h1>
+  </div>
+  <div class="well">
+    <div id="system-error" ng-messages="ajaxRequestError"
+         ng-show="ajaxRequestError">
+      <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+        unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+          {{ajaxRequestError.status}}</span>
+      </div>
+    </div>
+    <form name="form" class="css-form" novalidate>
+      <span class="view-label">Name:</span> {{data.name}}</br>
+      <span class="view-label">Position:</span> {{data.position}}</br>
+      <div>
+        <label for="input-coord-format">Display position format:</label>
+        <select id="input-coord-format" ng-model="coordFormat" >
+          <option ng-repeat="format in georefFormats" value="{{format.key}}">{{format.value}}</option>
+        </select>
+      </div>
+      <div ng-show="coordFormat !== 'plus+code' && coordFormat !== 'osgb36' && coordFormat !== 'IrishGrid' && coordFormat !== 'ITM'">
+        <label for="position-separator">Position ordering and separator:</label>
+        <select id="position-separator" ng-model="positionFormat">
+          <option value="lat-lng">lat lng</option>
+          <option value="lat,lng">lat,lng</option>
+          <option value="lng-lat">lng lat (Proj4 reversed)</option>
+          <option value="lng,lat">lng,lat (Reversed)</option>
+        </select>
+      </div>
+      <div>
+        <span class="view-label" ng-repeat="format in georefFormats | filter:coordFormat:true">Converted to "{{format.value}}" format: </span><span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng" ng-show="!form.position.$error.position && data.position && data.lat && data.lng"></span>
+        <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
+      </div>
+      <span class="view-label">Altitude:</span> {{data.altitude}}</br>
+      <span class="view-label">Symbol:</span> <span ng-repeat="symbol in symbols | filter:data.symbol:true">{{symbol.value}}</span></br>
+      <span class="view-label">Time:</span> {{data.time | date:'HH:mm:ss EEE dd-MMM-yyyy'}}</br>
+      <span class="view-label">Description:</span> {{data.description}}</br>
+      <span class="view-label">Comment:</span> {{data.comment}}</br>
+      <span class="view-label">Garmin averaging sample count:</span> {{data.samples}}</br>
+      <span class="view-label">OsmAnd category (type):</span> {{data.type}}</br>
+      <span class="view-label">OsmAnd colour:</span> {{data.color}}</br>
+      <div id="wpt-buttons">
+        <button id="btn-close" ng-click="close()" type="button" class="btn btn-lg btn-danger">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
