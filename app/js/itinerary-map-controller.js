@@ -244,7 +244,8 @@ angular.module('myApp.itinerary.map.controller', [])
                position: "topright",
                draw: {
                  polyline: {
-                   metric: false
+                   metric: true,
+                   feet: false
                  },
                  polygon: false,
                  rectangle: false,
