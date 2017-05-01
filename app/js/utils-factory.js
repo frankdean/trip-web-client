@@ -207,14 +207,13 @@ angular.module('myApp.utils.factory', [])
            {name: 'IrishGrid', regex: /^(?:ING|IG|TM65)?\s*(?:([A-HJ-Z]{1})\s*(\d{3,5})\s*(\d{3,5})|(?:ING|IG|TM65)\s*(\d{6})[,\s]+(\d{6}))$/},
            // Irish Transverse Mercator
            {name: 'ITM', regex: /^ITM\s*(?:E\s)?(\d{6}(?:\.\d{0,3})?)m?[,\s]+(?:N\s)?(\d{6}(?:\.\d{0,3})?)m?$/},
-           {name: 'OsmAnd share', regex: /^[Ll]at(?:itude)? (-?[.\d]+)[\s,]+[Ll](?:on|ong|ng|ongitude?) (-?[.\d]+)$/, latd: 1, lngd: 2},
-           {name: 'OSM map', regex: /m?lat=(-?[.\d]+)&m?lon=(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: 'Google map', regex: /q=(?:loc:)?(-?[.\d]+),(-?[.\d]+)/, latd: 1, lngd: 2},
            {name: '+DMS', regex: /([NSns]{1})\s?([.\d]+)\s?(?:[-\sd_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?(?:([.\d]+)\s?[-\s'_\u2032\u2035\u02b9]{0,1}\s?(?:([.\d]+)\s?[-\s"_\u2033\u2036\u02ba]{0,1}\s?)?)?)?[-_\s,]*([WEwe]{1})\s?([.\d]+)(?:[-\sd_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?(?:([.\d]+)\s?[-\s'_\u2032\u2035\u02b9]{0,1}\s?(?:([.\d]+)\s?[-\s"_\u2033\u2036\u02ba]{0,1}\s?)?)?)?/, latc: 1, latd: 2, latm: 3, lats: 4, lngc: 5, lngd: 6, lngm: 7, lngs: 8 },
            {name: 'DMS+', regex: /([.\d]+)\s?(?:[-\sd_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?(?:([.\d]+)\s?[-\s'_\u2032\u2035\u02b9]{0,1}\s?(?:([.\d]+)\s?[-\s"_\u2033\u2036\u02ba]{0,1}\s?)?)?)?([NSns]{1})[-_\s,]*([.\d]+)(?:[-\sd_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?(?:([.\d]+)\s?[-\s'_\u2032\u2035\u02b9]{0,1}\s?(?:([.\d]+)\s?[-\s"_\u2033\u2036\u02ba]{0,1}\s?)?)?)?([WEwe]{1})/, latd: 1, latm: 2, lats: 3, latc: 4, lngd: 5, lngm: 6, lngs: 7, lngc: 8 },
            {name: 'QlandkartGT', regex: /([NSns]{1})([.\d]+)[d_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?([.\d]+)[-\s'_\u2032\u2035\u02b9]+([WEwe]{1})([.\d]+)[d_\u00b0\u00ba\u02da\u030a\u0325\u309c\u309a\u2070\u2218]{1}\s?([.\d]+)[-\s'_\u2032\u2035\u02b9]*/, latc: 1, latd: 2, latm: 3, lngc: 4, lngd: 5, lngm: 6 },
            {name: 'Proj4', regex: /(\d+)[\u00b0°dD]{1}(\d+)['\u2032]{1}([.\d]+)"([WE]{1})\s+(\d+)[°dD]{1}(\d+)'([.\d]+)"([NS]{1})/, latd: 5, latm: 6, lats: 7, latc: 8, lngd: 1, lngm: 2, lngs: 3, lngc: 4 },
-           {name: 'lat/lng', regex: /([-.+\d]+)[_,\s]{1,3}([-.+\d]+)/, latd: 1, lngd: 2}
+           {name: 'lat/lng text', regex: /lat(?:itude)?=(-?\d+\.?\d*)\D*lo?ng(?:itude)?\D*(-?\d+\.?\d*)/, latd: 1, lngd: 2},
+           {name: 'lat/lng', regex: /(-?\d+\.?\d*)\D+?(-?\d+\.?\d*)/, latd: 1, lngd: 2}
          ];
          // $log.debug('text:', text);
          for (var i = 0, n = formats.length; i < n; ++i) {

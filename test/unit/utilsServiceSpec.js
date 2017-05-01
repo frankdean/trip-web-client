@@ -514,6 +514,30 @@ describe('UtilsService', function() {
       expect(utilsService.parseGeoLocation('ITM E 709885.081m, N 736167.699m')).toEqual({lat: {deg: 53.36427343603036}, lng: {deg: -6.348987346570671}});
     });
 
+    it('should parse one of our own track point URLs', function() {
+      expect(utilsService.parseGeoLocation('http://localhost:8080/app/index.html#/map-point?lat=48.85822222&lng=2.2945')).toEqual({lat: {deg: 48.85822222}, lng: {deg: 2.2945}});
+    });
+
+    it('should parse anything with two numbers', function() {
+      expect(utilsService.parseGeoLocation('xyz48.85822222abc2.2945xyz')).toEqual({lat: {deg: 48.85822222}, lng: {deg: 2.2945}});
+    });
+
+    it('should parse anything with two decimal looking numbers', function() {
+      expect(utilsService.parseGeoLocation('xyz48.abc21.xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
+    });
+
+    it('should parse anything with two integers', function() {
+      expect(utilsService.parseGeoLocation('xyz48abc21xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
+    });
+
+    it('should parse anything with two negative integers', function() {
+      expect(utilsService.parseGeoLocation('xyz-48abc-21xyz')).toEqual({lat: {deg: -48}, lng: {deg: -21}});
+    });
+
+    it('should parse anything with two negative numbers', function() {
+      expect(utilsService.parseGeoLocation('xyz-48.85822222abc-2.2945xyz')).toEqual({lat: {deg: -48.85822222}, lng: {deg: -2.2945}});
+    });
+
   });
 
   describe('convertDmsCoordsToDegreeCoords', function() {
