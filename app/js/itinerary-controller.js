@@ -199,7 +199,7 @@ angular.module('myApp.itinerary.controller', [])
          });
          if (selectedCount === 1) {
            if (waypoints.length === 1) {
-             $location.path('/itinerary-wpt');
+             $location.path('/itinerary-wpt-edit');
              $location.search({
                itineraryId: encodeURIComponent($scope.data.id),
                waypointId: encodeURIComponent(waypoints[0])
@@ -224,7 +224,7 @@ angular.module('myApp.itinerary.controller', [])
          }
        };
        $scope.createWaypoint = function(form) {
-         $location.path('/itinerary-wpt');
+         $location.path('/itinerary-wpt-edit');
          $location.search({
            itineraryId: encodeURIComponent($scope.data.id)
          });

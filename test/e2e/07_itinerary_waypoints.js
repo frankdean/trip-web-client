@@ -47,7 +47,7 @@ describe('Itinerary Waypoints', function() {
     var testWaypointId = 9356;
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary-wpt?itineraryId=929&waypointId=' + testWaypointId);
+      browser.get('app/index.html#itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
     });
 
     it('should show an error message if the name is blank', function() {
@@ -151,7 +151,7 @@ describe('Itinerary Waypoints', function() {
       eleColor.sendKeys('#ff0000');
       btnSave.click();
       expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
-      browser.get('app/index.html#itinerary-wpt?itineraryId=929&waypointId=' + testWaypointId);
+      browser.get('app/index.html#itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
       expect(eleName.getAttribute('value')).toEqual('Test waypoint modification');
       expect(elePosition.getAttribute('value')).toEqual('50,-3');
       expect(eleAltitude.getAttribute('value')).toEqual('450');
@@ -183,12 +183,12 @@ describe('Itinerary Waypoints', function() {
       eleName.sendKeys('test');
       btnCancel.click();
       element.all((by.css('.cancel-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should not ask for confirmation before resetting an unmodified form', function() {
       btnReset.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should ask for confirmation before resetting a modified form', function() {
@@ -198,7 +198,7 @@ describe('Itinerary Waypoints', function() {
       btnReset.click();
       element.all((by.css('.confirm-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual(nameBefore);
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should not reset the form when confirmation is cancelled', function() {
@@ -207,7 +207,7 @@ describe('Itinerary Waypoints', function() {
       btnReset.click();
       element.all((by.css('.cancel-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual('test');
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should show an error message when the samples value is less than one', function() {
@@ -243,7 +243,7 @@ describe('Itinerary Waypoints', function() {
   describe('new', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary-wpt?itineraryId=' + testItineraryId);
+      browser.get('app/index.html#itinerary-wpt-edit?itineraryId=' + testItineraryId);
     });
 
     it('the time should default to now', function() {

@@ -138,8 +138,8 @@ angular.module('myApp', [
            templateUrl: 'partials/itinerary-map.html',
            controller: 'ItineraryMapCtrl'
          }).
-         when('/itinerary-wpt', {
-           templateUrl: 'partials/itinerary-wpt.html',
+         when('/itinerary-wpt-edit', {
+           templateUrl: 'partials/itinerary-wpt-edit.html',
            controller: 'ItineraryWaypointCtrl'
          }).
          when('/itinerary-route-name', {

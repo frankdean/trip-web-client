@@ -69,12 +69,12 @@ describe('Itinerary uploads', function() {
     it('should show the itinerary waypoint edit page when a waypoint is selected for edit', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element(by.id('btn-edit-selected')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should show the itinerary waypoint edit page when the add waypoint button is clicked', function() {
       element(by.id('btn-new-waypoint')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt\?itineraryId=\d+$/);
+      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+$/);
     });
 
     describe('display geo items on map', function() {
