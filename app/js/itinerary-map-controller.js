@@ -76,6 +76,10 @@ angular.module('myApp.itinerary.map.controller', [])
                    weight: 4,
                    latlngs: latlngs
                  };
+                 if (t.color === 'Transparent') {
+                   path.weight = 8;
+                   path.opacity = 0.25;
+                 }
                  if (myBounds) {
                    myBounds.extend(latlngs);
                  } else {
@@ -107,18 +111,13 @@ angular.module('myApp.itinerary.map.controller', [])
              {id: $scope.itineraryId,
               routes: choices.routes})
              .$promise.then(function(routes) {
-               var latlng, path;
+               var latlng;
                routes.forEach(function(r) {
                  var latlngs = [];
                  r.points.forEach(function(rp) {
                    latlng =  {lat: parseFloat(rp.lat, 10), lng: parseFloat(rp.lng, 10), time: (new Date(rp.time)).toLocaleString('en-GB')};
                    latlngs.push(latlng);
                  });
-                 path = {
-                   color: 'blue',
-                   weight: 4,
-                   latlngs: latlngs
-                 };
                  if (myBounds) {
                    myBounds.extend(latlngs);
                  } else {
