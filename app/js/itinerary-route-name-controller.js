@@ -26,13 +26,24 @@ angular.module('myApp.itinerary.route.name.controller', [])
      '$location',
      'ItineraryRouteNameService',
      'ItineraryRouteService',
+     'PathColorService',
      '$log',
-     function($scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, $log) {
+     function($scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, PathColorService, $log) {
        $scope.data = {};
        $scope.data.reverse = true;
        $scope.master = {};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.routeId = $routeParams.routeId !== undefined ? decodeURIComponent($routeParams.routeId) : undefined;
+       PathColorService.query()
+         .$promise.then(function(colors) {
+           $scope.colors = colors;
+         }).catch(function(response) {
+           $log.warn('Error fetching route colors', response.status, response.statusText);
+           $scope.ajaxRequestError = {
+             error: true,
+             status: response.status
+           };
+         });
        if ($scope.routeId) {
          ItineraryRouteNameService.get({itineraryId: $scope.itineraryId, routeId: $scope.routeId})
            .$promise.then(function(route) {
@@ -57,7 +68,8 @@ angular.module('myApp.itinerary.route.name.controller', [])
              ItineraryRouteNameService.save({},
                                             {itineraryId: $scope.itineraryId,
                                              routeId: $scope.routeId,
-                                             name: $scope.data.name
+                                             name: $scope.data.name,
+                                             color: $scope.data.color
                                             })
                .$promise.then(function(value) {
                  $location.path('/itinerary');
@@ -93,6 +105,7 @@ angular.module('myApp.itinerary.route.name.controller', [])
                  ItineraryRouteService.save({},
                                             {id: $scope.itineraryId,
                                              name: newRoute.name,
+                                             color: $scope.data.color,
                                              points: newRoute.points})
                    .$promise.then(function(result) {
                      $location.path('/itinerary');

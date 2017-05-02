@@ -25,19 +25,19 @@ angular.module('myApp.itinerary.track.name.controller', [])
      '$routeParams',
      '$location',
      'ItineraryTrackNameService',
-     'TrackColorService',
+     'PathColorService',
      '$log',
      function($scope,
               $routeParams,
               $location,
               ItineraryTrackNameService,
-              TrackColorService,
+              PathColorService,
               $log) {
        $scope.data = {};
        $scope.master = {};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.trackId = $routeParams.trackId !== undefined ? decodeURIComponent($routeParams.trackId) : undefined;
-       TrackColorService.query()
+       PathColorService.query()
          .$promise.then(function(colors) {
            $scope.colors = colors;
          }).catch(function(response) {

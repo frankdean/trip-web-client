@@ -75,10 +75,10 @@ angular.module('myApp.itinerary.factory.js', [] )
      }])
 
   .factory(
-    'TrackColorService',
+    'PathColorService',
     ['$resource', 'ConfigService',
      function($resource, ConfigService) {
-       var url = ConfigService.restUrlPrefix + '/track/colors';
+       var url = ConfigService.restUrlPrefix + '/path/colors';
        return $resource(url);
      }])
 

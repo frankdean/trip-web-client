@@ -111,7 +111,7 @@ angular.module('myApp.itinerary.map.controller', [])
              {id: $scope.itineraryId,
               routes: choices.routes})
              .$promise.then(function(routes) {
-               var latlng;
+               var latlng, routeOptions;
                routes.forEach(function(r) {
                  var latlngs = [];
                  r.points.forEach(function(rp) {
@@ -123,7 +123,12 @@ angular.module('myApp.itinerary.map.controller', [])
                  } else {
                    myBounds = L.latLngBounds(latlngs);
                  }
-                 var lpolyline = new L.Polyline(latlngs, {color: 'Fuchsia', opacity: 0.5, weight: 4});
+                 routeOptions = {
+                   color: r.htmlcolor ? r.htmlcolor : 'Fuchsia',
+                   opacity: r.color === 'Transparent' ? 0.25 : 0.5,
+                   weight: 4
+                 };
+                 var lpolyline = new L.Polyline(latlngs, routeOptions);
                  lpolyline.tl_id = r.id;
                  drawnItems.addLayer(lpolyline);
                });

@@ -27,6 +27,7 @@ describe('ItineraryRouteNameCtrl', function() {
       itineraryWaypointService,
       createController,
       getRequestHandler,
+      colorRequestHandler,
       saveRequestHandler,
       getRouteRequestHandler,
       saveRouteRequestHandler,
@@ -56,6 +57,7 @@ describe('ItineraryRouteNameCtrl', function() {
       itineraryRouteNameService,
       expectedRoute,
       itineraryRouteParams = {itineraryId: '99', routeId: testRoute.id},
+      testColors = ['Red', 'Blue', 'Green'],
       mockValidForm = {$valid: true,
                        $setPristine: function() {},
                        $setUntouched: function() {}
@@ -73,6 +75,7 @@ describe('ItineraryRouteNameCtrl', function() {
     itineraryRouteNameService = ItineraryRouteNameService;
     getRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/route\/name\/\d+$/).respond(testRoute);
     getRouteRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/route\/\d+$/).respond(testRoute2);
+    colorRequestHandler = $httpBackend.when('GET', /path\/colors$/).respond(testColors);
     saveRequestHandler = $httpBackend.when('POST', /itinerary\/\d+\/route\/name\/\d+$/,
                       function(data) {
                         return expectedRoute === data;

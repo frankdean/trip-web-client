@@ -53,7 +53,7 @@ describe('ItineraryTrackNameCtrl', function() {
     scope = $rootScope;
     itineraryTrackNameService = ItineraryTrackNameService;
     getRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/track\/name\/\d+$/).respond(testTrack);
-    colorRequestHandler = $httpBackend.when('GET', /track\/colors$/).respond(testColors);
+    colorRequestHandler = $httpBackend.when('GET', /path\/colors$/).respond(testColors);
     saveRequestHandler = $httpBackend.when('POST', /itinerary\/\d+\/track\/name\/\d+$/,
                                            function(data) {
                                              return expectedTrack === data;

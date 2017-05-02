@@ -12,24 +12,33 @@
   <div class="well">
     <form name="form" class="css-form" novalidate>
       <div>
-        <label for="input-name">Name:</label>
-        <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
-        <span ng-show="data.distance">{{data.distance}}&nbsp;km {{data.distance / 1.609344 | number:2}}&nbsp;mi</span>
-      </div>
-      <div>
-        <label for="input-copy">Save as copy:</label>
-        <input id="input-copy" type="checkbox" ng-model="data.copy" />
-        <label for="input-reverse" ng-show="data.copy" style="padding-left: 1em">Reverse route:</label>
-        <input id="input-reverse" type="checkbox" ng-model="data.reverse" ng-show="data.copy" />
-      </div>
-      <div class="alert alert-info" ng-show="data.copy">
-        <p>A copy of the current route will be made<span ng-show="data.name">
-            using the name entered above: &ldquo;{{data.name}}&rdquo;</span>.  No changes will
-          be made to the existing route.</p>
-        <p ng-show="data.reverse">The new route will be the reverse of the current one.</p>
+        <div>
+          <label for="input-name">Name:</label>
+          <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
+          <span ng-show="data.distance">{{data.distance}}&nbsp;km {{data.distance / 1.609344 | number:2}}&nbsp;mi</span>
+        </div>
+        <div>
+          <label for="input-color">Colour:</label>
+          <select id="input-color" ng-model="data.color">
+            <option value="">-- not set --</option>
+            <option ng-repeat="color in colors" value="{{color.key}}">{{color.value}}</option>
+          </select>
+        </div>
+        <div>
+          <label for="input-copy">Save as copy:</label>
+          <input id="input-copy" type="checkbox" ng-model="data.copy" />
+          <label for="input-reverse" ng-show="data.copy" style="padding-left: 1em">Reverse route:</label>
+          <input id="input-reverse" type="checkbox" ng-model="data.reverse" ng-show="data.copy" />
+        </div>
+        <div class="alert alert-info" ng-show="data.copy">
+          <p>A copy of the current route will be made<span ng-show="data.name">
+              using the name entered above: &ldquo;{{data.name}}&rdquo;</span>.  No changes will
+            be made to the existing route.</p>
+          <p ng-show="data.reverse">The new route will be the reverse of the current one.</p>
+        </div>
       </div>
       <div id="wpt-buttons">
-        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success" ng-show="!ajaxRequestError.error">Save</button>
+        <button id="btn-save" ng-click="save(form)" type="submit" class="btn btn-lg btn-success">Save</button>
         <button id="btn-cancel"
                 type="button"
                 class="btn btn-lg btn-danger"
@@ -51,7 +60,6 @@
                 on-confirm="reset(form)"
                 >Reset</button>
       </div>
-      <p>{{ajaxRequestError}}</p>
     </form>
   </div>
 </div>
