@@ -1,0 +1,103 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Track Edit</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="well">
+    <div id="track-not-found" class="alert alert-info" ng-show="data.track.segments.length === 0">
+      <p>Track not found or has no segments</p>
+    </div>
+    <div ng-show="data.track.segments.length > 0">
+      <form name="search" class="css-form" novalidate>
+        <div>
+          <p>
+            <span class="view-label">Name:</span> {{data.track.name === '' ? 'ID: ' + data.track.id : data.track.name}}</p>
+          <p>
+            <span ng-show="data.track.distance">{{data.track.distance | number:1}} km</span>
+            <span ng-show="data.track.distance">{{data.track.distance / 1.609344 | number:1}} mi</span>
+
+            <span ng-show="data.track.highest" style="padding-left: 20px;">↗︎{{data.track.ascent | number:0}}&nbsp;m ↘︎{{data.track.descent | number:0}}&nbsp;m</span>
+            <span ng-show="data.track.highest">↗︎{{data.track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{data.track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+            <span ng-show="data.track.highest" style="padding-left: 20px;">{{data.track.highest | number:0}}⇅{{data.track.lowest | number:0}}&nbsp;m</span>
+            <span ng-show="data.track.highest">{{data.track.highest / 0.0254 / 12 | number:0}}&#x21c5;{{data.track.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+          </p>
+          <table id="table-segments" class="wide-table table table-striped">
+            <tr>
+              <th style="width: 60px;"><input type="checkbox" ng-model="data.selectAll" ng-click="selectAll(form)"/></th>
+              <th>Segment ID</th>
+            </tr>
+            <tr ng-repeat="segment in data.track.segments">
+              <td>
+                <input type="checkbox" ng-model="segment.selected" ng-click="showSegment(segment)" />
+              </td>
+              <td><a href="#/itinerary-track-segment-edit?itineraryId={{itineraryId}}&trackId={{trackId}}&segmentId={{segment.id}}">{{segment.id}}</a></td>
+            </tr>
+          </table>
+          <div id="div-paging">
+            <paging
+              class="small"
+              page="page"
+              page-size="pageSize"
+              total="totalCount"
+              hide-if-empty="true"
+              show-prev-next="true"
+              show-first-last="true"
+              paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+            </paging>
+          </div>
+        </div>
+        <div ng-messages="formError">
+          <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+               ng-message="editOnlyOne">
+            Select only one item.</div>
+          <div id="error-minimum-select-two" class="alert alert-warning" role="alert"
+               ng-message="selectTwoMinimum">
+            Select at least two track segments.</div>
+          <div id="error-cannot-delete-all" class="alert alert-warning" role="alert"
+               ng-message="cannotDeleteAll">
+            You cannot delete all the segments.</div>
+          <div id="error-non-contiguous-merge" class="alert alert-warning" role="alert"
+               ng-message="notContiguous">
+            All the segments to be merged must be contiguous (no gaps).</div>
+        </div>
+        <div id="div-buttons">
+          <button id="btn-delete"
+                  class="btn btn-lg btn-danger"
+                  mwl-confirm
+                  title="Confirm"
+                  message="Delete the selected segments?"
+                  on-confirm="deleteSegments(form)"
+                  >Delete segments</button>
+          <button id="btn-split"
+                  class="btn btn-lg btn-danger"
+                  mwl-confirm
+                  title="Confirm"
+                  message="Split track before selected segment"
+                  on-confirm="split(form)"
+                  >Split track</button>
+          <button id="btn-merge"
+                  class="btn btn-lg btn-danger"
+                  mwl-confirm
+                  title="Confirm"
+                  message="Merge selected segments"
+                  on-confirm="mergeSegments(form)"
+                  >Merge segments</button>
+        </div>
+      </form>
+    </div>
+    <div>
+      <button id="btn-close" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Close</button>
+    </div>
+  </div>
+  <leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
+  <div class="div-autozoom" ng-show="status.showMap">
+    <label for="auto-zoom">Auto-zoom:</label>
+    <input id="auto-zoom" type="checkbox" ng-model="autozoom" />
+  </div>
+</div>

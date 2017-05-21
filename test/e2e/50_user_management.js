@@ -443,12 +443,12 @@ describe('User management', function() {
 
         it('should allow edit of a single user', function() {
           element(by.id('btn-edit')).click();
-          expect(browser.getLocationAbsUrl()).toMatch(/\/edit-user\?id=[\d]+$/);
+          expect(browser.getCurrentUrl()).toMatch(/\/edit-user\?id=[\d]+$/);
         });
 
         it('should allow a password reset for a single user', function() {
           element(by.id('btn-edit-password')).click();
-          expect(browser.getLocationAbsUrl()).toMatch(/\/admin-password-reset\?id=[\d]+$/);
+          expect(browser.getCurrentUrl()).toMatch(/\/admin-password-reset\?id=[\d]+$/);
         });
 
       });
@@ -578,7 +578,7 @@ describe('User management', function() {
         });
 
         it('should display the user search page', function() {
-          expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+          expect(browser.getCurrentUrl()).toMatch(/\/users$/);
         });
 
       });
@@ -602,7 +602,7 @@ describe('User management', function() {
         });
 
         it('should display the user search page', function() {
-          expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+          expect(browser.getCurrentUrl()).toMatch(/\/users$/);
         });
 
       });
@@ -729,7 +729,7 @@ describe('User management', function() {
         });
 
         it('should display the user search page', function() {
-          expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+          expect(browser.getCurrentUrl()).toMatch(/\/users$/);
         });
 
       });
@@ -746,7 +746,7 @@ describe('User management', function() {
 
         it('should display the user search page', function() {
           if (browser.privateConfig.browserName !== 'safari') {
-            expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+            expect(browser.getCurrentUrl()).toMatch(/\/users$/);
           }
         });
 
@@ -802,13 +802,13 @@ describe('User management', function() {
       element(by.model('data.password')).sendKeys('testTwo');
       element(by.model('data.password2')).sendKeys('testTwo');
       element(by.id('btn-submit')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/users$/);
     });
 
     it('should not submit the form when cancelled', function() {
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/users$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/users$/);
     });
 
   });
@@ -820,7 +820,7 @@ describe('User management', function() {
     });
 
     it('should display the system status page', function() {
-      expect(browser.getLocationAbsUrl()).toMatch(/\/status$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/status$/);
       expect(element(by.id('tile-usage')).isDisplayed()).toBeTruthy();
     });
 

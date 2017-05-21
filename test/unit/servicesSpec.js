@@ -120,4 +120,32 @@ describe('service', function() {
 
   });
 
+  describe('StateService', function() {
+    var stateService,
+        p1 = "paging_1",
+        p2 = "paging_2",
+        test1 = 42,
+        test2 = 99;
+
+    beforeEach(inject(function(StateService) {
+      stateService = StateService;
+      stateService.savePage(p1, test1);
+      stateService.savePage(p2, test2);
+    }));
+
+    it('should return value 1 for an unknown reference', function() {
+      expect(stateService.getPage('New page')).toEqual(1);
+    });
+
+    it('should save a page number by name', function() {
+      expect(stateService.getPage(p1)).toEqual(test1);
+    });
+
+    it('should return value 1 for a page number after a reset', function() {
+      stateService.reset();
+      expect(stateService.getPage('New page')).toEqual(1);
+    });
+
+  });
+
 });

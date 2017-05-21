@@ -4,7 +4,7 @@
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
 	"name": "Frank Dean",
-	"email": "frank@fdsd.co.uk"
+	"email": "frankdean@users.noreply.github.com"
   },
   "license": "GPL-3.0+",
   "private": true,
@@ -20,8 +20,8 @@
     "bower": "^1.7.2",
     "copyfiles": "^1.0.0",
     "cssmin": "^0.4.3",
-    "firefox-profile": "^0.4.0",
-    "http-server": "^0.9.0",
+    "firefox-profile": "^1.0.0",
+    "http-server": "^0.10.0",
     "jasmine-core": "^2.4.1",
     "jshint": "^2.9.1",
     "karma": "^1.2.0",
@@ -31,7 +31,7 @@
     "karma-junit-reporter": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
     "mkdirp": "^0.5.1",
-    "protractor": "^4.0.0",
+    "protractor": "^5.1.1",
     "q": "^1.4.1",
     "rimraf": "^2.5.1",
     "shelljs": "^0.7.6",

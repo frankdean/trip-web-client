@@ -25,6 +25,101 @@ var mdExtraOptions = {
   table_class: 'table'
 };
 
+// Polyfills for String.padEnd and String.repeat
+// https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
+/**
+ * String.padEnd()
+ * version 1.0.1
+ * Feature	        Chrome  Firefox Internet Explorer   Opera	Safari	Edge
+ * Basic support	57   	48      (No)	            44   	10      15
+ * -------------------------------------------------------------------------------
+ */
+if (!String.prototype.padEnd) {
+    String.prototype.padEnd = function padEnd(targetLength,padString) {
+        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        padString = String(padString || ' ');
+        if (this.length > targetLength) {
+            return String(this);
+        }
+        else {
+            targetLength = targetLength-this.length;
+            if (targetLength > padString.length) {
+                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+            }
+            return String(this) + padString.slice(0,targetLength);
+        }
+    };
+}
+
+/**
+ * String.padStart()
+ * version 1.0.1
+ * Feature	        Chrome  Firefox Internet Explorer   Opera	Safari	Edge
+ * Basic support	57   	51      (No)	            44   	10      15
+ * -------------------------------------------------------------------------------
+ */
+if (!String.prototype.padStart) {
+    String.prototype.padStart = function padStart(targetLength,padString) {
+        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        padString = String(padString || ' ');
+        if (this.length > targetLength) {
+            return String(this);
+        }
+        else {
+            targetLength = targetLength-this.length;
+            if (targetLength > padString.length) {
+                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+            }
+            return padString.slice(0,targetLength) + String(this);
+        }
+    };
+}
+
+/**
+ * String.repeat()
+ * version 0.0.0
+ * Feature	        Chrome  Firefox Internet Explorer   Opera	Safari	Edge
+ * Basic support	41   	24      (No)	            (Yes)   9       (Yes)
+ * -------------------------------------------------------------------------------
+ */
+if (!String.prototype.repeat) {
+    String.prototype.repeat = function (count) {
+        if (this === null) {
+            throw new TypeError('can\'t convert ' + this + ' to object');
+        }
+        var str = '' + this;
+        count = +count;
+        if (count != count) {
+            count = 0;
+        }
+        if (count < 0) {
+            throw new RangeError('repeat count must be non-negative');
+        }
+        if (count == Infinity) {
+            throw new RangeError('repeat count must be less than infinity');
+        }
+        count = Math.floor(count);
+        if (str.length === 0 || count === 0) {
+            return '';
+        }
+        if (str.length * count >= 1 << 28) {
+            throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (; ;) {
+            if ((count & 1) == 1) {
+                rpt += str;
+            }
+            count >>>= 1;
+            if (count === 0) {
+                break;
+            }
+            str += str;
+        }
+        return rpt;
+    };
+}
+
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
   'ngRoute',
@@ -55,7 +150,12 @@ angular.module('myApp', [
   'myApp.itinerary.wpt.controller',
   'myApp.itinerary.wpt.view.controller',
   'myApp.itinerary.route.name.controller',
+  'myApp.itinerary.route.edit.controller',
+  'myApp.itinerary.route.join.controller',
   'myApp.itinerary.track.name.controller',
+  'myApp.itinerary.track.edit.controller',
+  'myApp.itinerary.track.segment.edit.controller',
+  'myApp.itinerary.track.join.controller',
   'myApp.login.controller',
   'myApp.map.controller',
   'myApp.map.point.controller',
@@ -68,6 +168,7 @@ angular.module('myApp', [
   'myApp.track.controller',
   'myApp.track.factory',
   'myApp.trackinfo.controller',
+  'myApp.location.controller',
   'myApp.user.controller',
   'myApp.user.edit.controller',
   'myApp.user.factory',
@@ -151,9 +252,29 @@ angular.module('myApp', [
            templateUrl: 'partials/itinerary-route-name.html',
            controller: 'ItineraryRouteNameCtrl'
          }).
+         when('/itinerary-route-edit', {
+           templateUrl: 'partials/itinerary-route-edit.html',
+           controller: 'ItineraryRouteEditCtrl'
+         }).
+         when('/itinerary-route-join', {
+           templateUrl: 'partials/itinerary-route-join.html',
+           controller: 'ItineraryRouteJoinCtrl'
+         }).
          when('/itinerary-track-name', {
            templateUrl: 'partials/itinerary-track-name.html',
            controller: 'ItineraryTrackNameCtrl'
+         }).
+         when('/itinerary-track-edit', {
+           templateUrl: 'partials/itinerary-track-edit.html',
+           controller: 'ItineraryTrackEditCtrl'
+         }).
+         when('/itinerary-track-segment-edit', {
+           templateUrl: 'partials/itinerary-track-segment-edit.html',
+           controller: 'ItineraryTrackSegmentEditCtrl'
+         }).
+         when('/itinerary-track-join', {
+           templateUrl: 'partials/itinerary-track-join.html',
+           controller: 'ItineraryTrackJoinCtrl'
          }).
          when('/gpx-upload', {
            templateUrl: 'partials/gpx-upload.html',
@@ -162,6 +283,10 @@ angular.module('myApp', [
          when('/users', {
            templateUrl: 'partials/users.html',
            controller: 'UserCtrl'
+         }).
+         when('/location', {
+           templateUrl: 'partials/location.html',
+           controller: 'LocationCtrl'
          }).
          when('/edit-user', {
            templateUrl: 'partials/user-edit.html',

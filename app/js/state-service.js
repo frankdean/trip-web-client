@@ -30,8 +30,18 @@ angular.module('myApp.state.service', [] )
          this.itinerariesPage = 1;
          this.itinerarySharingReportPage = 1;
          this.admin = undefined;
+         this.pageMap = [];
        };
        this.reset();
+
+       this.savePage = function(name, page) {
+         this.pageMap[name] = page;
+       };
+
+       this.getPage = function(name) {
+         var retval = this.pageMap[name];
+         return retval === undefined ? 1: retval;
+       };
 
        this.saveSearch = function(search) {
          this.tracksSearch = search;

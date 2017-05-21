@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Track Segment Edit</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="well">
+    <p><span class="view-label">Segment ID:</span> {{segmentId}}</p>
+    <div id="segment-not-found" class="alert alert-info" ng-show="points.length === 0">
+      <p>Track segment not found or has no points</p>
+    </div>
+    <div ng-show="points.length > 0">
+      <form name="search" class="css-form" novalidate>
+        <div>
+          <table id="table-segment-points" class="wide-table table table-striped">
+            <tr>
+              <th>
+                <input id="select-all-points" type="checkbox" ng-model="data.selectAll" ng-click="selectAll(form)"/>
+                <label for="select-all-points">ID</label>
+              </th>
+              <th>Time</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Altitude</th>
+              <th>HDOP</th>
+            </tr>
+            <tr ng-repeat="point in points">
+              <td>
+                <input id="select-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-click="showMarker(point)" />
+                <label for="select-point-{{point.id}}">{{point.id}}</label>
+              </td>
+              <td>{{point.time | date:'medium'}}</td>
+              <td>{{point.lat | number:5}}</td>
+              <td>{{point.lng | number:5}}</td>
+              <td>{{point.altitude | number:0}}</td>
+              <td>{{point.hdop | number:1}}</td>
+            </tr>
+          </table>
+          <div id="div-paging">
+            <paging
+              class="small"
+              page="page"
+              page-size="pageSize"
+              total="totalCount"
+              hide-if-empty="true"
+              show-prev-next="true"
+              show-first-last="true"
+              paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
+            </paging>
+          </div>
+        </div>
+        <div ng-messages="formError">
+          <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+               ng-message="editOnlyOne">
+            Select only one item.</div>
+        </div>
+        <div id="div-buttons">
+          <button id="btn-delete"
+                  class="btn btn-lg btn-danger"
+                  mwl-confirm
+                  title="Confirm"
+                  message="Delete the selected points?"
+                  on-confirm="deletePoints(form)"
+                  >Delete points</button>
+          <button id="btn-split"
+                  class="btn btn-lg btn-danger"
+                  mwl-confirm
+                  title="Confirm"
+                  message="Split segment before selected point"
+                  on-confirm="split(form)"
+                  >Split segment</button>
+        </div>
+      </form>
+    </div>
+    <div>
+      <button id="btn-close" ng-click="cancel(form)" type="button" class="btn btn-lg btn-danger">Close</button>
+    </div>
+  </div>
+  <leaflet ng-if="status.showMap" controls="controls" markers="markers" paths="paths" bounds="bounds" layers="layers" defaults="defaults" height="{{height}}"></leaflet>
+  <div class="div-autozoom" ng-show="status.showMap">
+    <label for="auto-zoom">Auto-zoom:</label>
+    <input id="auto-zoom" type="checkbox" ng-model="autozoom" />
+  </div>
+</div>

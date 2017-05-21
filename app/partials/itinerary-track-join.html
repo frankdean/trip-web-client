@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Join Itinerary Tracks</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <table id="tracks-table" class="itinerary-track-table wide-table table table-striped">
+        <tr ng-repeat="track in tracks">
+          <td>
+            <button type="button" class="btn btn-info" ng-click="up(track.id)">Up</button>
+            <button type="button" class="btn btn-info" ng-click="down(track.id)">Down</button>
+          </td>
+          <td>{{track.name}}</td>
+          <td>{{track.color}}</td>
+          <td style="text-align: right;"><span ng-show="track.distance">{{track.distance | number:1}} km</span></td>
+          <td style="text-align: right;"><span ng-show="track.distance">{{track.distance / 1.609344 | number:1}} mi</span></td>
+          <td><span ng-show="track.highest">↗︎{{track.ascent | number:0}}&nbsp;m ↘︎{{track.descent | number:0}}&nbsp;m</span></td>
+          <td><span ng-show="track.highest">↗︎{{track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+          <td><span ng-show="track.highest">{{track.highest | number:0}}⇅{{track.lowest | number:0}}&nbsp;m</span></td>
+          <td><span ng-show="track.highest">{{track.highest / 0.0254 / 12 | number:0}}&#x21c5;{{track.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+        </tr>
+      </table>
+      <div>
+        <label for="input-name">New track name:</label>
+        <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
+      </div>
+      <div style="padding-bottom: 10px;">
+        <label for="input-color">New track colour:</label>
+        <select id="input-color" ng-model="data.color">
+          <option value="">-- not set --</option>
+          <option ng-repeat="color in colors" value="{{color.key}}">{{color.value}}</option>
+        </select>
+      </div>
+      <button id="btn-join"
+              type="button"
+              class="btn btn-lg btn-success"
+              mwl-confirm
+              title="Confirm"
+              message="Join tracks?"
+              confirm-text="Yes"
+              cancel-text="No"
+              on-confirm="join(form)"
+              >Join</button>
+      <button id="btn-cancel"
+              type="button"
+              class="btn btn-lg btn-danger"
+              mwl-confirm
+              title="Confirm"
+              message="Cancel?"
+              confirm-text="Yes"
+              cancel-text="No"
+              on-confirm="cancel(form)"
+              >Cancel</button>
+    </form>
+  </div>
+  <leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
+  <div class="div-autozoom" ng-show="status.showMap">
+    <label for="auto-zoom">Auto-zoom:</label>
+    <input id="auto-zoom" type="checkbox" ng-model="autozoom" />
+    <label for="join-tracks">Show joined tracks:</label>
+    <input id="join-tracks" type="checkbox" ng-click="updateMap()" ng-model="joinTracks" />
+  </div>
+</div>

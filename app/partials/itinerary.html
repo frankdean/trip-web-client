@@ -131,6 +131,28 @@
              ng-message="editOnlyOne">
           Select only one item.</div>
       </div>
+      <div ng-messages="formError">
+        <div id="error-edit--paths-only" class="alert alert-warning" role="alert"
+             ng-message="editPathsOnly">
+          <p>Only route and track paths can be edited via the 'Edit path'
+          option.</p>
+          <p>Waypoint track and route attributes can be modified by selecting
+            one of them and clicking 'Edit attributes'.  Routes can also be
+            copied and optionally reversed via that option.</p>
+          <p>Routes can also be directly modified on the itinerary map by
+            selecting one or more routes and clicking the 'Show map'
+            button.</p>
+        </div>
+        <div id="error-join--paths-only" class="alert alert-warning" role="alert"
+             ng-message="joinPathsOnly">
+          <p>Only route and track paths can be joined via the 'Join paths'
+          option.</p>
+        </div>
+        <div id="error-select-two-plus" class="alert alert-warning" role="alert"
+             ng-message="selectTwoPlusError">
+          <p>Select at least two routes or two tracks to join.</p>
+        </div>
+      </div>
       <div style="margin-top: 20px;">
         <button id="btn-download"
                 type="button"
@@ -143,7 +165,7 @@
                 >GPX download</button>
         <button id="btn-edit-selected" ng-click="editSelected(downloads)"
                 class="btn btn-lg btn-info"
-                ng-show="data.shared_to_nickname === null">Edit selected</button>
+                ng-show="data.shared_to_nickname === null">Edit attributes</button>
         <button id="view-selected" ng-click="viewSelected(downloads)"
                 class="btn btn-lg btn-info"
                 ng-show="data.shared_to_nickname !== null && waypoints.length > 0"
@@ -156,6 +178,12 @@
                 message="Delete the selected waypoints, routes and tracks?"
                 on-confirm="deleteUploads(downloads)"
                 ng-show="data.shared_to_nickname === null">Delete selected items</button>
+        <button id="btn-edit-path" ng-click="editPath(downloads)"
+                class="btn btn-lg btn-info"
+                ng-show="data.shared_to_nickname === null">Edit path</button>
+        <button id="btn-join-path" ng-click="joinPaths(downloads)"
+                class="btn btn-lg btn-success"
+                ng-show="data.shared_to_nickname === null">Join paths</button>
       </div>
     </form>
   </div>

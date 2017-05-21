@@ -85,7 +85,12 @@
       'js/itinerary-wpt-controller.js',
       'js/itinerary-wpt-view-controller.js',
       'js/itinerary-route-name-controller.js',
+      'js/itinerary-route-edit-controller.js',
+	  'js/itinerary-route-join-controller.js',
       'js/itinerary-track-name-controller.js',
+      'js/itinerary-track-edit-controller.js',
+      'js/itinerary-track-segment-edit-controller.js',
+      'js/itinerary-track-join-controller.js',
       'js/login-controller.js',
       'js/map-controller.js',
       'js/map-point-controller.js',
@@ -98,6 +103,7 @@
       'js/track-controller.js',
       'js/track-factory.js',
       'js/trackerinfo-controller.js',
+	  'js/location-controller.js',
       'js/user-controller.js',
       'js/user-edit-controller.js',
       'js/user-factory.js',
@@ -138,8 +144,9 @@
             <ul class="nav navbar-nav">
               <li><a ng-click="navCollapsed=true" href="#/tracks">Tracking</a></li>
               <li><a ng-click="navCollapsed=true" href="#/tracker-info">Tracker Info</a></li>
-              <li><a ng-click="navCollapsed=true" href="#/sharing">Sharing</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/sharing">Track Sharing</a></li>
               <li><a ng-click="navCollapsed=true" href="#/itineraries">Itineraries</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/location">Location</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/users">Users</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/status">Status</a></li>
               <li><a ng-click="navCollapsed=true" href="#/logout">Logout</a></li>

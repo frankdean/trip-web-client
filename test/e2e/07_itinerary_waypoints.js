@@ -120,7 +120,7 @@ describe('Itinerary Waypoints', function() {
       eleType.clear();
       eleColor.clear();
       btnSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should save valid modifications', function() {
@@ -150,7 +150,7 @@ describe('Itinerary Waypoints', function() {
       eleType.sendKeys('Restaurant');
       eleColor.sendKeys('#ff0000');
       btnSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get('app/index.html#itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
       expect(eleName.getAttribute('value')).toEqual('Test waypoint modification');
       expect(elePosition.getAttribute('value')).toEqual('50,-3');
@@ -167,7 +167,7 @@ describe('Itinerary Waypoints', function() {
     it('should not ask for confirmation before cancelling an unmodified form', function() {
       btnCancel.click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should ask for confirmation before cancelling a modified form', function() {
@@ -175,7 +175,7 @@ describe('Itinerary Waypoints', function() {
       eleName.sendKeys('test');
       btnCancel.click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should not cancel the edit when confirmation is dismissed', function() {
@@ -183,12 +183,12 @@ describe('Itinerary Waypoints', function() {
       eleName.sendKeys('test');
       btnCancel.click();
       element.all((by.css('.cancel-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should not ask for confirmation before resetting an unmodified form', function() {
       btnReset.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should ask for confirmation before resetting a modified form', function() {
@@ -198,7 +198,7 @@ describe('Itinerary Waypoints', function() {
       btnReset.click();
       element.all((by.css('.confirm-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual(nameBefore);
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should not reset the form when confirmation is cancelled', function() {
@@ -207,7 +207,7 @@ describe('Itinerary Waypoints', function() {
       btnReset.click();
       element.all((by.css('.cancel-button'))).get(1).click();
       expect(eleName.getAttribute('value')).toEqual('test');
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should show an error message when the samples value is less than one', function() {
@@ -262,7 +262,7 @@ describe('Itinerary Waypoints', function() {
       eleName.sendKeys('Test new waypoint');
       elePosition.sendKeys('48.858222,2.2945');
       btnSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should create a new waypoint with all data', function() {
@@ -281,7 +281,7 @@ describe('Itinerary Waypoints', function() {
       eleType.sendKeys('Restaurant');
       eleColor.sendKeys('#ff0000');
       btnSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
   });

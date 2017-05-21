@@ -72,7 +72,7 @@ describe('itinerary sharing', function() {
 
       it('should show the itinerary list when the close/back button is clicked', function() {
         element(by.id('btn-close')).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       });
 
     });

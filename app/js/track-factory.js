@@ -47,4 +47,15 @@ angular.module('myApp.track.factory', [])
          update: {method: 'POST', url: url},
          save: {method: 'PUT', url: ConfigService.restUrlPrefix + '/location/share'}
        });
+     }])
+
+  .factory(
+    'LocationService',
+    ['$resource', 'ConfigService',
+     function($resource, ConfigService) {
+       var url = ConfigService.restUrlPrefix + '/log_point';
+       return $resource(url, {}, {
+       });
      }]);
+
+// http://localhost/trip/rest/log_point?lat=%LAT&lon=%LON&time=%TIME&hdop=%ACC&altitude=%ALT&speed=%SPD&bearing=%DIR&sat=%SAT&prov=%PROV&batt=%BATT&note=%DESC&uuid=d2b885d6-646a-48b3-9dfb-a021b038e23f

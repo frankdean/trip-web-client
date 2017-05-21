@@ -48,7 +48,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-color')).sendKeys('-');
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should save the amended track details', function() {
@@ -56,7 +56,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('Modified track name');
       element(by.id('input-color')).sendKeys('g');
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get('app/index.html#itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Modified track name');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Green');
@@ -67,7 +67,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('Test track name');
       element(by.id('input-color')).sendKeys('y');
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get('app/index.html#itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Test track name');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Yellow');
@@ -76,7 +76,7 @@ describe('Itinerary Track Name', function() {
     it('should cancel the form when there are no changes', function() {
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should cancel the form if the confirm dialog is accepted', function() {
@@ -85,7 +85,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-color')).sendKeys('b');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should not cancel the form if the confirm dialog is dismissed', function() {
@@ -93,7 +93,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.cancel-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/itinerary-track-name\?itineraryId=\d+&trackId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/itinerary-track-name\?itineraryId=\d+&trackId=\d+/);
     });
 
     it('should not reset the form when there are no changes', function() {

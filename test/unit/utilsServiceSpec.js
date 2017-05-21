@@ -244,6 +244,7 @@ describe('UtilsService', function() {
   });
 
   describe('GIS text parsing', function() {
+    var result;
 
     it('should parse a comma separated lat lng value', function() {
       expect(utilsService.parseGeoLocation('aaa48.85825,2.2945cccc')).toEqual({lat: {deg: 48.85825}, lng: {deg: 2.2945}});
@@ -479,27 +480,39 @@ describe('UtilsService', function() {
     });
 
     it('should convert a valid northerly OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('HP 61292 07379')).toEqual({ lat: { deg: 60.74476977639687 }, lng: { deg: -0.87761226177779 } });
+      result = utilsService.parseGeoLocation('HP 61292 07379');
+      expect(result.lat.deg).toBeCloseTo(60.74476977639687, 6);
+      expect(result.lng.deg).toBeCloseTo(-0.87761226177779, 6);
     });
 
     it('should convert a valid northerly OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('461292 1207379')).toEqual({ lat: { deg: 60.74476977639687 }, lng: { deg: -0.87761226177779 } });
+      result = utilsService.parseGeoLocation('461292 1207379');
+      expect(result.lat.deg).toBeCloseTo(60.74476977639687, 6);
+      expect(result.lng.deg).toBeCloseTo(-0.87761226177779,6);
     });
 
     it('should convert a valid 10 digit 1 letter prefixed Irish Grid reference', function() {
-      expect(utilsService.parseGeoLocation('O1590434671')).toEqual({ lat: { deg: 53.349796006075174 }, lng: { deg: -6.260248518456534 } });
+      result = utilsService.parseGeoLocation('O1590434671');
+      expect(result.lat.deg).toBeCloseTo(53.349796006075174, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260248518456534, 6);
     });
 
     it('should convert a valid 6 digit 1 letter prefixed Irish Grid reference', function() {
-      expect(utilsService.parseGeoLocation('O159346')).toEqual({ lat: { deg: 53.34915924204641 }, lng: { deg: -6.260334527258622 } });
+      result = utilsService.parseGeoLocation('O159346');
+      expect(result.lat.deg).toBeCloseTo(53.34915924204641, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260334527258622, 6);
     });
 
     it('should convert a valid 6 digit 1 letter prefixed Irish Grid reference prefixed with IG', function() {
-      expect(utilsService.parseGeoLocation('IG O159346')).toEqual({ lat: { deg: 53.34915924204641 }, lng: { deg: -6.260334527258622 } });
+      result = utilsService.parseGeoLocation('IG O159346');
+      expect(result.lat.deg).toBeCloseTo(53.34915924204641, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260334527258622, 6);
     });
 
     it('should convert a valid 12 digit Irish Grid reference', function() {
-      expect(utilsService.parseGeoLocation('IG 315904, 234671')).toEqual({ lat: { deg: 53.349796006075174 }, lng: { deg: -6.260248518456534 } });
+      result = utilsService.parseGeoLocation('IG 315904, 234671');
+      expect(result.lat.deg).toBeCloseTo(53.349796006075174, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260248518456534, 6);
     });
 
     it('should convert a valid 12 digit ITM reference', function() {

@@ -223,6 +223,95 @@ angular.module('myApp.itinerary.controller', [])
            $scope.formError = {editOnlyOne: true};
          }
        };
+       $scope.editPath = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         var selectedCount = 0,
+             waypoints = [], routes = [], tracks = [];
+         $scope.waypoints.forEach(function(v) {
+           if (v.selected) {
+             waypoints.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.routeNames.forEach(function(v) {
+           if (v.selected) {
+             routes.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             tracks.push(v.id);
+             selectedCount++;
+          }
+         });
+         if (selectedCount === 1) {
+           if (waypoints.length === 1) {
+             $scope.formError = {editPathsOnly: true};
+           }
+           if (routes.length === 1) {
+             $scope.formError = {editPathsOnly: true};
+             $location.path('/itinerary-route-edit');
+             $location.search({
+               itineraryId: encodeURIComponent($scope.data.id),
+               routeId: encodeURIComponent(routes[0])
+             });
+           }
+           if (tracks.length === 1) {
+             $location.path('/itinerary-track-edit');
+             $location.search({
+               itineraryId: encodeURIComponent($scope.data.id),
+               trackId: encodeURIComponent(tracks[0])
+             });
+           }
+         } else {
+           $scope.formError = {editOnlyOne: true};
+         }
+       };
+       $scope.joinPaths = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         var selectedCount = 0,
+             waypoints = [], routes = [], tracks = [];
+         $scope.waypoints.forEach(function(v) {
+           if (v.selected) {
+             waypoints.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.routeNames.forEach(function(v) {
+           if (v.selected) {
+             routes.push(v.id);
+             selectedCount++;
+           }
+         });
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             tracks.push(v.id);
+             selectedCount++;
+          }
+         });
+         if (waypoints.length > 0) {
+           $scope.formError = {joinPathsOnly: true};
+         } else if (routes.length > 1) {
+           ItinerarySelectionService.setChoices({
+             routes: routes
+           });
+           $location.path('/itinerary-route-join');
+           $location.search({
+             itineraryId: encodeURIComponent($scope.itineraryId)
+           });
+         } else if (tracks.length > 1) {
+           ItinerarySelectionService.setChoices({
+             tracks: tracks
+           });
+           $location.path('/itinerary-track-join');
+           $location.search({
+             itineraryId: encodeURIComponent($scope.itineraryId)
+           });
+         } else {
+           $scope.formError = {selectTwoPlusError: true};
+         }
+       };
        $scope.viewSelected = function(form) {
          $scope.ajaxRequestError = {error: false};
          var selectedCount = 0,

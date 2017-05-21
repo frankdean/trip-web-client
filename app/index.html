@@ -28,6 +28,11 @@
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/angular-i18n/angular-locale_en-gb.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="bower_components/pagedown/Markdown.Converter.js"></script>
+  <script src="bower_components/leaflet/dist/leaflet.js"></script>
+  <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="bower_components/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
+  <script src="bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
 </head>
 <body role="document">
   <div id="wrapper">
@@ -49,6 +54,7 @@
               <li><a ng-click="navCollapsed=true" href="#/tracker-info">Tracker Info</a></li>
               <li><a ng-click="navCollapsed=true" href="#/sharing">Track Sharing</a></li>
               <li><a ng-click="navCollapsed=true" href="#/itineraries">Itineraries</a></li>
+              <li><a ng-click="navCollapsed=true" href="#/location">Location</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/users">Users</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="#/status">Status</a></li>
               <li><a ng-click="navCollapsed=true" href="#/logout">Logout</a></li>
@@ -78,11 +84,7 @@
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-paging/dist/paging.min.js"></script>
   <script src="bower_components/angular-jwt/dist/angular-jwt.min.js"></script>
-  <script src="bower_components/leaflet/dist/leaflet.js"></script>
-  <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
   <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
-  <script src="bower_components/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
-  <script src="bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
   <script src="bower_components/angular-validation-match/dist/angular-validation-match.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -93,7 +95,6 @@
   <script src="bower_components/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js"></script>
   <script src="bower_components/open-location-code/js/src/openlocationcode.min.js"></script>
   <script src="bower_components/proj4/dist/proj4.js"></script>
-  <script src="bower_components/pagedown/Markdown.Converter.js"></script>
   <script src="bower_components/pagedown/Markdown.Sanitizer.js"></script>
   <script src="bower_components/pagedown/Markdown.Extra.js"></script>
   <script src="bower_components/pagedown/Markdown.Editor.js"></script>
@@ -112,7 +113,12 @@
   <script src="js/itinerary-wpt-controller.js"></script>
   <script src="js/itinerary-wpt-view-controller.js"></script>
   <script src="js/itinerary-route-name-controller.js"></script>
+  <script src="js/itinerary-route-edit-controller.js"></script>
+  <script src="js/itinerary-route-join-controller.js"></script>
   <script src="js/itinerary-track-name-controller.js"></script>
+  <script src="js/itinerary-track-edit-controller.js"></script>
+  <script src="js/itinerary-track-segment-edit-controller.js"></script>
+  <script src="js/itinerary-track-join-controller.js"></script>
   <script src="js/login-controller.js"></script>
   <script src="js/map-controller.js"></script>
   <script src="js/map-point-controller.js"></script>
@@ -125,6 +131,7 @@
   <script src="js/track-controller.js"></script>
   <script src="js/track-factory.js"></script>
   <script src="js/trackerinfo-controller.js"></script>
+  <script src="js/location-controller.js"></script>
   <script src="js/user-controller.js"></script>
   <script src="js/user-edit-controller.js"></script>
   <script src="js/user-factory.js"></script>

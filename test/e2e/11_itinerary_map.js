@@ -121,7 +121,8 @@ describe('Itinerary map', function() {
         });
 
         it('should allow a marker to be edited and cancelled', function() {
-          // element(by.css('.leaflet-control-zoom-out')).click();
+          // Zoom out, otherwise sometimes the marker is partly off the map
+          element(by.css('.leaflet-control-zoom-out')).click();
           var e1 = markerIcons.first();
           elemEditControl.click();
           e1.click();
@@ -154,7 +155,7 @@ describe('Itinerary map', function() {
 
         it('it should return to the itinerary page when the back button is clicked', function() {
           element(by.id('btn-back')).click();
-          expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=[0-9]+/);
+          expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=[0-9]+/);
         });
 
       });

@@ -35,7 +35,7 @@ describe('TRIP app', function() {
   describe('default redirect', function() {
     it('should automatically redirect to /tracks when location hash/fragment is empty', function() {
       browser.get('app/index.html');
-      expect(browser.getLocationAbsUrl()).toMatch("/tracks");
+      expect(browser.getCurrentUrl()).toMatch("/tracks");
     });
   });
 

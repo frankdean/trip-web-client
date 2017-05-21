@@ -47,14 +47,14 @@ describe('Itinerary Route Name', function() {
     it('should allow an empty route name', function() {
       element(by.id('input-name')).clear();
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should save the amended route name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('Modified route name');
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get('app/index.html#itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Modified route name');
     });
@@ -62,7 +62,7 @@ describe('Itinerary Route Name', function() {
     it('should cancel the form when there are no changes', function() {
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should cancel the form if the confirm dialog is accepted', function() {
@@ -70,7 +70,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should not cancel the form if the confirm dialog is dismissed', function() {
@@ -78,7 +78,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.cancel-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/itinerary-route-name\?itineraryId=\d+&routeId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/itinerary-route-name\?itineraryId=\d+&routeId=\d+/);
     });
 
     it('should not reset the form when there are no changes', function() {
@@ -110,7 +110,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('Copy');
       element(by.id('input-copy')).click();
       element(by.id('btn-save')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
   });

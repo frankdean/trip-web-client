@@ -41,7 +41,7 @@ module.exports = function(config){
     frameworks: ['jasmine'],
 
     _browsers : ['Chrome', 'Firefox', 'Safari'],
-    browsers : ['Firefox'],
+    browsers : ['Chrome'],
 
     logLevel: config.LOG_INFO,
 

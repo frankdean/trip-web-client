@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Join Itinerary Routes</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <table id="routes-table" class="itinerary-route-table wide-table table table-striped">
+        <tr ng-repeat="route in routes">
+          <td>
+            <button type="button" class="btn btn-info" ng-click="up(route.id)">Up</button>
+            <button type="button" class="btn btn-info" ng-click="down(route.id)">Down</button>
+          </td>
+          <td>{{route.name}}</td>
+          <td>{{route.color}}</td>
+          <td style="text-align: right;"><span ng-show="route.distance">{{route.distance | number:1}} km</span></td>
+          <td style="text-align: right;"><span ng-show="route.distance">{{route.distance / 1.609344 | number:1}} mi</span></td>
+          <td><span ng-show="route.highest">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span></td>
+          <td><span ng-show="route.highest">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+          <td><span ng-show="route.highest">{{route.highest | number:0}}⇅{{route.lowest | number:0}}&nbsp;m</span></td>
+          <td><span ng-show="route.highest">{{route.highest / 0.0254 / 12 | number:0}}&#x21c5;{{route.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+        </tr>
+      </table>
+      <div>
+        <label for="input-name">New route name:</label>
+        <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
+      </div>
+      <div style="padding-bottom: 10px;">
+        <label for="input-color">New route colour:</label>
+        <select id="input-color" ng-model="data.color">
+          <option value="">-- not set --</option>
+          <option ng-repeat="color in colors" value="{{color.key}}">{{color.value}}</option>
+        </select>
+      </div>
+      <button id="btn-join"
+              type="button"
+              class="btn btn-lg btn-success"
+              mwl-confirm
+              title="Confirm"
+              message="Join routes?"
+              confirm-text="Yes"
+              cancel-text="No"
+              on-confirm="join(form)"
+              >Join</button>
+      <button id="btn-cancel"
+              type="button"
+              class="btn btn-lg btn-danger"
+              mwl-confirm
+              title="Confirm"
+              message="Cancel?"
+              confirm-text="Yes"
+              cancel-text="No"
+              on-confirm="cancel(form)"
+              >Cancel</button>
+    </form>
+  </div>
+  <leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
+  <div class="div-autozoom" ng-show="status.showMap">
+    <label for="auto-zoom">Auto-zoom:</label>
+    <input id="auto-zoom" type="checkbox" ng-model="autozoom" />
+    <label for="join-routes">Show joined routes:</label>
+    <input id="join-routes" type="checkbox" ng-click="updateMap()" ng-model="joinRoutes" />
+  </div>
+</div>

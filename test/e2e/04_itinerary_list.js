@@ -35,7 +35,7 @@ describe('Itineries page', function() {
 
   it('should show the edit page when an itinerary is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=[0-9]+/);
   });
 
 });

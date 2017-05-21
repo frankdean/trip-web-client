@@ -68,7 +68,7 @@ describe('ItineraryCtrl', function() {
       requestHandler = $httpBackend.when('GET', itineraryRegex).respond(expected);
       getWaypointNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/waypoint$/).respond(expectedWaypoints);
       getRouteNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/routes\/names$/).respond(expectedRouteNames);
-      getTrackNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/tracks\/names$/).respond(expectedTrackNames);
+      getTrackNamesRequestHandler = $httpBackend.when('GET', /\/itinerary\/\d+\/track\/names$/).respond(expectedTrackNames);
       deleteRequestHandler = $httpBackend.when('PUT', /\/download\/itinerary\/\d+\/delete-gpx$/).respond(null);
       $location = _$location_;
       gpxDownloadService = InitGpxDownload;

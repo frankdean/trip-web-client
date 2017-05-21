@@ -58,7 +58,7 @@ describe('Itinerary management', function() {
                                '## Lorem ipsum',
                                protractor.Key.ENTER);
       elemSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('text-title')).getText()).toEqual('Test title');
       expect(element(by.id('text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
       // cleanup
@@ -70,7 +70,7 @@ describe('Itinerary management', function() {
     it('should create a new itinerary if only the title field is entered', function() {
       elemTitle.sendKeys('Test title 2');
       elemSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('text-title')).getText()).toEqual('Test title 2');
       expect(element(by.id('text-date')).getText()).toEqual('');
       // cleanup
@@ -131,11 +131,11 @@ describe('Itinerary management', function() {
     it('should delete an itinerary when the delete button is clicked', function() {
       elemTitle.sendKeys('Test deleting itinerary');
       elemSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       element(by.id('btn-edit')).click();
       elemDelete.click();
       element.all((by.css('.confirm-button'))).get(0).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itineraries/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itineraries/);
     });
 
   });
@@ -164,7 +164,7 @@ describe('Itinerary management', function() {
                                '## Lorem ipsum modified too',
                                protractor.Key.ENTER);
       elemSave.click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('text-title')).getText()).toEqual('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
       expect(element(by.id('text-date')).getText()).toMatch(/Date from: (\w+ )?22.Nov.2015 to: (\w+ )?23.Nov.2015/);
     });
@@ -275,7 +275,7 @@ describe('Itinerary management', function() {
                                  protractor.Key.ENTER);
         elemReset.click();
         element.all((by.css('.confirm-button'))).get(2).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
         expect(elemTitle.getAttribute('value')).toEqual(titleBefore);
         expect(elemStartDate.getAttribute('value')).toEqual(startDateBefore);
         expect(elemFinishDate.getAttribute('value')).toEqual(finishDateBefore);
@@ -293,7 +293,7 @@ describe('Itinerary management', function() {
 
     it('should show the sharing page when the sharing button is clicked', function() {
       element(by.id('btn-sharing')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-sharing\?id=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=\d+/);
     });
 
     it('should show the Add Waypoint button whilst the form is not in edit mode', function() {

@@ -75,6 +75,23 @@ angular.module('myApp.itinerary.factory.js', [] )
      }])
 
   .factory(
+    'ItineraryTrackSegmentService',
+    ['$resource', 'ConfigService',
+     function($resource, ConfigService) {
+       var url = ConfigService.restUrlPrefix + '/itinerary/:itineraryId/track/:trackId/segment/:segmentId';
+       return $resource(url, {itineraryId: '@itineraryId', trackId: '@trackId', segmentId: '@segmentId'}, {
+         query: {isArray: false},
+         deleteSegments: {url: ConfigService.restUrlPrefix + '/itinerary/:itineraryId/track/:trackId/delete-segments',
+                          method: 'PUT'},
+         getPoints: {url: ConfigService.restUrlPrefix + '/itinerary/:itineraryId/track/:trackId/segment/:segmentId'},
+         deletePoints: {
+           url: ConfigService.restUrlPrefix + '/itinerary/:itineraryId/track/:trackId/segment/:segmentId/delete-points',
+           method: 'PUT'
+         }
+       });
+     }])
+
+  .factory(
     'PathColorService',
     ['$resource', 'ConfigService',
      function($resource, ConfigService) {
@@ -106,6 +123,11 @@ angular.module('myApp.itinerary.factory.js', [] )
      return $resource(url, {id: '@id', routeId: '@routeId'}, {
        routeNames: {isArray: true, url: ConfigService.restUrlPrefix + '/itinerary/:id/routes/names'},
        getRoutes: {method: 'POST', url: ConfigService.restUrlPrefix + '/itinerary/:id/routes', isArray: true},
+       getPoints: {url: ConfigService.restUrlPrefix + '/itinerary/:id/route/:routeId/points'},
+       deletePoints: {
+         method: 'PUT',
+         url: ConfigService.restUrlPrefix + '/itinerary/:id/route/:routeId/delete-points'
+       },
        update: {method: 'PUT', url: ConfigService.restUrlPrefix + '/itinerary/:id/route/:routeId/points'}
      });
    }])
@@ -114,10 +136,11 @@ angular.module('myApp.itinerary.factory.js', [] )
   'ItineraryTrackService',
   ['$resource', 'ConfigService',
    function($resource, ConfigService) {
-     var url = ConfigService.restUrlPrefix + '/itinerary/:id/tracks';
-     return $resource(url, {id: '@id'}, {
+     var url = ConfigService.restUrlPrefix + '/itinerary/:id/track/:trackId';
+     return $resource(url, {id: '@id', trackId: '@trackId'}, {
        trackNames: {isArray: true, url: url + '/names'},
-       getTracks: {method: 'POST', isArray: true}
+       getTracks: {url: ConfigService.restUrlPrefix + '/itinerary/:id/tracks/selected',
+                   method: 'POST', isArray: true}
      });
    }])
 

@@ -24,13 +24,13 @@
     "socket.io-client": "^1.7.2",
     "angular-file-saver": "^1.1.2",
     "angular-pagedown": "0.4.3",
-    "ui-leaflet": "^1.0.0",
-    "ui-leaflet-draw": "^0.0.3",
+    "ui-leaflet-draw": "^0.0.5",
     "leaflet-draw": "Leaflet/Leaflet.draw#^0.4.9",
     "lodash": "^4.17.4",
     "open-location-code": "google/open-location-code#^1.0.1",
     "proj4": "^2.4.3",
-    "angular-bootstrap-confirm": "^2.5.1"
+    "angular-bootstrap-confirm": "^2.5.1",
+    "ui-leaflet": "frankdean/ui-leaflet#1.0.4-rc.1"
   },
   "resolutions": {
     "angular": "~1.5.6",

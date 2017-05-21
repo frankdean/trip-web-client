@@ -35,24 +35,24 @@ describe('Itineraries sharing report', function() {
 
   it('should show the itinerary sharing page when an itinerary is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
   });
 
   it('should show the itinerary when the "show itinerary" button on the itinerary sharing page is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
     element(by.id('btn-show-itinerary')).click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary\?id=\d+$/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+$/);
   });
 
   it('should show the itinerary sharing report when the back button on the itinerary sharing page is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
     element(by.id('btn-close')).click();
-    expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-sharing-report$/);
+    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing-report$/);
   });
 
 });

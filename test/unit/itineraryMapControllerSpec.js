@@ -50,7 +50,7 @@ describe('ItineraryMapCtrl', function() {
     service = ItineraryTrackService;
     selectionService = ItinerarySelectionService;
     routeParams = {id: '42'};
-    $httpBackend.when('POST', /itinerary\/\d+\/tracks$/,
+    $httpBackend.when('POST', /itinerary\/\d+\/tracks\/selected$/,
                       function(data) {
                         return '{"id":"42","tracks":[1,2]}' === data;
                       }).respond(tracks);

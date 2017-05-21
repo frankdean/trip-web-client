@@ -69,12 +69,12 @@ describe('Itinerary uploads', function() {
     it('should show the itinerary waypoint edit page when a waypoint is selected for edit', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element(by.id('btn-edit-selected')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should show the itinerary waypoint edit page when the add waypoint button is clicked', function() {
       element(by.id('btn-new-waypoint')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+$/);
     });
 
     describe('display geo items on map', function() {
@@ -90,25 +90,25 @@ describe('Itinerary uploads', function() {
       it('should show everything on the map', function() {
         element(by.model('selection.allGeoItemsSelected')).click();
         element(by.id('btn-map')).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
       it('should show all waypoints on the map', function() {
         element(by.model('selection.allWaypointsSelected')).click();
         element(by.id('btn-map')).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
       it('should show all routes on the map', function() {
         element(by.model('selection.allRoutesSelected')).click();
         element(by.id('btn-map')).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
       it('should show all tracks on the map', function() {
         element(by.model('selection.allTracksSelected')).click();
         element(by.id('btn-map')).click();
-        expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
     });
@@ -145,21 +145,21 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).get(1).click();
       element(by.id('btn-map')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 
     it('should show routes on the map', function() {
       element.all(by.repeater('route in routeNames')).all(by.model('route.selected')).first().click();
       element.all(by.repeater('route in routeNames')).all(by.model('route.selected')).get(1).click();
       element(by.id('btn-map')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 
     it('should show tracks on the map', function() {
       element.all(by.repeater('track in trackNames')).all(by.model('track.selected')).first().click();
       element.all(by.repeater('track in trackNames')).all(by.model('track.selected')).get(1).click();
       element(by.id('btn-map')).click();
-      expect(browser.getLocationAbsUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 
   });

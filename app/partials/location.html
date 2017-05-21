@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Current Location</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+    <div ng-messages="locationNotFound">
+      <div id="error-edit-only-one" class="alert alert-warning" role="alert"
+           ng-message="error">
+        Browser failed to provide your current location.</div>
+    </div>
+    <div ng-messages="updateSuccess">
+      <div id="error-edit-only-one" class="alert alert-info" role="alert"
+           ng-message="ok">
+        Location successfully updated.</div>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <div id="div-location-data" ng-show="data.position">
+        <span class="view-label">Time:</span> {{data.time | date:'HH:mm:ss EEE dd-MMM-yyyy'}}</br>
+        <span class="view-label">Position:</span> {{data.latitude | number:5}},{{data.longitude | number:5}}</br>
+        <div>
+          <label for="input-coord-format">Display position format:</label>
+          <select id="input-coord-format" ng-model="coordFormat" >
+            <option ng-repeat="format in georefFormats" value="{{format.key}}">{{format.value}}</option>
+          </select>
+        </div>
+        <div ng-show="coordFormat !== 'plus+code' && coordFormat !== 'osgb36' && coordFormat !== 'IrishGrid' && coordFormat !== 'ITM'">
+          <label for="position-separator">Position ordering and separator:</label>
+          <select id="position-separator" ng-model="positionFormat">
+            <option value="lat-lng">lat lng</option>
+            <option value="lat,lng">lat,lng</option>
+            <option value="lng-lat">lng lat (Proj4 reversed)</option>
+            <option value="lng,lat">lng,lat (Reversed)</option>
+          </select>
+        </div>
+        <div>
+          <span class="view-label" ng-repeat="format in georefFormats | filter:coordFormat:true">Converted to "{{format.value}}" format: </span><span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng" ng-show="!form.position.$error.position && data.position && data.lat && data.lng"></span>
+          <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
+        </div>
+        <span class="view-label">HDOP:</span>&nbsp;{{data.hdop | number:1}}</br>
+        <span class="view-label">Altitude:</span>&nbsp;{{data.altitude | number:0}}
+        <span class="view-label" style="padding-left: 10px;">Speed:</span>&nbsp;{{data.speed | number:0}}
+        <span class="view-label" style="padding-left: 10px;">Bearing:</span>&nbsp;{{data.bearing | number:1}}</br>
+        <label for="input-note">Note:</label>
+        <input id="input-note" ng-model="data.note" name="note" type="text" size="30" required="" /></br>
+      </div>
+      <label for="input-gps-accuracy">Request high accuracy location:</label>
+      <input id="input-gps-accuracy" type="checkbox" ng-model="data.highAccuracy" />
+    </form>
+    <div class="text-center map-page-div map-page-buttons">
+      <button id="btn-update" ng-click="updateLocation()" type="button" class="btn btn-primary">Update position</button>
+      <button id="btn-send"
+              ng-click="sendLocation()"
+              type="button"
+              class="btn btn-success"
+              ng-show="data.position">Record this position</button>
+    </div>
+  </div>
+  <leaflet ng-if="status.showMap" controls="map.controls" lf-center="map.center" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
+</div>
