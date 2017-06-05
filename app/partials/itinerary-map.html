@@ -30,11 +30,17 @@
       Browser failed to provide your current location.
     </div>
   </div>
+  <div style="padding-left: 20px;">
+    <div>
+      <label for="input-live-map">Enable live map</label>
+      <input id="input-live-map" type="checkbox" ng-model="state.liveMap" ng-click="initLiveMapSettings()" style="margin-right: 15px;"/>
+    </div>
+    <div>
+      <label for="input-gps-accuracy">Request high accuracy location:</label>
+      <input id="input-gps-accuracy" type="checkbox" ng-model="data.highAccuracy" />
+    </div>
+  </div>
   <div class="text-center map-page-div map-page-buttons">
-    <label for="input-live-map">Enable live map</label>
-    <input id="input-live-map" type="checkbox" ng-model="state.liveMap" ng-click="initLiveMapSettings()" style="margin-right: 15px;"/>
-    <label for="input-gps-accuracy">Request high accuracy location:</label>
-    <input id="input-gps-accuracy" type="checkbox" ng-model="data.highAccuracy" />
     <button id="btn-whereami" ng-click="updatePosition()" type="button" class="btn btn-primary">My position</button>
     <button id="btn-mark-pos" ng-show="canDropMarker" ng-click="markPosition()" type="button" class="btn btn-success">Drop marker</button>
     <button id="btn-back" ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
