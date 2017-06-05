@@ -29,12 +29,17 @@ angular.module('myApp.itinerary.map.controller', [])
      'leafletBoundsHelpers',
      '$log',
      '$window',
+     '$timeout',
      'MapConfigService',
      'UtilsService',
      'ItineraryWaypointService',
      'ItineraryTrackService',
      'ItineraryRouteService',
      'ItinerarySelectionService',
+     'RecentPoints',
+     'UserService',
+     'mySocket',
+     'SharedLocationNickname',
      function($scope,
               $sanitize,
               $routeParams,
@@ -43,18 +48,83 @@ angular.module('myApp.itinerary.map.controller', [])
               leafletBoundsHelpers,
               $log,
               $window,
+              $timeout,
               MapConfigService,
               UtilsService,
               ItineraryWaypointService,
               ItineraryTrackService,
               ItineraryRouteService,
-              ItinerarySelectionService) {
+              ItinerarySelectionService,
+              RecentPoints,
+              UserService,
+              mySocket,
+              SharedLocationNickname) {
        var choices = ItinerarySelectionService.getChoices(),
            drawnItems = new L.FeatureGroup(),
            autoDiscover = true,
-           myBounds;
-       $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
-       $scope.ajaxRequestError = {error: false};
+           myBounds,
+           start = new Date(),
+           trackColor = 0,
+           trackColors = [
+             'red',
+             'lime',
+             'fuchsia',
+             'blue',
+             'green',
+             'navy',
+             'purple',
+             'maroon',
+             'olive',
+             'teal',
+             'aqua',
+             'gray',
+             'black',
+             'yellow',
+             'silver',
+             'white'
+           ];
+       start.setHours(0);
+       start.setMinutes(0);
+       start.setSeconds(0);
+       start.setMilliseconds(0);
+       angular.extend($scope, {
+         ajaxRequestError: {error: false},
+         itineraryId: $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined,
+         data: {
+           highAccuracy: false,
+           liveTracks: [],
+           dateFrom: start
+
+         },
+         state: {
+           autocenter: false,
+           liveMap: false,
+           updateBounds: true,
+           showMap: false,
+           locationFound: {error: false, success: false}
+         },
+         map: {
+           height: $window.innerHeight - 168,
+           controls: {
+             scale: {
+               position: "bottomright"
+             }
+           },
+           center: {},
+           bounds: {},
+           markers: [],
+           paths: []
+         }
+       });
+
+
+       $scope.$on('leafletDirectiveMap.locationfound', function(event, data) {
+         $scope.state.locationFound = {error: false, success: true};
+       });
+       $scope.$on('leafletDirectiveMap.locationerror', function(event, data) {
+         $scope.state.locationFound = {error: true, success: false};
+       });
+
        if (choices) {
          if (choices.tracks && choices.tracks.length > 0) {
            autoDiscover = false;
@@ -200,23 +270,6 @@ angular.module('myApp.itinerary.map.controller', [])
          $location.search({id: encodeURIComponent($scope.itineraryId)});
        }
 
-       angular.extend($scope, {
-         status: {
-           // Delay construction of map object until attribution fetched from server
-           showMap: false
-         },
-         map: {
-           height: $window.innerHeight - 168,
-           controls: {
-             scale: {
-               position: "bottomright"
-             }
-           },
-           center: {},
-           bounds: {},
-           paths: []
-         }
-       });
        MapConfigService.getMapLayers()
          .then(function(layers) {
            angular.extend($scope.map, {
@@ -234,7 +287,7 @@ angular.module('myApp.itinerary.map.controller', [])
                maxZoom: 17
              }
            });
-           $scope.status.showMap = true;
+           $scope.state.showMap = true;
          })
          .catch(function(error) {
            $log.error('Failed to get the map layer configuration: ', error);
@@ -283,6 +336,7 @@ angular.module('myApp.itinerary.map.controller', [])
        }
        if (autoDiscover) {
          $scope.map.center = {
+           enableHighAccuracy: $scope.data.highAccuracy,
            autoDiscover: true,
            zoom: 16
          };
@@ -291,6 +345,7 @@ angular.module('myApp.itinerary.map.controller', [])
          $scope.ajaxRequestError = {error: false};
          $scope.invalidMarkerError = {error: false};
          $scope.invalidRouteError = {error: false};
+         $scope.state.locationFound = {error: false, success: false};
          if (payload.leafletEvent.layerType === 'marker') {
            if (!payload.leafletEvent.layer.tl_id) {
              // Create a new marker
@@ -371,6 +426,7 @@ angular.module('myApp.itinerary.map.controller', [])
          $scope.ajaxRequestError = {error: false};
          $scope.invalidMarkerError = {error: false};
          $scope.invalidRouteError = {error: false};
+         $scope.state.locationFound = {error: false, success: false};
          var layers = payload.leafletEvent.layers;
          layers.eachLayer(function (layer) {
            if (layer instanceof L.Marker) {
@@ -445,6 +501,7 @@ angular.module('myApp.itinerary.map.controller', [])
          $scope.ajaxRequestError = {error: false};
          $scope.invalidMarkerError = {error: false};
          $scope.invalidRouteError = {error: false};
+         $scope.state.locationFound = {error: false, success: false};
          payload.leafletEvent.layers.eachLayer(function (layer) {
            if (layer instanceof L.Marker) {
              if (layer.tl_id) {
@@ -474,8 +531,17 @@ angular.module('myApp.itinerary.map.controller', [])
            }
          });
        });
+       $scope.updatePosition = function() {
+         $scope.ajaxRequestError = {error: false};
+         $scope.state.locationFound = {error: false, success: false};
+         $scope.map.center = {
+           enableHighAccuracy: $scope.data.highAccuracy,
+           autoDiscover: true
+         };
+       };
        $scope.markPosition = function() {
          $scope.ajaxRequestError = {error: false};
+         $scope.state.locationFound = {error: false, success: false};
          var lat = $scope.map.center.lat,
              lng = $scope.map.center.lng;
          ItineraryWaypointService.save({},
@@ -500,6 +566,227 @@ angular.module('myApp.itinerary.map.controller', [])
        $scope.goBack = function() {
          $location.path('/itinerary');
          $location.search({id: encodeURIComponent($scope.itineraryId)});
+       };
+
+       $scope.initLiveMapSettings = function() {
+         $scope.state.locationFound = {error: false, success: false};
+         if ($scope.state.liveMap) {
+           if (!$scope.state.connected) {
+             mySocket.connect();
+             mySocket.on('connect', function() {
+               $scope.state.connected = true;
+             });
+             mySocket.on('disconnect', function() {
+               $scope.state.connected = false;
+             });
+             $scope.$on('$destroy', function() {
+               mySocket.disconnect();
+               mySocket.removeAllListeners();
+             });
+           }
+           SharedLocationNickname.query({})
+             .$promise.then(function(nicknames) {
+               $scope.data.nicknames = nicknames;
+             });
+           UserService.nickname({})
+             .$promise.then(function(data) {
+               $scope.data.myNickname = data.nickname;
+             });
+         } else {
+           $scope.data.selfSelected = false;
+           $scope.data.myNickname = null;
+           $scope.data.nicknames = null;
+           mySocket.disconnect();
+           $scope.data.liveTracks.forEach(function(i) {
+             $scope.removeListener(i.nickname);
+           });
+           mySocket.removeAllListeners();
+           $scope.state.connected = false;
+         }
+       };
+
+       $scope.selectNickname = function(nickname) {
+         $scope.state.locationFound = {error: false, success: false};
+         if ($scope.data.myNickname && nickname === $scope.data.myNickname) {
+           $scope.data.trackSelf = $scope.data.selfSelected;
+         } else {
+           nickname.selected = nickname.selected ? false : true;
+         }
+       };
+
+       $scope.addListener = function(nickname) {
+         var liveItem;
+         var i = $scope.data.liveTracks.findIndex(function(e) {
+           return e.nickname === nickname;
+         });
+         if (i === -1) {
+           liveItem =
+             {
+               nickname: nickname,
+               marker: null,
+               path: null,
+               listen: false,
+               color: trackColors[trackColor],
+               apply: function(socket, args) {
+                 if (args && args[0] && args[0].update) {
+                   $scope.state.updateBounds = false;
+                   $scope.updateLiveTrack(this.nickname, true);
+                 }
+               }
+             };
+           trackColor++;
+           if (trackColor >= trackColors.length) {
+             trackColor = 0;
+           }
+           $scope.data.liveTracks.push(liveItem);
+         } else {
+           liveItem = $scope.data.liveTracks[i];
+         }
+         if (!liveItem.listen) {
+           liveItem.listen = true;
+           mySocket.addListener(liveItem.nickname, liveItem);
+         }
+       };
+
+       $scope.removeLiveItem = function(liveItem) {
+         var pos;
+         if (liveItem.path) {
+           pos = $scope.map.paths.indexOf(liveItem.path);
+           if (pos !== -1) {
+             $scope.map.paths.splice(pos, 1);
+           }
+         }
+         if (liveItem.marker) {
+           pos = $scope.map.markers.indexOf(liveItem.marker);
+           if (pos !== -1) {
+             $scope.map.markers.splice(pos, 1);
+           }
+         }
+       };
+
+       $scope.removeListener = function(nickname) {
+         var i, liveItem;
+         i = $scope.data.liveTracks.findIndex(function(e) {
+           return e.nickname === nickname;
+         });
+         if (i !== -1) {
+           liveItem = $scope.data.liveTracks[i];
+           if (liveItem.listen) {
+             mySocket.removeListener(liveItem.nickname, liveItem);
+             liveItem.listen = false;
+           }
+           if (liveItem.path) {
+             $scope.removeLiveItem(liveItem);
+             liveItem.path = null;
+           }
+         }
+       };
+
+       $scope.updateLiveTrack = function(nickname, focusMarker) {
+         var i, liveItem;
+         i = $scope.data.liveTracks.findIndex(function(e) {
+           return e.nickname === nickname;
+         });
+         if (i !== -1) {
+           liveItem = $scope.data.liveTracks[i];
+           if (liveItem.path) {
+             $scope.removeLiveItem(liveItem);
+             liveItem.path = null;
+           }
+           var path, latlng, latlngs = [], now = new Date();
+           RecentPoints.query(
+             {nickname: nickname === $scope.data.myNickname ? undefined : nickname,
+              max_hdop: $scope.data.maxHdop,
+              from: $scope.data.dateFrom,
+              to: now
+             })
+             .$promise.then(function(trackData) {
+               path = {
+                 color: liveItem.color,
+                 opacity: 1,
+                 weight: 2,
+                 latlngs: latlngs
+               };
+               trackData.payload.forEach(function(item) {
+                 latlng =  {lat: parseFloat(item.lat, 10), lng: parseFloat(item.lng, 10), time: (new Date(item.time)).toLocaleString('en-GB')};
+                 latlngs.push(latlng);
+               });
+               if (latlng !== undefined) {
+                 liveItem.marker = {
+                   lat: latlng.lat,
+                   lng: latlng.lng,
+                   icon: ConfigService.getDefaultMarkerIcon(),
+                   focus: !$scope.state.updateBounds && $scope.state.autocenter && focusMarker ? true : false,
+                   message: $sanitize('<b>' + _.escape(nickname) + '</br>'  + latlng.time)
+                 };
+                 $scope.map.markers.push(liveItem.marker);
+               }
+               liveItem.path = path;
+               $scope.map.paths.push(path);
+               if (myBounds) {
+                 myBounds.extend(latlngs);
+               } else {
+                 myBounds = L.latLngBounds(latlngs);
+               }
+               if ($scope.state.updateBounds) {
+                 if (myBounds && myBounds.isValid()) {
+                   $scope.map.bounds = leafletBoundsHelpers.createBoundsFromLeaflet(myBounds);
+                   $scope.map.bounds.options = {maxZoom: 14};
+                 } else if (latlng && $scope.state.autocenter) {
+                   $scope.map.center = {
+                     lat: latlng.lat,
+                     lng: latlng.lng,
+                     zoom: 14
+                   };
+                 } else {
+                   $scope.map.center = {
+                     enableHighAccuracy: $scope.data.highAccuracy,
+                     autoDiscover: true,
+                     zoom: 16
+                   };
+                 }
+                 if (nickname === $scope.data.myNickname) {
+                   $scope.data.myDistance = trackData.distance;
+                 } else if (Array.isArray($scope.data.nicknames)) {
+                   $scope.data.nicknames.forEach(function(v) {
+                     if (v.nickname === nickname) {
+                       v.distance = trackData.distance;
+                     }
+                   });
+                 }
+               } else if (latlng && $scope.state.autocenter) {
+                 $scope.map.center = {
+                   lat: latlng.lat,
+                   lng: latlng.lng,
+                   zoom: 14
+                 };
+               }
+             });
+         }
+       };
+
+       $scope.updateLiveMapSettings = function() {
+         if ($scope.form  && $scope.form.$valid) {
+           $scope.state.updateBounds = true;
+           $scope.state.locationFound = {error: false, success: false};
+           if ($scope.data.trackSelf) {
+             $scope.addListener($scope.data.myNickname);
+             $scope.updateLiveTrack($scope.data.myNickname);
+           } else {
+             $scope.removeListener($scope.data.myNickname);
+           }
+           $scope.data.nicknames.forEach(function(v) {
+             if (v.selected) {
+               $scope.addListener(v.nickname);
+               $scope.updateLiveTrack(v.nickname);
+             } else {
+               $scope.removeListener(v.nickname);
+             }
+           });
+           $timeout(function() {
+             $scope.state.updateBounds = false;
+           }, 3000);
+         }
        };
 
      }]);

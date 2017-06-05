@@ -151,6 +151,7 @@
         <div id="error-lastname-required" class="alert alert-warning" role="alert" ng-show="form.lastname.$error.required">Enter the user's last name</div>
       </div>
       <div>
+        <button id="btn-submit" type="submit" ng-click="saveUser(form)" class="btn btn-lg btn-success">Save</button>
         <button id="btn-cancel"
                 type="button"
                 class="btn btn-lg btn-danger"
@@ -161,7 +162,6 @@
                 cancel-text="No"
                 on-confirm="cancelEdit(form)"
                 >Cancel</button>
-        <button id="btn-submit" type="submit" ng-click="saveUser(form)" class="btn btn-lg btn-success">Save</button>
         <button id="btn-reset"
                 class="btn btn-lg btn-danger"
                 ng-show="!state.new"

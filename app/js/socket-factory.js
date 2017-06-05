@@ -41,9 +41,8 @@ angular.module('myApp.socket.factory', [] )
            'websocket'];
        }
        */
-       var myIoSocket = io.connect({path: ConfigService.getWebSocketPath(), transports:transports});
        var mySocket = socketFactory({
-         ioSocket: myIoSocket
+         ioSocket: io.connect({path: ConfigService.getWebSocketPath(), transports:transports})
        });
        return mySocket;
      }]);

@@ -134,17 +134,30 @@ angular.module('myApp.location.controller', [])
          });
 
        $scope.$on('leafletDirectiveMap.locationfound', function(event, data) {
+         var now = new Date(), eventDate;
          $scope.locationNotFound = undefined;
          $scope.updateSuccess = undefined;
          $scope.ajaxRequestError = {error: false};
          if (data.leafletEvent && data.leafletEvent.latlng) {
            markerLayer = new L.Marker(data.leafletEvent.latlng);
-           $scope.data.time = new Date(data.leafletEvent.timestamp);
+           eventDate = new Date(data.leafletEvent.timestamp);
+           // Epoch of 978307200 seconds between 1-Jan-1970 and 1-Jan-2001
+           // Safari desktop appears to be based on Epoch of 1-Jan-2001
+           // If the difference between now and the event date is more than 10 years
+           if (now.getTime() - eventDate.getTime() > 315576000000) {
+             eventDate = new Date(eventDate.getTime() + 978307200000);
+             // If the timestamp looks more than 24 hours out, let's just play safe and use current time
+             if (Math.abs(now.getTime() - eventDate.getTime()) > 86400000) {
+               eventDate = now;
+               $log.debug('Timestamp still looks wrong (%s).  Will use the current time', eventDate.toLocaleString('en-GB'));
+             }
+             $log.warn('Altered event date to %s', eventDate.toLocaleString('en-GB'));
+           }
            angular.extend($scope.data,
                           {position: data.leafletEvent.latitude + ',' + data.leafletEvent.longitude},
                           {latitude: data.leafletEvent.latitude},
                           {longitude: data.leafletEvent.longitude},
-                          {time: data.leafletEvent.timestamp},
+                          {time: eventDate.getTime()},
                           {altitude: data.leafletEvent.altitude},
                           {vdop: data.leafletEvent.altitudeAccuracy},
                           {heading: data.leafletEvent.heading},

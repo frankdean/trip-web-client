@@ -46,6 +46,11 @@
         <input id="input-admin" type="checkbox" ng-model="data.admin" />
       </div>
       <div>
+        <button id="btn-submit"
+                type="submit"
+                class="btn btn-lg btn-success"
+                ng-click="saveUser(form)"
+                >Save</button>
         <button id="btn-cancel"
                 type="button"
                 mwl-confirm
@@ -56,11 +61,6 @@
                 on-confirm="cancelEdit(form)"
                 class="btn btn-lg btn-danger"
                 >Cancel</button>
-        <button id="btn-submit"
-                type="submit"
-                class="btn btn-lg btn-success"
-                ng-click="saveUser(form)"
-                >Save</button>
         <button id="btn-reset"
                 class="btn btn-lg btn-danger"
                 mwl-confirm

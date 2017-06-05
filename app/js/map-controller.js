@@ -136,13 +136,6 @@ angular.module('myApp.map.controller', [])
              }
            }
          });
-       } else {
-         // Injected factory service connects during injection
-         // But we don't want a connection in this specific scenaria
-         $timeout(function() {
-           mySocket.disconnect();
-           mySocket.removeAllListeners();
-         }, 2000);
        }
        $scope.updatePaths = function() {
          $scope.ajaxRequestError = {error: false};

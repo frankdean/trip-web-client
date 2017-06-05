@@ -21,10 +21,62 @@
   <div id="map-layers-error" class="map-page-div" ng-messages="mapLayersError">
     <div class="alert alert-danger" role="alert" ng-message="error">Unable to display the map.  There was an error when attempting to fetching the map configuration.</div>
   </div>
-  <leaflet ng-if="status.showMap" paths="map.paths" controls="map.controls" lf-center="map.center" bounds="map.bounds" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
+  <leaflet ng-if="state.showMap" markers="map.markers" paths="map.paths" controls="map.controls" lf-center="map.center" bounds="map.bounds" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
+  <div ng-messages="state.locationFound">
+    <div ng-message="success" class="alert alert-info" role="alert">
+      Location updated successfully.
+    </div>
+    <div ng-message="error" class="alert alert-warning" role="alert">
+      Browser failed to provide your current location.
+    </div>
+  </div>
   <div class="text-center map-page-div map-page-buttons">
-    <button id="btn-whereami" ng-click="map.center.zoom=16; map.center.autoDiscover=true; ajaxRequestError=null;" type="button" class="btn btn-primary">My position</button>
+    <label for="input-live-map">Enable live map</label>
+    <input id="input-live-map" type="checkbox" ng-model="state.liveMap" ng-click="initLiveMapSettings()" style="margin-right: 15px;"/>
+    <label for="input-gps-accuracy">Request high accuracy location:</label>
+    <input id="input-gps-accuracy" type="checkbox" ng-model="data.highAccuracy" />
+    <button id="btn-whereami" ng-click="updatePosition()" type="button" class="btn btn-primary">My position</button>
     <button id="btn-mark-pos" ng-show="canDropMarker" ng-click="markPosition()" type="button" class="btn btn-success">Drop marker</button>
     <button id="btn-back" ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
+  </div>
+  <div id="div-live-map" ng-show="state.liveMap" style="padding-left: 5px">
+    <form name="form" class="css-form" novalidate>
+      <div>
+        <label for="auto-update">Auto-centre on live update:</label>
+        <input id="auto-update" type="checkbox" ng-model="state.autocenter" />
+      </div>
+      <div id="div-nicknames">
+        <div style="padding-left: 15px;">
+          <input id="input-my-nickname" type="checkbox" ng-click="selectNickname(data.myNickname)" ng-model="data.selfSelected"/>
+          <label for="input-my-nickname">{{data.myNickname}}</label>
+          <span ng-show="data.myDistance && data.selfSelected" style="padding-left: 20px;">{{data.myDistance | number:1}}&nbsp;km</span>
+        </div>
+        <div ng-repeat="nickname in data.nicknames" style="padding-left: 15px;">
+          <input id="input-nickname-{{nickname.nickname}}" type="checkbox" ng-click="selectNickname(nickname)"/>
+          <label for="input-nickname-{{nickname.nickname}}">{{nickname.nickname}}</label>
+          <span ng-show="nickname.distance && nickname.selected" style="padding-left: 20px;">{{nickname.distance | number:1}}&nbsp;km</span>
+        </div>
+      </div>
+      <div>
+        <label for="input-date-from">Starting from:</label>
+        <input id="input-date-from" type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" name="dFrom" size="25" maxlength="25" ng-model="data.dateFrom" required=""/>
+        <div ng-show="form.$submitted || form.dFrom.$touched">
+          <div id="error-required-from" ng-show="form.dFrom.$error.required" class="alert alert-warning" role="alert">Enter the start date to fetch live tracks from.</div>
+          <div id="invalid-date-from" class="alert alert-warning" role="alert" ng-show="form.dFrom.$error.datetimelocal">Not a valid date!</div>
+        </div>
+        <div>
+          <label for="input-max-hdop">Max hdop:</label>
+          <input id="input-max-hdop" type="number" min="0" max="9999" name="max_hdop" size="5" maxlength="4" ng-model="data.maxHdop" /> (leave blank for no maximum)
+        </div>
+        <div ng-show="form.$submitted || form.max_hdop.$touched">
+          <div id="error-number-hdop" class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.number">Invalid value for max HDOP</div>
+          <div class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.min">Minimum hdop = 0</div>
+          <div id="error-max-hdop" class="alert alert-warning" role="alert" ng-show="form.max_hdop.$error.max">Maximum hdop = 9999</div>
+        </div>
+      </div>
+      <div id="div-live-map-buttons">
+        <button id="btn-update-map" type="submit" class="btn btn-success btn-small" ng-click="updateLiveMapSettings()">Apply live map settings</button>
+      </div>
+    </form>
   </div>
 </div>

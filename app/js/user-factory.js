@@ -35,7 +35,8 @@ angular.module('myApp.user.factory', [])
      function($resource, ConfigService){
        var url = ConfigService.restUrlPrefix + '/admin/user/:id';
        return $resource(url, {id: '@id'}, {
-         query: {isArray: false}
+         query: {isArray: false},
+         nickname: {isArray: false, url: ConfigService.restUrlPrefix + '/nickname'}
        });
      }])
 

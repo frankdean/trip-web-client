@@ -111,5 +111,10 @@ for the latest information.
 
 1.  Protractor 5.1.1 requires node >= 6.9.x
 
+1.  When fetching a Geo Location, Safari desktop provides a time stamp based
+    on an epoch of 01-Jan-2001 instead of 01-Jan-1970.  Workaround implemented
+    to alter the timestamp by that difference if it appears to be more than 10
+    years old.  See
+    [Safari (Mac OS X Lion) returns wrong epochtime value to position.timestamp call](https://stackoverflow.com/questions/10870138/safari-mac-os-x-lion-returns-wrong-epochtime-value-to-position-timestamp-call)
 
 [trip-server]: https://github.com/frankdean/trip-server
