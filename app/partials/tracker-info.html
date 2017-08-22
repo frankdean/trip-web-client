@@ -49,6 +49,23 @@
         <td>&nbsp;</td>
       </tr>
       <tr>
+        <td>offset</td>
+        <td>
+          Offset to apply to the time value being passed in seconds. e.g. 3600
+          to add one hour.  This is a workaround to situations where it is
+          known that the time value is consistently incorrectly reported.
+          e.g. A bug causing the GPS time to be one hour slow.
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>msoffset</td>
+        <td>
+          Same as the offset parameter above, but in <a href="https://en.wikipedia.org/wiki/Millisecond">milliseconds</a> e.g. 1000 to add one second.
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
         <td>hdop</td>
         <td><a href="https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)">Horizontal Dilution of Precision</a> (accuracy)</td>
         <td>&nbsp;</td>

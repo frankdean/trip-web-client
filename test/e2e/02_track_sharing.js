@@ -144,41 +144,42 @@ describe('Track Sharing page', function() {
   });
 
   it('should show page navigation once the list is big enough', function() {
-    var btnSave = element(by.id('btn-save'));
+    var btnSave = element(by.id('btn-save')),
+        btnNew = element(by.id('btn-new'));
     elemNickname.clear();
     elemNickname.sendKeys('Adam');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('Adam2');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('oswald');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('Fred');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('Jane');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('John');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('test2');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('Adam3');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('oswald4');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('oswald3');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('oswald2');
     btnSave.click();
-    elemNickname.clear();
+    btnNew.click();
     elemNickname.sendKeys('oswald5');
     btnSave.click();
     browser.waitForAngular();
@@ -229,7 +230,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when the nickname field is blank', function() {
-    element(by.id('btn-new')).click();
     expect(element(by.id('error-nickname-required')).isDisplayed()).toBeFalsy();
     elemNickname.click();
     elemButtonSave.click();
@@ -247,7 +247,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the recent days field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-recent-days-min'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentDays.sendKeys('-9');
@@ -265,7 +264,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the recent hours field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-recent-hours'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentHours.sendKeys('-1');
@@ -286,7 +284,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the recent minutes field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-recent-minutes'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentMinutes.sendKeys('-1');
@@ -307,7 +304,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the maximum days field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-max-days-min'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxDays.sendKeys('-9');
@@ -324,7 +320,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the maximum hours field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-max-hours'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxHours.sendKeys('-1');
@@ -345,7 +340,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should show an error message when invalid values are entered in the maximum minutes field', function() {
-    element(by.id('btn-new')).click();
     var elemError = element(by.id('error-max-minutes'));
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxMinutes.sendKeys('-1');

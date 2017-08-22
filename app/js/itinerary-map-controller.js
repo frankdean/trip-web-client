@@ -747,10 +747,12 @@ angular.module('myApp.itinerary.map.controller', [])
                  }
                  if (nickname === $scope.data.myNickname) {
                    $scope.data.myDistance = trackData.distance;
+                   $scope.data.myColor = liveItem.path.color;
                  } else if (Array.isArray($scope.data.nicknames)) {
                    $scope.data.nicknames.forEach(function(v) {
                      if (v.nickname === nickname) {
                        v.distance = trackData.distance;
+                       v.color = liveItem.path.color;
                      }
                    });
                  }
