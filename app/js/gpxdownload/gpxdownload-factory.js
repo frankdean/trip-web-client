@@ -33,7 +33,7 @@ angular.module('myApp.gpxdownload.factory', [] )
            cache: false,
            transformResponse: function(data) {
              return {
-               data: new Blob([data], {type: /[Ss]afari/.test($window.navigator.userAgent) ? 'text/plain' : 'application/gpx+xml'})
+               data: new Blob([data], {type: 'application/gpx+xml'})
              };
            },
            responseType : 'arraybuffer'
@@ -48,7 +48,7 @@ angular.module('myApp.gpxdownload.factory', [] )
            cache: false,
            transformResponse: function(data) {
              return {
-               data: new Blob([data], {type: /[Ss]afari/.test($window.navigator.userAgent) ? 'text/plain' : 'application/gpx+xml'})
+               data: new Blob([data], {type: 'application/gpx+xml'})
              };
            },
            responseType : 'arraybuffer'

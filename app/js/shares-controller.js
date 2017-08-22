@@ -167,6 +167,7 @@ angular.module('myApp.shares.controller', [])
             active: $scope.data.active
            },
            function() {
+             $scope.data.state = {new: false};
              $scope.master = angular.copy($scope.data);
              $scope.listShares();
            },

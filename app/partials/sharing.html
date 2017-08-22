@@ -48,12 +48,13 @@
                 on-confirm="delete()"
                 >Delete selected</button>
         <button id="btn-edit" ng-click="edit(form)" class="btn btn-lg btn-info">Edit selected</button>
-        <button id="btn-new" ng-click="new(form)" class="btn btn-lg btn-warning">New</button>
       </div>
     </div>
-    <hr/>
   </div>
-  <div id="div-edit">
+  <div ng-show="!data.state.new" style="padding-top: 5px;">
+    <button id="btn-new" ng-click="new(form)" class="btn btn-lg btn-warning">New</button>
+  </div>
+  <div id="div-edit" style="padding-top: 10px;">
     <div ng-messages="ajaxRequestError">
       <div id="error-invalid-nickname" class="alert alert-danger" role="alert"
            ng-message="invalidNickname">The nickname does not exist.  Note that
