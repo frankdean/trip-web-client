@@ -42,6 +42,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
               ItineraryRouteService) {
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.routeId = $routeParams.routeId !== undefined ? decodeURIComponent($routeParams.routeId) : undefined;
+       $scope.shared = $routeParams.shared !== undefined ? decodeURIComponent($routeParams.shared) === "true" : false;
        $scope.pageSize = 10;
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;
        $scope.totalCount = 0;

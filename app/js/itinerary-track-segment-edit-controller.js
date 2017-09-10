@@ -45,6 +45,7 @@ angular.module('myApp.itinerary.track.segment.edit.controller', [])
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.trackId = $routeParams.trackId !== undefined ? decodeURIComponent($routeParams.trackId) : undefined;
        $scope.segmentId = $routeParams.segmentId !== undefined ? decodeURIComponent($routeParams.segmentId) : undefined;
+       $scope.shared = $routeParams.shared !== undefined ? decodeURIComponent($routeParams.shared) === "true" : false;
        $scope.pageSize = 10;
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;
        $scope.totalCount = 0;

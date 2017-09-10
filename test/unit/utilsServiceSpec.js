@@ -270,6 +270,10 @@ describe('UtilsService', function() {
       expect(utilsService.parseGeoLocation('https://www.google.co.uk/maps/@48.85825,2.2945,16z')).toEqual({lat: {deg: 48.85825}, lng: {deg: 2.2945}});
     });
 
+    it('should parse a Google map URL search result containing a numbered address', function() {
+      expect(utilsService.parseGeoLocation('https://www.google.co.uk/maps/place/103+High+St,+Guildford+GU1/@51.2356439,-0.574309,18z/data=!3m1!4b1!4m12!1m6!3m5!1s0x4875d0974d7e5121:0xe3cb6f8fb746de30!2sSuperdrug!8m2!3d51.2357869!4d-0.5733485!3m4!1s0x4875d090b33bfe39:0x7ffe672d2b4438ab!8m2!3d51.2355436!4d-0.5734522?hl=en')).toEqual({lat: {deg: 51.2356439}, lng: {deg: -0.574309}});
+    });
+
     it('should parse an Open Street Map URL', function() {
       expect(utilsService.parseGeoLocation('http://www.openstreetmap.org/?mlat=48.85825&mlon=2.2945#map=16/48.85825/2.2945')).toEqual({lat: {deg: 48.85825}, lng: {deg: 2.2945}});
     });
@@ -531,24 +535,27 @@ describe('UtilsService', function() {
       expect(utilsService.parseGeoLocation('http://localhost:8080/app/index.html#/map-point?lat=48.85822222&lng=2.2945')).toEqual({lat: {deg: 48.85822222}, lng: {deg: 2.2945}});
     });
 
-    it('should parse anything with two numbers', function() {
-      expect(utilsService.parseGeoLocation('xyz48.85822222abc2.2945xyz')).toEqual({lat: {deg: 48.85822222}, lng: {deg: 2.2945}});
-    });
+    describe('fuzzy text matching', function() {
 
-    it('should parse anything with two decimal looking numbers', function() {
-      expect(utilsService.parseGeoLocation('xyz48.abc21.xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
-    });
+      it('should parse anything with two numbers', function() {
+        expect(utilsService.parseGeoLocation('xyz48.85822222abc2.2945xyz')).toEqual({lat: {deg: 48.85822222}, lng: {deg: 2.2945}});
+      });
 
-    it('should parse anything with two integers', function() {
-      expect(utilsService.parseGeoLocation('xyz48abc21xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
-    });
+      it('should parse anything with two decimal looking numbers', function() {
+        expect(utilsService.parseGeoLocation('xyz48.abc21.xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
+      });
 
-    it('should parse anything with two negative integers', function() {
-      expect(utilsService.parseGeoLocation('xyz-48abc-21xyz')).toEqual({lat: {deg: -48}, lng: {deg: -21}});
-    });
+      it('should parse anything with two integers', function() {
+        expect(utilsService.parseGeoLocation('xyz48abc21xyz')).toEqual({lat: {deg: 48}, lng: {deg: 21}});
+      });
 
-    it('should parse anything with two negative numbers', function() {
-      expect(utilsService.parseGeoLocation('xyz-48.85822222abc-2.2945xyz')).toEqual({lat: {deg: -48.85822222}, lng: {deg: -2.2945}});
+      it('should parse anything with two negative integers', function() {
+        expect(utilsService.parseGeoLocation('xyz-48abc-21xyz')).toEqual({lat: {deg: -48}, lng: {deg: -21}});
+      });
+
+      it('should parse anything with two negative numbers', function() {
+        expect(utilsService.parseGeoLocation('xyz-48.85822222abc-2.2945xyz')).toEqual({lat: {deg: -48.85822222}, lng: {deg: -2.2945}});
+      });
     });
 
   });

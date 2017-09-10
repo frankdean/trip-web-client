@@ -20,6 +20,8 @@
 describe('Itinerary Route Edit', function() {
 
   var testItineraryId = 2425,
+      testSharedItineraryId = 983,
+      testSharedRouteId = 8309,
       testRouteId_01 = 8312,
       testRouteId_02 = 8313,
       list;
@@ -73,6 +75,13 @@ describe('Itinerary Route Edit', function() {
       points = element.all(by.repeater('point in data.points'));
     });
 
+    it('should display the edit buttons', function() {
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-route-edit\?itineraryId=\d+&routeId=\d+&shared=false/);
+      expect(element(by.id('div-buttons')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-delete')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-split')).isDisplayed()).toBeTruthy();
+    });
+
     it('should allow a single point to be deleted', function() {
       points.get(9).all(by.tagName('td')).get(0).click();
       element(by.id('btn-delete')).click();
@@ -104,6 +113,24 @@ describe('Itinerary Route Edit', function() {
       element(by.id('btn-split')).click();
       element.all((by.css('.confirm-button'))).get(1).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+  });
+
+  describe('Read only', function() {
+
+    beforeEach(function() {
+      browser.get('app/index.html#itinerary?id=' + testSharedItineraryId);
+      list = element.all(by.repeater('route in routeNames'));
+      list.get(0).all(by.tagName('td')).get(0).click();
+      element(by.id('btn-view-path')).click();
+    });
+
+    it('should not display the edit buttons', function() {
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-route-edit\?itineraryId=\d+&routeId=\d+&shared=true/);
+      expect(element(by.id('div-buttons')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
     });
 
   });

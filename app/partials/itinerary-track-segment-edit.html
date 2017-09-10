@@ -59,7 +59,7 @@
                ng-message="editOnlyOne">
             Select only one item.</div>
         </div>
-        <div id="div-buttons">
+        <div id="div-buttons" ng-show="!shared">
           <button id="btn-delete"
                   class="btn btn-lg btn-danger"
                   mwl-confirm

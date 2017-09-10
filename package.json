@@ -22,9 +22,9 @@
     "cssmin": "^0.4.3",
     "firefox-profile": "^1.0.0",
     "http-server": "^0.10.0",
-    "jasmine-core": "^2.4.1",
+    "jasmine-core": "^2.8.0",
     "jshint": "^2.9.1",
-    "karma": "^1.2.0",
+    "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.0",
@@ -35,7 +35,7 @@
     "q": "^1.4.1",
     "rimraf": "^2.5.1",
     "shelljs": "^0.7.6",
-    "uglify-js": "^2.6.2"
+    "uglify-js": "^2.8.29"
   },
   "scripts": {
     "postinstall": "bower install",

@@ -223,7 +223,7 @@ angular.module('myApp.itinerary.controller', [])
            $scope.formError = {editOnlyOne: true};
          }
        };
-       $scope.editPath = function(form) {
+       $scope.editPath = function(form, isShared) {
          $scope.ajaxRequestError = {error: false};
          var selectedCount = 0,
              waypoints = [], routes = [], tracks = [];
@@ -254,14 +254,16 @@ angular.module('myApp.itinerary.controller', [])
              $location.path('/itinerary-route-edit');
              $location.search({
                itineraryId: encodeURIComponent($scope.data.id),
-               routeId: encodeURIComponent(routes[0])
+               routeId: encodeURIComponent(routes[0]),
+               shared: encodeURIComponent(isShared)
              });
            }
            if (tracks.length === 1) {
              $location.path('/itinerary-track-edit');
              $location.search({
                itineraryId: encodeURIComponent($scope.data.id),
-               trackId: encodeURIComponent(tracks[0])
+               trackId: encodeURIComponent(tracks[0]),
+               shared: encodeURIComponent(isShared)
              });
            }
          } else {

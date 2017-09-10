@@ -35,7 +35,12 @@ describe('LocationCtrl', function() {
       $httpBackend.when('GET', /\/georef\/formats$/).respond(null);
       $httpBackend.when('GET', /\/tracking_uuid$/).respond();
       $httpBackend.when('GET', /\/config\/map\/layers$/).respond([{text: 'simple test'}]);
-      $httpBackend.when('GET', /\/log_point\?lat=[-.\d]+&lng=[-.\d]+$/).respond();
+      // $httpBackend.when('GET', /\/log_point\?lat=[-.\d]+&lng=[-.\d]+$/).respond();
+      $httpBackend.when('POST', /\/log_point/,
+                        function(data) {
+                          return "{\"lat\":53.33333,\"lng\":-3.9999}" === data;
+                        }
+                       ).respond();
       createController = function(routeParams) {
         return $controller('LocationCtrl', {
           $scope: scope,

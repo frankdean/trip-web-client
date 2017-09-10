@@ -22,6 +22,7 @@ angular.module('myApp.map.controller', [])
   .controller(
     'MapCtrl',
     ['$scope',
+     '$sanitize',
      '$routeParams',
      '$location',
      'RecentPoints',
@@ -35,7 +36,7 @@ angular.module('myApp.map.controller', [])
      '$window',
      '$log',
      'mySocket',
-     function($scope, $routeParams, $location, RecentPoints, Storage, ConfigService, MapConfigService, UtilsService, leafletData, leafletBoundsHelpers, $timeout, $window, $log, mySocket) {
+     function($scope, $sanitize, $routeParams, $location, RecentPoints, Storage, ConfigService, MapConfigService, UtilsService, leafletData, leafletBoundsHelpers, $timeout, $window, $log, mySocket) {
        var dateFrom, dateTo, now;
 
        angular.extend($scope, {
@@ -50,6 +51,7 @@ angular.module('myApp.map.controller', [])
          status: {
            firstRun: true,
            liveupdate: false,
+           updating: false,
            connected: false,
            withinTimeSpan: true,
            hideWarning: true,
@@ -138,6 +140,11 @@ angular.module('myApp.map.controller', [])
          });
        }
        $scope.updatePaths = function() {
+         if ($scope.status.updating) {
+           $log.debug('Update in progress, skipping subsequent request');
+           return;
+         }
+         $scope.status.updating = true;
          $scope.ajaxRequestError = {error: false};
          RecentPoints.query(
            {nickname: $scope.data.nicknameSelect,
@@ -162,7 +169,7 @@ angular.module('myApp.map.controller', [])
                  var latlngs = new Array(value.payload.length);
                  var latlng;
                  value.payload.forEach(function(item, index, array){
-                   latlng =  {lat: parseFloat(item.lat, 10), lng: parseFloat(item.lng, 10), time: (new Date(item.time)).toLocaleString('en-GB')};
+                   latlng =  {lat: parseFloat(item.lat, 10), lng: parseFloat(item.lng, 10), time: (new Date(item.time)).toLocaleString('en-GB'), note: item.note};
                    latlngs[index] = latlng;
                  });
                  $scope.map.paths.p1.latlngs = latlngs;
@@ -173,7 +180,7 @@ angular.module('myApp.map.controller', [])
                        lng: latlng.lng,
                        icon: ConfigService.getDefaultMarkerIcon(),
                        focus: true,
-                       message: latlng.time
+                       message: $sanitize(latlng.time + (latlng.note && latlng.note !== '' ? '</br>' + _.escape(latlng.note) : ''))
                      }
                    };
                  }
@@ -206,6 +213,9 @@ angular.module('myApp.map.controller', [])
              } else {
                $scope.ajaxRequestError = {error: true};
              }
+             $timeout(function() {
+               $scope.status.updating = false;
+             }, 1000);
            }, function(response) {
              $scope.ajaxRequestError = {
                error: true,
@@ -218,6 +228,9 @@ angular.module('myApp.map.controller', [])
              } else {
                $log.warn('Error fetching tracks: ', response.status, response.statusText);
              }
+             $timeout(function() {
+               $scope.status.updating = false;
+             }, 10000);
            });
        };
        $scope.updatePaths();

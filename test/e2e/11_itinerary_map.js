@@ -58,6 +58,11 @@ describe('Itinerary map', function() {
 
     describe('editing', function() {
 
+      it('should display the edit-path button', function() {
+        expect(element(by.id('btn-edit-path')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('btn-view-path')).isDisplayed()).toBeFalsy();
+      });
+
       describe('Waypoint editing', function() {
 
         beforeEach(function() {
@@ -296,6 +301,11 @@ describe('Itinerary map', function() {
 
     beforeEach(function() {
       browser.get('app/index.html#itinerary?id=' + testSharedItineraryId);
+    });
+
+    it('should not display the edit-path button', function() {
+      expect(element(by.id('btn-edit-path')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-view-path')).isDisplayed()).toBeTruthy();
     });
 
     describe('waypoints', function() {

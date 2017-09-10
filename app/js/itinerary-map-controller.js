@@ -684,86 +684,107 @@ angular.module('myApp.itinerary.map.controller', [])
 
        $scope.updateLiveTrack = function(nickname, focusMarker) {
          var i, liveItem;
+         $scope.ajaxRequestError = {error: false};
          i = $scope.data.liveTracks.findIndex(function(e) {
            return e.nickname === nickname;
          });
          if (i !== -1) {
            liveItem = $scope.data.liveTracks[i];
-           if (liveItem.path) {
-             $scope.removeLiveItem(liveItem);
-             liveItem.path = null;
-           }
-           var path, latlng, latlngs = [], now = new Date();
-           RecentPoints.query(
-             {nickname: nickname === $scope.data.myNickname ? undefined : nickname,
-              max_hdop: $scope.data.maxHdop,
-              from: $scope.data.dateFrom,
-              to: now
-             })
-             .$promise.then(function(trackData) {
-               path = {
-                 color: liveItem.color,
-                 opacity: 1,
-                 weight: 2,
-                 latlngs: latlngs
-               };
-               trackData.payload.forEach(function(item) {
-                 latlng =  {lat: parseFloat(item.lat, 10), lng: parseFloat(item.lng, 10), time: (new Date(item.time)).toLocaleString('en-GB')};
-                 latlngs.push(latlng);
-               });
-               if (latlng !== undefined) {
-                 liveItem.marker = {
-                   lat: latlng.lat,
-                   lng: latlng.lng,
-                   icon: ConfigService.getDefaultMarkerIcon(),
-                   focus: !$scope.state.updateBounds && $scope.state.autocenter && focusMarker ? true : false,
-                   message: $sanitize('<b>' + _.escape(nickname) + '</br>'  + latlng.time)
+           if (liveItem.updating) {
+             $log.debug('Already running update for', nickname, 'skipping request');
+           } else {
+             liveItem.updating = true;
+             if (liveItem.path) {
+               $scope.removeLiveItem(liveItem);
+               liveItem.path = null;
+             }
+             var path, latlng, latlngs = [], now = new Date();
+             RecentPoints.query(
+               {nickname: nickname === $scope.data.myNickname ? undefined : nickname,
+                max_hdop: $scope.data.maxHdop,
+                from: $scope.data.dateFrom,
+                to: now
+               })
+               .$promise.then(function(trackData) {
+                 path = {
+                   color: liveItem.color,
+                   opacity: 1,
+                   weight: 2,
+                   latlngs: latlngs
                  };
-                 $scope.map.markers.push(liveItem.marker);
-               }
-               liveItem.path = path;
-               $scope.map.paths.push(path);
-               if (myBounds) {
-                 myBounds.extend(latlngs);
-               } else {
-                 myBounds = L.latLngBounds(latlngs);
-               }
-               if ($scope.state.updateBounds) {
-                 if (myBounds && myBounds.isValid()) {
-                   $scope.map.bounds = leafletBoundsHelpers.createBoundsFromLeaflet(myBounds);
-                   $scope.map.bounds.options = {maxZoom: 14};
+                 trackData.payload.forEach(function(item) {
+                   latlng =  {lat: parseFloat(item.lat, 10), lng: parseFloat(item.lng, 10), time: (new Date(item.time)).toLocaleString('en-GB'), note: item.note};
+                   latlngs.push(latlng);
+                 });
+                 if (latlng !== undefined) {
+                   liveItem.marker = {
+                     lat: latlng.lat,
+                     lng: latlng.lng,
+                     icon: ConfigService.getDefaultMarkerIcon(),
+                     focus: /*!$scope.state.updateBounds && */ $scope.state.autocenter && focusMarker ? true : false,
+                     message: $sanitize('<b>' + _.escape(nickname) + '</br>'  + latlng.time)
+                   };
+                   if (latlng.note && latlng.note !== '') {
+                     liveItem.marker.message += '</br>' + _.escape(latlng.note);
+                   }
+                   $scope.map.markers.push(liveItem.marker);
+                 }
+                 liveItem.path = path;
+                 $scope.map.paths.push(path);
+                 if (myBounds) {
+                   myBounds.extend(latlngs);
+                 } else {
+                   myBounds = L.latLngBounds(latlngs);
+                 }
+                 if ($scope.state.updateBounds) {
+                   if (myBounds && myBounds.isValid()) {
+                     $scope.map.bounds = leafletBoundsHelpers.createBoundsFromLeaflet(myBounds);
+                     $scope.map.bounds.options = {maxZoom: 14};
+                   } else if (latlng && $scope.state.autocenter) {
+                     $scope.map.center = {
+                       lat: latlng.lat,
+                       lng: latlng.lng,
+                       zoom: 14
+                     };
+                   } else {
+                     $scope.map.center = {
+                       enableHighAccuracy: $scope.data.highAccuracy,
+                       autoDiscover: true,
+                       zoom: 16
+                     };
+                   }
+                   if (nickname === $scope.data.myNickname) {
+                     $scope.data.myDistance = trackData.distance;
+                     $scope.data.myColor = liveItem.path.color;
+                   } else if (Array.isArray($scope.data.nicknames)) {
+                     $scope.data.nicknames.forEach(function(v) {
+                       if (v.nickname === nickname) {
+                         v.distance = trackData.distance;
+                         v.color = liveItem.path.color;
+                       }
+                     });
+                   }
                  } else if (latlng && $scope.state.autocenter) {
                    $scope.map.center = {
                      lat: latlng.lat,
                      lng: latlng.lng,
                      zoom: 14
                    };
-                 } else {
-                   $scope.map.center = {
-                     enableHighAccuracy: $scope.data.highAccuracy,
-                     autoDiscover: true,
-                     zoom: 16
-                   };
                  }
-                 if (nickname === $scope.data.myNickname) {
-                   $scope.data.myDistance = trackData.distance;
-                   $scope.data.myColor = liveItem.path.color;
-                 } else if (Array.isArray($scope.data.nicknames)) {
-                   $scope.data.nicknames.forEach(function(v) {
-                     if (v.nickname === nickname) {
-                       v.distance = trackData.distance;
-                       v.color = liveItem.path.color;
-                     }
-                   });
-                 }
-               } else if (latlng && $scope.state.autocenter) {
-                 $scope.map.center = {
-                   lat: latlng.lat,
-                   lng: latlng.lng,
-                   zoom: 14
+                 $timeout(function() {
+                   liveItem.updating = false;
+                 }, 1000);
+               }).catch(function(response) {
+                 $log.error('Error whilst fetching points - status code:', response.status);
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
                  };
-               }
-             });
+                 $timeout(function() {
+                   liveItem.updating = false;
+                 }, 10000);
+               });
+           }
          }
        };
 
@@ -773,14 +794,14 @@ angular.module('myApp.itinerary.map.controller', [])
            $scope.state.locationFound = {error: false, success: false};
            if ($scope.data.trackSelf) {
              $scope.addListener($scope.data.myNickname);
-             $scope.updateLiveTrack($scope.data.myNickname);
+             $scope.updateLiveTrack($scope.data.myNickname, true);
            } else {
              $scope.removeListener($scope.data.myNickname);
            }
            $scope.data.nicknames.forEach(function(v) {
              if (v.selected) {
                $scope.addListener(v.nickname);
-               $scope.updateLiveTrack(v.nickname);
+               $scope.updateLiveTrack(v.nickname, true);
              } else {
                $scope.removeListener(v.nickname);
              }

@@ -20,6 +20,8 @@
 describe('Itinerary Track Edit', function() {
 
   var testItineraryId = 2425,
+      testSharedItineraryId = 983,
+      testSharedTrackId = 1025,
       testTrackId_01 = 1027,
       testTrackId_02 = 1028,
       list;
@@ -76,6 +78,10 @@ describe('Itinerary Track Edit', function() {
     it('should display the track segment list', function() {
       // There should be two segments with the second column showing the segment ID
       expect(segments.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/\d+/);
+      expect(element(by.id('div-buttons')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-delete')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-split')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-merge')).isDisplayed()).toBeTruthy();
     });
 
     describe ('Track points', function() {
@@ -84,6 +90,13 @@ describe('Itinerary Track Edit', function() {
       beforeEach(function() {
         segments.get(1).all(by.tagName('a')).get(0).click();
         points = element.all(by.repeater('point in points'));
+      });
+
+      it('should display the edit buttons', function() {
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-track-segment-edit\?itineraryId=\d+&trackId=\d+&segmentId=\d+&shared=false/);
+        expect(element(by.id('div-buttons')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('btn-delete')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('btn-split')).isDisplayed()).toBeTruthy();
       });
 
       it('should allow a single point to be deleted', function() {
@@ -193,6 +206,42 @@ describe('Itinerary Track Edit', function() {
       element(by.id('btn-delete')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
       expect(element(by.id('track-not-found')).isDisplayed()).toBeTruthy();
+    });
+
+  });
+
+  describe('Read only', function() {
+    var segments;
+
+    beforeEach(function() {
+      browser.get('app/index.html#itinerary?id=' + testSharedItineraryId);
+      element(by.id('input-track-' + testSharedTrackId)).click();
+      element(by.id('btn-view-path')).click();
+      segments = element.all(by.repeater('segment in data.track.segments'));
+    });
+
+    it('should display the track segment list', function() {
+      // There should be two segments with the second column showing the segment ID
+      expect(segments.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/\d+/);
+      expect(element(by.id('div-buttons')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-merge')).isDisplayed()).toBeFalsy();
+    });
+
+    describe('View points', function() {
+
+      beforeEach(function() {
+        segments.get(1).all(by.tagName('a')).get(0).click();
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-track-segment-edit\?itineraryId=\d+&trackId=\d+&segmentId=\d+&shared=true/);
+      });
+
+      it('should display the track points', function() {
+        expect(element(by.id('div-buttons')).isDisplayed()).toBeFalsy();
+        expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
+        expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
+      });
+
     });
 
   });

@@ -177,7 +177,7 @@ angular.module('myApp.location.controller', [])
          $scope.locationNotFound = undefined;
          $scope.updateSuccess = undefined;
          $scope.ajaxRequestError = {error: false};
-         LocationService.get({
+         LocationService.save({
            uuid: $scope.data.uuid.uuid,
            lat: $scope.data.latitude,
            lng: $scope.data.longitude,

@@ -178,9 +178,12 @@
                 message="Delete the selected waypoints, routes and tracks?"
                 on-confirm="deleteUploads(downloads)"
                 ng-show="data.shared_to_nickname === null">Delete selected items</button>
-        <button id="btn-edit-path" ng-click="editPath(downloads)"
+        <button id="btn-edit-path" ng-click="editPath(downloads, false)"
                 class="btn btn-lg btn-info"
                 ng-show="data.shared_to_nickname === null">Edit path</button>
+        <button id="btn-view-path" ng-click="editPath(downloads, true)"
+                class="btn btn-lg btn-info"
+                ng-show="data.shared_to_nickname !== null">View path</button>
         <button id="btn-join-path" ng-click="joinPaths(downloads)"
                 class="btn btn-lg btn-success"
                 ng-show="data.shared_to_nickname === null">Join paths</button>
