@@ -54,9 +54,22 @@
           Offset to apply to the time value being passed in seconds. e.g. 3600
           to add one hour.  This is a workaround to situations where it is
           known that the time value is consistently incorrectly reported.
-          e.g. A bug causing the GPS time to be one hour slow.
+          e.g. A bug causing the GPS time to be one hour slow.  Can be a comma
+          separated list of the same length as the offsetprovs parameter.
         </td>
         <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>offsetprovs</td>
+        <td>
+          Used in conjunction with the prov parameter to apply offsets per
+          location provider.  E.g. setting offset to '3600' and offsetprovs to
+          'gps' will only apply the offset to locations submitted with the
+          prov parameter matching 'gps'.  To apply offset to more than one
+          provider, use comma separated lists of the same length.  E.g. set
+          offset to '3600,7200' and offsetprovs to 'gps,network' to add 1 hour
+          to gps times and 2 hours to network times.
+        </td>
       </tr>
       <tr>
         <td>msoffset</td>
@@ -106,8 +119,8 @@
         <td>&nbsp;</td>
       </tr>
     </table>
-    <p><strong>Note:</strong> Where one of the time parameters is not
-    included, the server will record the time it <strong><em>receives</em></strong> the
+    <p><strong>Note:</strong> Where none of the time parameters are included,
+    the server will record the time it <strong><em>receives</em></strong> the
     location using the server's time zone.  As the time received may vary
     greatly from the actual time the location was recorded in the device, it
     is highly recommended to include a time parameter if at all possible.</p>

@@ -142,6 +142,7 @@ input.days, input.minutes, input.hours {
     padding-right: 1em;
   }
   .logger-param-table td {
+    padding-bottom: 1em;
     padding-right: 1em;
 }
 .select-all-option {
