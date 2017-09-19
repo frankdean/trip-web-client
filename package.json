@@ -52,6 +52,8 @@
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .npm run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
     "disable-debug": "node -e \"require('shelljs/global'); sed('-i', /$compileProvider.debugInfoEnabled\\(true\\)/, '$compileProvider.debugInfoEnabled(false)', 'app/js/app.js');\"",
     "enable-debug": "node -e \"require('shelljs/global'); sed('-i', /$compileProvider.debugInfoEnabled\\(false\\)/, '$compileProvider.debugInfoEnabled(true)', 'app/js/app.js');\"",
+    "disable-debug-logging": "node -e \"require('shelljs/global'); sed('-i', /$logProvider.debugEnabled\\(true\\)/, '$logProvider.debugEnabled(false)', 'app/js/app.js');\"",
+    "enable-debug-logging": "node -e \"require('shelljs/global'); sed('-i', /$logProvider.debugEnabled\\(false\\)/, '$logProvider.debugEnabled(true)', 'app/js/app.js');\"",
     "update-index-prod": "node -e \"require('shelljs/global'); sed('-i', /^\\s+<script src=\\\"js\\/.*\\.js\\\"><\\/script>\\s*$/, '', 'dist/app/index.html'); sed('-i', /^\\s+<!-- <script src=\\\"trip.min.js\\\"><\\/script> -->\\s*$/, '  <script src=\\\"trip.min.js\\\"></script>', 'dist/app/index.html');\"",
     "update-index-async-prod": "node -e \"require('shelljs/global'); sed('-i', /^\\s+\\'js\\/.*\\.js\\',?\\s*$/, '', 'dist/app/index-async.html'); sed('-i', /\\/\\/ \\'trip.min.js\\'/, '\\'trip.min.js\\'', 'dist/app/index-async.html');\"",
     "env": "env",
@@ -62,6 +64,6 @@
     "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map trip.min.js.map --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
     "dist": "copyfiles 'app/bower_components/leaflet/dist/leaflet.js' 'app/bower_components/leaflet/dist/images/*.png' 'app/bower_components/leaflet-draw/dist/leaflet.draw.js' 'app/bower_components/leaflet-draw/dist/images/*' 'app/bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/bower_components/socket.io-client/socket.io.js' 'app/bower_components/**/*.min.js' 'app/bower_components/**/*.min.js.map' 'app/bower_components/angular-i18n/angular-locale_en-gb.js' 'app/bower_components/pagedown/*.js' 'app/bower_components/proj4/dist/*.js' 'app/bower_components/pagedown/*.png' 'app/bower_components/ui-leaflet/**/*.min.no-header.js' 'app/bower_components/**/*.css' 'app/bower_components/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' dist",
-    "build-release": "npm run disable-debug && npm run clean && npm run build && npm run dist && npm run update-index-prod && npm run dist-update-index-async && npm run update-index-async-prod && npm run enable-debug"
+    "build-release": "npm run disable-debug && npm run disable-debug-logging && npm run clean && npm run build && npm run dist && npm run update-index-prod && npm run dist-update-index-async && npm run update-index-async-prod && npm run enable-debug && npm run enable-debug-logging"
   }
 }

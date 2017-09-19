@@ -135,6 +135,43 @@ describe('Itinerary Route Edit', function() {
 
   });
 
+  describe('Handling of routes with no name', function() {
+
+    beforeEach(function() {
+      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      element(by.id('input-route-' + testRouteId_01)).click();
+      element(by.id('input-route-' + testRouteId_02)).click();
+      element(by.id('btn-join-path')).click();
+      list = element.all(by.repeater('route in routes'));
+    });
+
+    it('should allow creation of a new route with no name', function() {
+      element(by.id('input-name')).clear();
+      element(by.id('btn-join')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+    describe('Display of route names', function() {
+
+      beforeEach(function() {
+        browser.get('app/index.html#itinerary?id=' + testItineraryId);
+        element(by.id('input-select-all-routes')).click();
+        element(by.id('btn-join-path')).click();
+        list = element.all(by.repeater('route in routes'));
+      });
+
+      // Test expects one of the previous tests to have created a route with no name
+      it('Route names should not be empty, even when route has no name', function() {
+        expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+        expect(list.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+        expect(list.get(2).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+      });
+
+    });
+
+  });
+
   describe('Cleanup', function() {
 
     beforeEach(function() {

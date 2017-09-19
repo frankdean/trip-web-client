@@ -246,6 +246,42 @@ describe('Itinerary Track Edit', function() {
 
   });
 
+  describe('Handling of tracks with no name', function() {
+
+    beforeEach(function() {
+      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      element(by.id('input-track-' + testTrackId_01)).click();
+      element(by.id('input-track-' + testTrackId_02)).click();
+      element(by.id('btn-join-path')).click();
+      list = element.all(by.repeater('track in tracks'));
+    });
+
+    it('should allow creation a new track with no name', function() {
+      element(by.id('input-name')).clear();
+      element(by.id('btn-join')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+    describe('Display of track names', function() {
+      beforeEach(function() {
+        browser.get('app/index.html#itinerary?id=' + testItineraryId);
+        element(by.id('input-select-all-tracks')).click();
+        element(by.id('btn-join-path')).click();
+        list = element.all(by.repeater('track in tracks'));
+      });
+
+      // Test expects one of the previous tests to have created a track with no name
+      it('Track names should not be empty, even when track has no name', function() {
+        expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+        expect(list.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+        expect(list.get(2).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
+      });
+
+    });
+
+  });
+
   describe('Cleanup', function() {
 
     beforeEach(function() {
