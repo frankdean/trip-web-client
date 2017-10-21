@@ -128,6 +128,13 @@ angular.module('myApp.itinerary.track.segment.edit.controller', [])
            })
            .$promise.then(function(segmentInfo) {
              var latlng, latlngs = new Array(segmentInfo.points.length);
+             $scope.segment = {
+               distance: segmentInfo.distance,
+               ascent: segmentInfo.ascent,
+               descent: segmentInfo.descent,
+               lowest: segmentInfo.lowest,
+               highest: segmentInfo.highest
+             };
              segmentInfo.points.forEach(function(v, index) {
                latlng =  {lat: parseFloat(v.lat, 10), lng: parseFloat(v.lng, 10)};
                latlngs[index] = latlng;

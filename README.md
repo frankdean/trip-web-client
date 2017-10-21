@@ -62,15 +62,11 @@ See
 [Protractor Browser Support page](http://www.protractortest.org/#/browser-support)
 for the latest information.
 
-1.  [Protractor bug #3239 with Firefox](https://github.com/angular/protractor/issues/3239)
-    in Protractor 3.3.0 with Firefox version >46.  Awaiting fix.  Not working
-    with Firefox 48 and Protractor 4.0.3.  This bug has been closed in
-    Protractor 4.0.0.  The issue may now be
-    [Protractor bug #3590](https://github.com/angular/protractor/issues/3590).
-    See also
-    [Protractor bug #3556](https://github.com/angular/protractor/issues/3556) and
-    [webdriver-manager bug #21](https://github.com/angular/webdriver-manager/issues/52).
-    May be some time before Firefox driver works reliably.
+1.  Latest Firefox Protractor testing requires using
+    [geckdriver](https://github.com/mozilla/geckodriver).  Seel also
+    <http://www.seleniumeasy.com/selenium-tutorials/launching-firefox-browser-with-geckodriver-selenium-3>.
+	Not yet tested as documentation says it doesn't yet fully support the
+    webdriver standard.
 
 1.  The Safari web browser seems to cache the last interactively used versions
     of the JavaScript, therefore runs the tests against the wrong version.
@@ -79,6 +75,9 @@ for the latest information.
 
 1.  Safari not working -
     [Protractor bug #3588](https://github.com/angular/protractor/issues/3588).
+
+	Also need to enable 'Allow Remote Automation' option in Safari's 'Develop'
+    menu, but fails when attempting to script the login.
 
 1.  Safari on iOS (iPad) fails when using websockets with self-signed
 	certificates over HTTPS, with:

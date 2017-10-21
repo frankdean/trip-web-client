@@ -17,6 +17,15 @@
     <div ng-show="points.length > 0">
       <form name="search" class="css-form" novalidate>
         <div>
+          <p>
+            <span ng-show="segment.distance">{{segment.distance | number:1}} km</span>
+            <span ng-show="segment.distance">{{segment.distance / 1.609344 | number:1}} mi</span>
+
+            <span ng-show="segment.highest" style="padding-left: 20px;">↗︎{{segment.ascent | number:0}}&nbsp;m ↘︎{{segment.descent | number:0}}&nbsp;m</span>
+            <span ng-show="segment.highest">↗︎{{segment.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{segment.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+            <span ng-show="segment.highest" style="padding-left: 20px;">{{segment.highest | number:0}}⇅{{segment.lowest | number:0}}&nbsp;m</span>
+            <span ng-show="segment.highest">{{segment.highest / 0.0254 / 12 | number:0}}&#x21c5;{{segment.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span>
+          </p>
           <table id="table-segment-points" class="wide-table table table-striped">
             <tr>
               <th>
