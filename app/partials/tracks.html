@@ -26,8 +26,8 @@
         <tr ng-repeat="location in locations.payload">
           <td>{{location.id}}</td>
           <td>{{location.time | date:'medium'}}</td>
-          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lat | number:5}}</a></td>
-          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lng | number:5}}</a></td>
+          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lat | number:6}}</a></td>
+          <td><a href="#/map-point?lat={{location.lat}}&lng={{location.lng}}">{{location.lng | number:6}}</a></td>
           <td>{{location.hdop | number:1}}</td>
           <td>{{location.altitude | number:0}}</td>
           <td>{{location.speed | number:1}}</td>

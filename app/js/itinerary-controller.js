@@ -31,6 +31,7 @@ angular.module('myApp.itinerary.controller', [])
      'ItineraryRouteService',
      'ItineraryTrackService',
      'InitGpxDownload',
+     'InitKmlDownload',
      'SaveAs',
      'ItinerarySelectionService',
      'UtilsService',
@@ -44,6 +45,7 @@ angular.module('myApp.itinerary.controller', [])
                ItineraryRouteService,
                ItineraryTrackService,
                InitGpxDownload,
+               InitKmlDownload,
                SaveAs,
                ItinerarySelectionService,
                UtilsService) {
@@ -415,13 +417,56 @@ angular.module('myApp.itinerary.controller', [])
              routes: routes,
              tracks: tracks
            }).$promise.then(function(response) {
-             SaveAs(response.data, 'trip.gpx');
+             // Only likely to happen in unit tests
+             if (response.data && response.data.size > 0) {
+               SaveAs(response.data, 'trip.gpx');
+             } else {
+               $log.warn('Downloaded response contained no data');
+             }
            }).catch(function(response) {
              $scope.ajaxRequestError = {
                error: true,
                status: response.status
              };
              $log.warn('GPX itinerary download failed', response.status);
+           });
+       };
+       $scope.downloadKml = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         $scope.formError = {editOnlyOne: false};
+         var waypoints = [], routes = [], tracks = [];
+         $scope.waypoints.forEach(function(v) {
+           if (v.selected) {
+             waypoints.push(v.id);
+           }
+         });
+         $scope.routeNames.forEach(function(v) {
+           if (v.selected) {
+             routes.push(v.id);
+           }
+         });
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             tracks.push(v.id);
+           }
+         });
+         InitKmlDownload.downloadItineraryKml(
+           { id: $scope.itineraryId,
+             waypoints: waypoints,
+             routes: routes,
+             tracks: tracks
+           }).$promise.then(function(response) {
+             if (response.data && response.data.size > 0) {
+               SaveAs(response.data, 'trip.kml');
+             } else {
+               $log.warn('Downloaded response contained no data');
+             }
+           }).catch(function(response) {
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+             $log.warn('KML itinerary download failed', response.status);
            });
        };
        $scope.deleteUploads = function(form) {

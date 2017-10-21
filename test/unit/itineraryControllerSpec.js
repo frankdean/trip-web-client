@@ -33,7 +33,8 @@ describe('ItineraryCtrl', function() {
   describe('view', function() {
     var scope, form, $location, $httpBackend, requestHandler,
         getWaypointNamesRequestHandler, getRouteNamesRequestHandler, getTrackNamesRequestHandler,
-        deleteRequestHandler, createController, gpxDownloadService, itineraryService;
+        deleteRequestHandler, createController, gpxDownloadService, kmlDownloadService,
+        itineraryService;
     var routeParams = {id: '42'};
     var expectedWaypoints = [{id: 234, name: 'wp234', symbol: 'Flag, Blue', comment: 'test234'}];
     var expectedRouteNames = [{id: 1, name: 'test'}];
@@ -62,6 +63,7 @@ describe('ItineraryCtrl', function() {
                                ItineraryService,
                                ItineraryRouteService,
                                InitGpxDownload,
+                               InitKmlDownload,
                                ItineraryTrackService) {
       $httpBackend = _$httpBackend_;
       scope = $rootScope;
@@ -72,6 +74,7 @@ describe('ItineraryCtrl', function() {
       deleteRequestHandler = $httpBackend.when('PUT', /\/download\/itinerary\/\d+\/delete-gpx$/).respond(null);
       $location = _$location_;
       gpxDownloadService = InitGpxDownload;
+      kmlDownloadService = InitKmlDownload;
       itineraryService = ItineraryService;
       createController = function() {
         return $controller('ItineraryCtrl', {$scope: scope,
@@ -102,7 +105,7 @@ describe('ItineraryCtrl', function() {
       expect($location.search.calls.argsFor(0)).toEqual([testItinerarySearchObject]);
     });
 
-    it('should deleting an itinerary', function() {
+    it('should delete an itinerary', function() {
       spyOn(gpxDownloadService, 'deleteItineraryGpx').and.callThrough();
       createController();
       $httpBackend.flush();
@@ -155,6 +158,62 @@ describe('ItineraryCtrl', function() {
       getTrackNamesRequestHandler.respond(500, '');
       $httpBackend.flush();
       expect(scope.ajaxRequestError.error).toBeTruthy();
+    });
+
+    describe('GPX download', function() {
+
+      beforeEach(inject(function(
+        InitGpxDownload) {
+        $httpBackend.when('POST',
+                          /\/download\/itinerary\/\d+\/gpx$/,
+                          function(data) {
+                            return true;
+                          }).respond(200, '');
+        gpxDownloadService = InitGpxDownload;
+        spyOn(gpxDownloadService, 'downloadItineraryGpx').and.callThrough();
+        createController();
+        $httpBackend.flush();
+        scope.data = {};
+        scope.waypoints = [];
+        scope.routeNames = [];
+        scope.trackNames = [];
+        scope.data.id = testItinerarySearchObject.id;
+        scope.download();
+        $httpBackend.flush();
+      }));
+
+      it('should initiate a GPX file download', function() {
+        expect(gpxDownloadService.downloadItineraryGpx).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('KML download', function() {
+
+      beforeEach(inject(function(
+        InitKmlDownload) {
+        $httpBackend.when('POST',
+                          /\/download\/itinerary\/\d+\/kml$/,
+                          function(data) {
+                            return true;
+                          }).respond(200, '');
+        kmlDownloadService = InitKmlDownload;
+        spyOn(kmlDownloadService, 'downloadItineraryKml').and.callThrough();
+        createController();
+        $httpBackend.flush();
+        scope.data = {};
+        scope.waypoints = [];
+        scope.routeNames = [];
+        scope.trackNames = [];
+        scope.data.id = testItinerarySearchObject.id;
+        scope.downloadKml();
+        $httpBackend.flush();
+      }));
+
+      it('should initiate a KML file download', function() {
+        expect(kmlDownloadService.downloadItineraryKml).toHaveBeenCalled();
+      });
+
     });
 
   });

@@ -139,6 +139,7 @@ angular.module('myApp', [
   'myApp.admin.password.reset.controller',
   'myApp.config.factory',
   'myApp.gpxdownload.factory',
+  'myApp.kmldownload.factory',
   'myApp.gpxupload',
   'myApp.itineries.controller',
   'myApp.itinerary.controller',

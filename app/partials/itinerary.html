@@ -40,7 +40,7 @@
           <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">What is Markdown?</a>
         </div>
       </div>
-      <div>
+      <div style="margin-top: 10px;">
         <button id="btn-close" ng-click="close()" class="btn btn-lg btn-danger">Close</button>
       </div>
     </div>
@@ -159,7 +159,7 @@
                 class="btn btn-lg btn-success"
                 mwl-confirm
                 title="GPX Download"
-                message="Download waypoints, routes and tracks?" 
+                message="Download waypoints, routes and tracks as GPX?"
                 on-confirm="download(downloads)"
                 confirm-button-type="success"
                 >GPX download</button>
@@ -190,7 +190,16 @@
       </div>
     </form>
   </div>
-  <div id="extra-actions">
+  <div id="extra-actions" style="margin-top: 10px;">
+    <button id="btn-download-kml"
+            type="button"
+            class="btn btn-lg btn-success"
+            mwl-confirm
+            title="KML Download"
+            message="Download waypoints, routes and tracks as KML?"
+            on-confirm="downloadKml(downloads)"
+            confirm-button-type="success"
+            >KML download</button>
     <button id="btn-map" ng-click="showMap(downloads)" type="button" class="btn btn-lg btn-primary">Show map</button>
     <button id="btn-new-waypoint" ng-click="createWaypoint(downloads)"
             class="btn btn-lg btn-warning"

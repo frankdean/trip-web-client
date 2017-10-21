@@ -45,8 +45,8 @@
                 <input id="input-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-click="showMarker(point)" />
                 <label for="input-point-{{point.id}}">{{point.id}}</label>
               </td>
-              <td>{{point.lat | number:5}}</td>
-              <td>{{point.lng | number:5}}</td>
+              <td>{{point.lat | number:6}}</td>
+              <td>{{point.lng | number:6}}</td>
               <td>{{point.altitude | number:0}}</td>
               <td>{{point.name}}</td>
               <td>{{point.comment}}</td>

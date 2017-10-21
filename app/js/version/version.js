@@ -5,4 +5,4 @@ angular.module('myApp.version', [
   'myApp.version.version-directive'
 ])
 
-.value('version', '0.14.1');
+.value('version', '0.15.0-rc.1');
