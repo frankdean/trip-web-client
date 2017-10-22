@@ -288,7 +288,6 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        $scope.split = function(form) {
          var newRoute = {},
              selectedPointId,
-             selectedPoints = [],
              selectedCount = 0,
              pointIndex;
          $scope.formError = undefined;
