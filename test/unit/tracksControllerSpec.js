@@ -144,14 +144,14 @@ describe('TRIP controllers', function() {
       createController();
       scope.listTracks(testTrackSearchParams);
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+      expect($location.path).toHaveBeenCalledWith('/login');
     });
 
     it('should redirect to the login page if the user fails authentication fetching nicknames', function() {
       nicknamesRequestHandler.respond(401, '');
       createController();
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+      expect($location.path).toHaveBeenCalledWith('/login');
     });
 
     it('should change the location to display the map and set the URL search parameters', function() {
@@ -165,7 +165,7 @@ describe('TRIP controllers', function() {
       scope.form = mockValidForm;
       scope.showMap(testTrackSearchParams);
       expect($location.path).toHaveBeenCalled();
-      expect($location.path.calls.argsFor(0)).toEqual(['/map']);
+      expect($location.path).toHaveBeenCalledWith('/map');
       expect($location.search).toHaveBeenCalled();
       expect($location.search.calls.argsFor(0)).toEqual([expected]);
     });

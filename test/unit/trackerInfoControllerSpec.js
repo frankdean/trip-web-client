@@ -103,7 +103,7 @@ describe('TrackerInfoCtrl', function() {
     spyOn($location, 'path').and.stub();
     scope.generateUuid();
     $httpBackend.flush();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
     expect(scope.ajaxRequestMessage).toBeUndefined();
     expect(scope.ajaxRequestError.error).toBeFalsy();
   }));

@@ -21,7 +21,7 @@ describe('Itineraries sharing report', function() {
   var list;
 
   beforeEach(function() {
-    browser.get('app/index.html#/itinerary-sharing-report');
+    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-sharing-report');
     list = element.all(by.repeater('itinerary in itineraries'));
   });
 
@@ -30,18 +30,18 @@ describe('Itineraries sharing report', function() {
   });
 
   it('should render links to the itinerary sharing page', function() {
-    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#\/itinerary-sharing\?id=[0-9]+/);
+    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#!?\/itinerary-sharing\?id=[0-9]+/);
   });
 
   it('should show the itinerary sharing page when an itinerary is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/(%2F|\/)itinerary-sharing(%3F|\?)id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
   });
 
   it('should show the itinerary when the "show itinerary" button on the itinerary sharing page is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/(%2F|\/)itinerary-sharing(%3F|\?)id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
     element(by.id('btn-show-itinerary')).click();
     expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+$/);
@@ -49,7 +49,7 @@ describe('Itineraries sharing report', function() {
 
   it('should show the itinerary sharing report when the back button on the itinerary sharing page is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/(%2F|\/)itinerary-sharing(%3F|\?)id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
     element(by.id('btn-close')).click();
     expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing-report$/);

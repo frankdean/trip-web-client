@@ -23,7 +23,7 @@ describe('Track Sharing page', function() {
       elemMaxMinutes, elemActive, elemButtonSave;
 
   beforeEach(function() {
-    browser.get('app/index.html#/sharing');
+    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/sharing');
     sharesList = element.all(by.repeater('share in shares'));
     pageCount = sharesList.count();
     elemNickname = element(by.model('data.nickname'));

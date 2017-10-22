@@ -22,7 +22,7 @@
       </tr>
       <tr ng-repeat="itinerary in itineraries.payload">
         <td>{{itinerary.start | date :'EEE dd-MMM-yyyy'}}</td>
-        <td><a href="#/itinerary?id={{itinerary.id}}">{{itinerary.title}}</a></td>
+        <td><a href="#!/itinerary?id={{itinerary.id}}">{{itinerary.title}}</a></td>
         <td>{{itinerary.nickname}}</td>
         <td>{{itinerary.shared == true ? '\u2713' : ''}}</td>
       </tr>

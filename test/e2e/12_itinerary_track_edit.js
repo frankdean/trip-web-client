@@ -29,7 +29,7 @@ describe('Itinerary Track Edit', function() {
   describe('Join tracks', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
       element(by.id('btn-join-path')).click();
@@ -68,7 +68,7 @@ describe('Itinerary Track Edit', function() {
     var segments;
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
       element(by.id('btn-edit-path')).click();
@@ -158,7 +158,7 @@ describe('Itinerary Track Edit', function() {
     var segments;
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
       element(by.id('btn-edit-path')).click();
@@ -186,7 +186,7 @@ describe('Itinerary Track Edit', function() {
     var segments, points;
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
       element(by.id('btn-edit-path')).click();
@@ -214,7 +214,7 @@ describe('Itinerary Track Edit', function() {
     var segments;
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testSharedItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testSharedItineraryId);
       element(by.id('input-track-' + testSharedTrackId)).click();
       element(by.id('btn-view-path')).click();
       segments = element.all(by.repeater('segment in data.track.segments'));
@@ -249,7 +249,7 @@ describe('Itinerary Track Edit', function() {
   describe('Handling of tracks with no name', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
       element(by.id('btn-join-path')).click();
@@ -265,7 +265,7 @@ describe('Itinerary Track Edit', function() {
 
     describe('Display of track names', function() {
       beforeEach(function() {
-        browser.get('app/index.html#itinerary?id=' + testItineraryId);
+        browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
         element(by.id('input-select-all-tracks')).click();
         element(by.id('btn-join-path')).click();
         list = element.all(by.repeater('track in tracks'));
@@ -285,7 +285,7 @@ describe('Itinerary Track Edit', function() {
   describe('Cleanup', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
     });
 
     it('should remove tracks we created during testing', function() {

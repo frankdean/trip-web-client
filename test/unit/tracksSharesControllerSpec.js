@@ -329,7 +329,7 @@ describe('SharesCtrl', function() {
     spyOn($location, 'path').and.stub();
     scope.listShares();
     $httpBackend.flush();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
   });
 
   it('should redirect to the login page when authentication fails in save shares', function() {
@@ -338,7 +338,7 @@ describe('SharesCtrl', function() {
     spyOn($location, 'path').and.stub();
     scope.saveShares({updateType: 'activeStateChange'});
     $httpBackend.flush();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
   });
 
   it('should redirect to the login page when authentication fails in save share', function() {
@@ -347,7 +347,7 @@ describe('SharesCtrl', function() {
     spyOn($location, 'path').and.stub();
     scope.save();
     $httpBackend.flush();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
   });
 
   it('should show an error when there is a backend failure saving a share', function() {

@@ -21,7 +21,7 @@ describe('Itineries page', function() {
   var list;
 
   beforeEach(function() {
-    browser.get('app/index.html#/itineraries');
+    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itineraries');
     list = element.all(by.repeater('itinerary in itineraries.payload'));
   });
 
@@ -30,12 +30,12 @@ describe('Itineries page', function() {
   });
 
   it('should render links for editing each itinerary', function() {
-    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#\/itinerary\?id=[0-9]+/);
+    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#!?\/itinerary\?id=[0-9]+/);
   });
 
   it('should show the edit page when an itinerary is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
-    expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=[0-9]+/);
+    expect(browser.getCurrentUrl()).toMatch(/(%2F|\/)itinerary(%3F|\?)id=[0-9]+/);
   });
 
 });

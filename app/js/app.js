@@ -304,7 +304,6 @@ angular.module('myApp', [
          otherwise({
            redirectTo: '/tracks'
          });
-       $httpProvider.useLegacyPromiseExtensions(false);
        jwtOptionsProvider.config({
          urlParam: 'access_token',
          tokenGetter: ['$log', 'Storage', 'options',

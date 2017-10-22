@@ -24,7 +24,7 @@ describe('Itinerary uploads', function() {
   describe('Itinerary owned by user', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=929');
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=929');
     });
 
     it('should show the Select-all checkboxes and list waypoints, routes and tracks', function() {
@@ -118,7 +118,7 @@ describe('Itinerary uploads', function() {
   describe('Itinerary shared to user', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=983');
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=983');
     });
 
     it('should show the Select-all checkboxes and list waypoints, routes and tracks', function() {

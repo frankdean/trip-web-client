@@ -87,7 +87,7 @@ describe('UserCtrl', function() {
       spyOn($location, 'path').and.stub();
       scope.searchUsers();
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+      expect($location.path).toHaveBeenCalledWith('/login');
     });
 
     it('should fetch a page when the page navigation buttons are pressed', function() {
@@ -183,7 +183,7 @@ describe('UserCtrl', function() {
         spyOn($location, 'path').and.stub();
         scope.saveUser();
         $httpBackend.flush();
-        expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+        expect($location.path).toHaveBeenCalledWith('/login');
       });
 
     });

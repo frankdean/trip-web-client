@@ -42,7 +42,7 @@ describe('TRIP app', function() {
   describe('tracks page', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#/tracks');
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/tracks');
     });
 
     var elemDateFrom = element(by.model('tracks.search.dateFrom'));
@@ -345,7 +345,7 @@ describe('TRIP app', function() {
 
     it('should navigate to the map page when the submit button is clicked', function() {
       element(by.id('btn-map')).click();
-      expect(browser.getCurrentUrl()).toMatch(new RegExp('^' + browser.baseUrl + 'app\\/index.html#\\/map'));
+      expect(browser.getCurrentUrl()).toMatch(new RegExp('^' + browser.baseUrl + 'app\\/index.html#!?\\/map'));
     });
 
     it('should navigate to the map point page when a map link is clicked', function() {
@@ -364,11 +364,11 @@ describe('TRIP app', function() {
       browser.waitForAngular();
       var locationList = element.all(by.repeater('location in locations'));
       var link = locationList.first().all(by.tagName('a')).first();
-      expect(locationList.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
-      expect(locationList.first().all(by.tagName('a')).get(1).getAttribute('href')).toMatch(/#\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
+      expect(locationList.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#!?\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
+      expect(locationList.first().all(by.tagName('a')).get(1).getAttribute('href')).toMatch(/#!?\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
       link.click();
       browser.waitForAngular();
-      expect(browser.getCurrentUrl()).toMatch(new RegExp('^' + browser.baseUrl + 'app\\/index.html#\\/map-point'));
+      expect(browser.getCurrentUrl()).toMatch(new RegExp('^' + browser.baseUrl + 'app\\/index.html#!?\\/map-point'));
     });
 
     it('should download an empty GPX file for another nickname', function() {
@@ -462,7 +462,7 @@ describe('TRIP app', function() {
 
     var uuidUrlRegex = /https?:\/\/[\S]+\/log_point(\.php)?[\S]+uuid=[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
     beforeEach(function() {
-      browser.get('app/index.html#/tracker-info');
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/tracker-info');
     });
 
     it('should display the GPSLogger URL prefix in the link element', function() {

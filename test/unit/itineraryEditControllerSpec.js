@@ -83,8 +83,7 @@ describe('ItineraryEditCtrl', function() {
       scope.saveItinerary(scope.data);
       $httpBackend.flush();
       expect(itineraryService.save).toHaveBeenCalledWith({}, expected);
-      expect($location.search).toHaveBeenCalled();
-      expect($location.search.calls.argsFor(0)).toEqual([{id: testItinerary.id + ''}]);
+      expect($location.search).toHaveBeenCalledWith({id: testItinerary.id + ''});
       expect(scope.data.id).toEqual(testItinerary.id);
       expect(scope.data.start).toBeDefined();
       expect(scope.data.finish).toBeDefined();
@@ -98,7 +97,7 @@ describe('ItineraryEditCtrl', function() {
       spyOn($location, 'path').and.stub();
       scope.saveItinerary(scope.data);
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+      expect($location.path).toHaveBeenCalledWith('/login');
     });
 
   });
@@ -229,7 +228,7 @@ describe('ItineraryEditCtrl', function() {
       spyOn($location, 'path').and.stub();
       scope.saveItinerary(testItinerary);
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+      expect($location.path).toHaveBeenCalledWith('/login');
     });
 
     it('should show an error when there is a backend failure saving the itinerary', function() {
@@ -326,9 +325,8 @@ describe('ItineraryEditCtrl', function() {
       scope.delete(testItinerary);
       $httpBackend.flush();
       expect($location.path).toHaveBeenCalled();
-      expect($location.path.calls.argsFor(0)).toEqual(['/itineraries']);
-      expect($location.search).toHaveBeenCalled();
-      expect($location.search.calls.argsFor(0)).toEqual(['']);
+      expect($location.path).toHaveBeenCalledWith('/itineraries');
+      expect($location.search).toHaveBeenCalledWith('');
     });
 
   });

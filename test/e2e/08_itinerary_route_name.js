@@ -25,7 +25,7 @@ describe('Itinerary Route Name', function() {
   describe('Non-existant route ID', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=-1');
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=-1');
     });
 
     it('should display a system error', function() {
@@ -37,7 +37,7 @@ describe('Itinerary Route Name', function() {
   describe('edit', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
     });
 
     it('should fetch the route name', function() {
@@ -55,7 +55,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('Modified route name');
       element(by.id('btn-save')).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      browser.get('app/index.html#itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Modified route name');
     });
 

@@ -93,8 +93,8 @@ describe('AdminPasswordResetCtrl', function() {
       scope.data.password=testPassword;
       scope.resetPassword(mockValidForm);
       $httpBackend.flush();
-      expect($location.path.calls.argsFor(0)).toEqual(['/users']);
-      expect($location.search.calls.argsFor(0)).toEqual(['']);
+      expect($location.path).toHaveBeenCalledWith('/users');
+      expect($location.search).toHaveBeenCalledWith('');
     });
 
     it('should set an error when the backend fails to return the user', function() {

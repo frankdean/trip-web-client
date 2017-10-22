@@ -110,8 +110,8 @@ describe('ItineraryRouteNameCtrl', function() {
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
     $httpBackend.flush();
     expect(scope.ajaxRequestError.error).toBeFalsy();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
-    expect($location.search.calls.argsFor(0)).toEqual([]);
+    expect($location.path).toHaveBeenCalledWith('/login');
+    expect($location.search).not.toHaveBeenCalled();
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
@@ -126,7 +126,6 @@ describe('ItineraryRouteNameCtrl', function() {
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
     $httpBackend.flush();
     expect(scope.ajaxRequestError.saveFailed).toBeDefined();
-    expect($location.path).not.toHaveBeenCalled();
     expect($location.search).not.toHaveBeenCalled();
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
     expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
@@ -157,8 +156,8 @@ describe('ItineraryRouteNameCtrl', function() {
     $httpBackend.flush();
     expect(itineraryRouteNameService.get).toHaveBeenCalled();
     expect(scope.ajaxRequestError).not.toBeDefined();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
-    expect($location.search.calls.argsFor(0)).toEqual([]);
+    expect($location.path).toHaveBeenCalledWith('/login');
+    expect($location.search).not.toHaveBeenCalled();
   });
 
   it('should save the specified route name', function() {
@@ -237,8 +236,8 @@ describe('ItineraryRouteNameCtrl', function() {
     mockValidForm.$dirty = true;
     scope.cancel(mockValidForm);
     expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
-    expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
-    expect($location.search.calls.argsFor(0)).toEqual([{id: '99'}]);
+    expect($location.path).toHaveBeenCalledWith('/itinerary');
+    expect($location.search).toHaveBeenCalledWith({id: '99'});
   });
 
   it('should reset the form after cancellation', function() {

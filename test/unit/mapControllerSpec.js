@@ -81,7 +81,7 @@ describe('MapCtrl', function() {
     requestHandler.respond(401, '');
     createController();
     $httpBackend.flush();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
   });
 
   it('should show an error when there is a backend failure', function() {

@@ -219,16 +219,16 @@ describe('ItinerarySharingCtrl', function() {
       createController();
       $httpBackend.flush();
       scope.cancel();
-      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
-      expect($location.search.calls.argsFor(0)).toEqual([{id: '' + routeParams.id}]);
+      expect($location.path).toHaveBeenCalledWith('/itinerary');
+      expect($location.search).toHaveBeenCalledWith({id: '' + routeParams.id});
     });
 
     it('should display the itineary list when the cancel/back button is clicked', function() {
       createController();
       $httpBackend.flush();
       scope.cancel();
-      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary']);
-      expect($location.search.calls.argsFor(0)).toEqual([{id: '' + routeParams.id}]);
+      expect($location.path).toHaveBeenCalledWith('/itinerary');
+      expect($location.search).toHaveBeenCalledWith({id: '' + routeParams.id});
     });
 
     it('should display the itineary sharing report when the cancel/back button is clicked when routing parameter is set', function() {
@@ -240,8 +240,8 @@ describe('ItinerarySharingCtrl', function() {
       });
       $httpBackend.flush();
       scope.cancel();
-      expect($location.path.calls.argsFor(0)).toEqual(['/itinerary-sharing-report']);
-      expect($location.search.calls.argsFor(0)).toEqual(['']);
+      expect($location.path).toHaveBeenCalledWith('/itinerary-sharing-report');
+      expect($location.search).toHaveBeenCalledWith('');
     });
 
   });

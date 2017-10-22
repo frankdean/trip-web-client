@@ -60,7 +60,7 @@ describe('SystemStatusCtrl', function() {
     requestHandler.respond(401, '');
     $httpBackend.flush();
     expect(systemStatusService.get).toHaveBeenCalled();
-    expect($location.path.calls.argsFor(0)).toEqual(['/login']);
+    expect($location.path).toHaveBeenCalledWith('/login');
   });
 
   it('should set an error condition when the backend call fails', function() {

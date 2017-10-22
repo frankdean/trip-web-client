@@ -55,7 +55,7 @@ describe('Itinerary map', function() {
   describe('Itinerary owned by user', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
       browser.wait(EC.visibilityOf(selectAllWaypoints), 5000);
       browser.waitForAngular();
     });
@@ -317,7 +317,7 @@ describe('Itinerary map', function() {
   describe('itinerary owned and shared by someone else', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testSharedItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testSharedItineraryId);
     });
 
     it('should not display the edit-path button', function() {
@@ -384,7 +384,7 @@ describe('Itinerary map', function() {
         routeIds = [8303, 8304];
 
     beforeEach(function() {
-      browser.get('app/index.html#itinerary?id=' + testItineraryId);
+      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
     });
 
     it('should reset the coordinates of the London waypoint ready for another test run', function() {

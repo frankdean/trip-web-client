@@ -106,8 +106,8 @@ describe('UserEditCtrl', function() {
         $httpBackend.flush();
         scope.saveUser(mockValidForm);
         $httpBackend.flush();
-        expect($location.path.calls.argsFor(0)).toEqual(['/users']);
-        expect($location.search.calls.argsFor(0)).toEqual(['']);
+        expect($location.path).toHaveBeenCalledWith('/users');
+        expect($location.search).toHaveBeenCalledWith('');
       });
 
       it('should show an error when there is a backend failure updating a user', function() {
