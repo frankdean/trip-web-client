@@ -137,7 +137,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
                }
              }
              $scope.map.paths.push({
-               color: $scope.route && $scope.route.color ? $scope.route.color : 'magenta',
+               color: $scope.route && $scope.route.htmlcolor ? $scope.route.htmlcolor : 'magenta',
                opacity: 0.5,
                weight: 4,
                latlngs: latlngs

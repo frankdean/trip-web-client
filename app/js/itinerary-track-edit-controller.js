@@ -172,7 +172,7 @@ angular.module('myApp.itinerary.track.edit.controller', [])
                }
                $scope.map.paths.push({
                  tripSegmentId: segment.id,
-                 color: $scope.data.track.color ? $scope.data.track.color : 'red',
+                 color: 'red',
                  opacity: 0.5,
                  weight: 4,
                  latlngs: latlngs
