@@ -25,7 +25,7 @@ describe('Itinerary Track Name', function() {
   describe('Non-existant track ID', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=-1');
+      browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=-1');
     });
 
     it('should display a system error', function() {
@@ -37,7 +37,7 @@ describe('Itinerary Track Name', function() {
   describe('edit', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
+      browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
     });
 
     it('should fetch the track name', function() {
@@ -57,7 +57,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-color')).sendKeys('g');
       element(by.id('btn-save')).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
+      browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Modified track name');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Green');
     });
@@ -68,7 +68,7 @@ describe('Itinerary Track Name', function() {
       element(by.id('input-color')).sendKeys('y');
       element(by.id('btn-save')).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
+      browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Test track name');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Yellow');
     });

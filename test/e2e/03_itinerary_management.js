@@ -36,7 +36,7 @@ describe('Itinerary management', function() {
   describe('new itinerary page', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-edit');
+      browser.get(browser.baseUrl + '/itinerary-edit');
     });
 
     it('should create a new itinerary', function() {
@@ -143,7 +143,7 @@ describe('Itinerary management', function() {
   describe('edit itinerary page', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-edit?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary-edit?id=' + testItineraryId);
     });
 
     it('should be able to modify each field', function() {
@@ -288,7 +288,7 @@ describe('Itinerary management', function() {
   describe('view', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
     });
 
     it('should show the sharing page when the sharing button is clicked', function() {
@@ -305,7 +305,7 @@ describe('Itinerary management', function() {
   describe('view with missing itinerary id attribute', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary');
+      browser.get(browser.baseUrl + '/itinerary');
     });
 
     it('should not show the Add Waypoint button whilst the form is in edit mode', function() {

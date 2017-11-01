@@ -179,10 +179,20 @@ angular.module('myApp', [
   'myApp.version'
 ])
 
-  .config(['$compileProvider', function ($compileProvider) {
-    // disable for production release
-    $compileProvider.debugInfoEnabled(true);
-  }])
+  .config(
+    ['$compileProvider', '$locationProvider', '$provide',
+     function ($compileProvider, $locationProvider, $provide) {
+       // disable for production release
+       $compileProvider.debugInfoEnabled(true);
+       $locationProvider.html5Mode(true).hashPrefix('!');
+       /*
+       // Force hashbang mode in HTML5 (for testing)
+       $provide.decorator('$sniffer', ['$delegate', function($delegate) {
+         $delegate.history = false;
+         return $delegate;
+       }]);
+       */
+     }])
 
   .config(
     ['$routeProvider', '$httpProvider', 'jwtOptionsProvider', '$logProvider',

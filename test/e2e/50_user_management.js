@@ -47,9 +47,9 @@ describe('User management', function() {
   };
 
   var adminLogin = function() {
-    browser.get(browser.baseUrl + 'app/index.html#' + browser.privateConfig.hashPrefix + '/logout');
+    browser.get(browser.baseUrl + '/logout');
     browser.waitForAngular();
-    browser.get(browser.baseUrl + 'app/index.html#' + browser.privateConfig.hashPrefix + '/login');
+    browser.get(browser.baseUrl + '/login');
     browser.findElement(by.id('input-email')).sendKeys(browser.privateConfig.testAdminUser);
     browser.findElement(by.id('input-password')).sendKeys(browser.privateConfig.testAdminUserPassword);
     browser.findElement(by.id('btn-submit')).click();
@@ -66,7 +66,7 @@ describe('User management', function() {
   describe('User search page', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/users');
+      browser.get(browser.baseUrl + '/users');
     });
 
     describe('Create new user', function() {
@@ -179,15 +179,15 @@ describe('User management', function() {
 
       it('should not allow a non-admin user to create a user', function() {
         // Logout and log back in as the test user without admin rights
-        browser.get(browser.baseUrl + 'app/index.html#' + browser.privateConfig.hashPrefix + '/logout');
+        browser.get(browser.baseUrl + '/logout');
         browser.waitForAngular();
-        browser.get(browser.privateConfig.baseUrl + 'app/index.html#' + browser.privateConfig.hashPrefix + '/login');
+        browser.get(browser.privateConfig.baseUrl + '/login');
         browser.findElement(by.id('input-email')).sendKeys(browser.privateConfig.testUser);
         browser.findElement(by.id('input-password')).sendKeys(browser.privateConfig.testUserPassword);
         browser.findElement(by.id('btn-submit')).click();
         browser.waitForAngular();
         // Start the test
-        browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/users');
+        browser.get(browser.baseUrl + '/users');
         element(by.id('btn-new')).click();
         elemNickname.sendKeys('x4g48');
         elemUsername.sendKeys('x4g48@secret.org');
@@ -503,7 +503,7 @@ describe('User management', function() {
     describe('Save changes', function() {
 
       beforeEach(function() {
-        browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/edit-user?id=' + testUser1.id);
+        browser.get(browser.baseUrl + '/edit-user?id=' + testUser1.id);
         browser.wait(
           EC.visibilityOf(
             element(by.id('btn-submit'))),
@@ -718,7 +718,7 @@ describe('User management', function() {
     describe('Cancel edit user', function() {
 
       beforeEach(function() {
-        browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/edit-user?id=' + testUser3.id);
+        browser.get(browser.baseUrl + '/edit-user?id=' + testUser3.id);
       });
 
       describe('Form not altered', function() {
@@ -781,7 +781,7 @@ describe('User management', function() {
   describe('Reset password', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/admin-password-reset?id=' + testUser1.id);
+      browser.get(browser.baseUrl + '/admin-password-reset?id=' + testUser1.id);
     });
 
     it('should display error messages for mandatory fields', function() {
@@ -816,7 +816,7 @@ describe('User management', function() {
   describe('System status', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/status');
+      browser.get(browser.baseUrl + '/status');
     });
 
     it('should display the system status page', function() {

@@ -47,7 +47,7 @@ describe('Itinerary Waypoints', function() {
     var testWaypointId = 9356;
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
+      browser.get(browser.baseUrl + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
     });
 
     it('should show an error message if the name is blank', function() {
@@ -151,7 +151,7 @@ describe('Itinerary Waypoints', function() {
       eleColor.sendKeys('#ff0000');
       btnSave.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
+      browser.get(browser.baseUrl + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
       expect(eleName.getAttribute('value')).toEqual('Test waypoint modification');
       expect(elePosition.getAttribute('value')).toEqual('50,-3');
       expect(eleAltitude.getAttribute('value')).toEqual('450');
@@ -243,7 +243,7 @@ describe('Itinerary Waypoints', function() {
   describe('new', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-wpt-edit?itineraryId=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary-wpt-edit?itineraryId=' + testItineraryId);
     });
 
     it('the time should default to now', function() {
@@ -289,7 +289,7 @@ describe('Itinerary Waypoints', function() {
   describe('test cleanup', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
     });
 
     it('should delete waypoints that were created', function() {

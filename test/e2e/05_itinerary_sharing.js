@@ -22,7 +22,7 @@ describe('itinerary sharing', function() {
   var testItineraryId = 929;
 
   beforeEach(function() {
-    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-sharing?id=' + testItineraryId);
+    browser.get(browser.baseUrl + '/itinerary-sharing?id=' + testItineraryId);
   });
 
   describe('create itinerary shares', function() {

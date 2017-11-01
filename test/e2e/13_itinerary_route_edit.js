@@ -29,7 +29,7 @@ describe('Itinerary Route Edit', function() {
   describe('Join routes', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
       element(by.id('btn-join-path')).click();
@@ -68,7 +68,7 @@ describe('Itinerary Route Edit', function() {
     var points;
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
       list = element.all(by.repeater('route in routeNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
       element(by.id('btn-edit-path')).click();
@@ -120,7 +120,7 @@ describe('Itinerary Route Edit', function() {
   describe('Read only', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testSharedItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
       list = element.all(by.repeater('route in routeNames'));
       list.get(0).all(by.tagName('td')).get(0).click();
       element(by.id('btn-view-path')).click();
@@ -138,7 +138,7 @@ describe('Itinerary Route Edit', function() {
   describe('Handling of routes with no name', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
       element(by.id('btn-join-path')).click();
@@ -155,7 +155,7 @@ describe('Itinerary Route Edit', function() {
     describe('Display of route names', function() {
 
       beforeEach(function() {
-        browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+        browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
         element(by.id('input-select-all-routes')).click();
         element(by.id('btn-join-path')).click();
         list = element.all(by.repeater('route in routes'));
@@ -175,7 +175,7 @@ describe('Itinerary Route Edit', function() {
   describe('Cleanup', function() {
 
     beforeEach(function() {
-      browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary?id=' + testItineraryId);
+      browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
     });
 
     it('should remove routes we created during testing', function() {

@@ -36,7 +36,7 @@
               <td>
                 <input type="checkbox" ng-model="segment.selected" ng-click="showSegment(segment)" />
               </td>
-              <td><a href="#!/itinerary-track-segment-edit?itineraryId={{itineraryId}}&trackId={{trackId}}&segmentId={{segment.id}}&shared={{shared}}">{{segment.id}}</a></td>
+              <td><a ng-href="/trip/app/itinerary-track-segment-edit?itineraryId={{itineraryId}}&trackId={{trackId}}&segmentId={{segment.id}}&shared={{shared}}">{{segment.id}}</a></td>
             </tr>
           </table>
           <div id="div-paging">

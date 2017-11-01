@@ -21,7 +21,7 @@ describe('Itineraries sharing report', function() {
   var list;
 
   beforeEach(function() {
-    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/itinerary-sharing-report');
+    browser.get(browser.baseUrl + '/itinerary-sharing-report');
     list = element.all(by.repeater('itinerary in itineraries'));
   });
 
@@ -30,7 +30,7 @@ describe('Itineraries sharing report', function() {
   });
 
   it('should render links to the itinerary sharing page', function() {
-    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/#!?\/itinerary-sharing\?id=[0-9]+/);
+    expect(list.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/\/itinerary-sharing\?id=[0-9]+/);
   });
 
   it('should show the itinerary sharing page when an itinerary is clicked', function() {

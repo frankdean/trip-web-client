@@ -23,7 +23,7 @@ describe('Track Sharing page', function() {
       elemMaxMinutes, elemActive, elemButtonSave;
 
   beforeEach(function() {
-    browser.get('app/index.html#' + browser.privateConfig.hashPrefix + '/sharing');
+    browser.get(browser.baseUrl + '/sharing');
     sharesList = element.all(by.repeater('share in shares'));
     pageCount = sharesList.count();
     elemNickname = element(by.model('data.nickname'));
@@ -108,7 +108,6 @@ describe('Track Sharing page', function() {
   });
 
   it('should allow edit of a selected location share ', function() {
-    // browser.pause();
     sharesList.all(by.model('share.selected')).first().click();
     expect(sharesList.all(by.model('share.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
     element(by.id('btn-edit')).click();

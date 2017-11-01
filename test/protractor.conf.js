@@ -64,8 +64,7 @@ exports.config = {
     browser.privateConfig.testUser = env.testUser;
     browser.privateConfig.testAdminUserPassword = env.testAdminUserPassword;
     browser.privateConfig.baseUrl = env.baseUrl;
-    browser.privateConfig.hashPrefix = '!';
-    browser.get(env.baseUrl + 'app/index.html#' + browser.privateConfig.hashPrefix + '/login');
+    browser.get(env.baseUrl + '/login');
     browser.findElement(by.id('input-email')).sendKeys(env.testUser);
     browser.findElement(by.id('input-password')).sendKeys(env.testUserPassword);
     browser.findElement(by.id('btn-submit')).click();
