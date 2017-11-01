@@ -23,7 +23,7 @@ describe('User management', function() {
   var elemNickname, elemUsername, elemPassword, elemPassword2,
       elemFirstname, elemLastname, elemButtonSubmit, adminLoggedIn,
       userListElem;
-  var testUserEmail = 'test@secret.org';
+  var testUserEmail = 'test@trip.test';
   var testUser1 = {
     id: 670,
     nickname: 'test',
@@ -34,14 +34,14 @@ describe('User management', function() {
   var testUser2 = {
     id: 670,
     nickname: 'user2',
-    email: 'user2@secret.org',
+    email: 'user2@trip.test',
     firstname: 'James',
     lastname: 'Jones'
   };
   var testUser3 = {
     id: 456,
     nickname: 'purple',
-    email: 'purple@secret.org',
+    email: 'purple@trip.test',
     firstname: 'purple',
     lastname: 'purple'
   };
@@ -84,7 +84,7 @@ describe('User management', function() {
 
       it('should show an error when the passwords do not match', function() {
         elemNickname.sendKeys('smithy');
-        elemUsername.sendKeys('smithy@secret.org');
+        elemUsername.sendKeys('smithy@trip.test');
         elemPassword.sendKeys('secret');
         elemPassword2.sendKeys('Secret');
         elemFirstname.sendKeys('John');
@@ -145,7 +145,7 @@ describe('User management', function() {
         if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName !== 'safari' ) {
           // invalid nickname
           elemNickname.sendKeys('smi\u0007thy');
-          elemUsername.sendKeys('smithy2@secret.org');
+          elemUsername.sendKeys('smithy2@trip.test');
           elemPassword.sendKeys('secret');
           elemPassword2.sendKeys('secret');
           elemFirstname.sendKeys('John');
@@ -157,7 +157,7 @@ describe('User management', function() {
 
       it('should display an error message if the e-mail address exists', function() {
         elemNickname.sendKeys('qwerty-man');
-        elemUsername.sendKeys('test@secret.org');
+        elemUsername.sendKeys('test@trip.test');
         elemPassword.sendKeys('secret');
         elemPassword2.sendKeys('secret');
         elemFirstname.sendKeys('John');
@@ -168,7 +168,7 @@ describe('User management', function() {
 
       it('should display an error message if the nickname exists', function() {
         elemNickname.sendKeys('test');
-        elemUsername.sendKeys('qwerty.man@secret.org');
+        elemUsername.sendKeys('qwerty.man@trip.test');
         elemPassword.sendKeys('secret');
         elemPassword2.sendKeys('secret');
         elemFirstname.sendKeys('John');
@@ -190,7 +190,7 @@ describe('User management', function() {
         browser.get(browser.baseUrl + '/users');
         element(by.id('btn-new')).click();
         elemNickname.sendKeys('x4g48');
-        elemUsername.sendKeys('x4g48@secret.org');
+        elemUsername.sendKeys('x4g48@trip.test');
         elemPassword.sendKeys('secret');
         elemPassword2.sendKeys('secret');
         elemFirstname.sendKeys('John');
@@ -206,7 +206,7 @@ describe('User management', function() {
         // Safari can't handle the delete method, so best not create a user
         if (browser.privateConfig.browserName !== 'safari') {
           elemNickname.sendKeys('smithy');
-          elemUsername.sendKeys('smithy@secret.org');
+          elemUsername.sendKeys('smithy@trip.test');
           elemPassword.sendKeys('secret');
           elemPassword2.sendKeys('secret');
           elemFirstname.sendKeys('John');
@@ -271,7 +271,7 @@ describe('User management', function() {
           });
 
           it('should fail to find a non-existent user by email with exact match', function() {
-            element(by.model('search.email')).sendKeys('secret');
+            element(by.model('search.email')).sendKeys('zebra');
             element(by.id('btn-search')).click();
             expect(userListElem.count()).toBe(0);
             expect(element(by.id('no-users-found')).isDisplayed()).toBeTruthy();
@@ -343,7 +343,7 @@ describe('User management', function() {
           });
 
           it('should find the user by email with partial match', function() {
-            element(by.model('search.email')).sendKeys('@secret');
+            element(by.model('search.email')).sendKeys('@trip');
             element(by.id('btn-search')).click();
             expect(userListElem.count()).toBeGreaterThan(1);
           });
@@ -392,7 +392,7 @@ describe('User management', function() {
 
       beforeEach(function() {
         element(by.id('radio-email')).click();
-        element(by.model('search.email')).sendKeys('@secret.org');
+        element(by.model('search.email')).sendKeys('@trip.test');
         element(by.id('radio-partial-match')).click();
         element(by.id('btn-search')).click();
         userListElem = element.all(by.repeater('user in users.payload'));
@@ -560,7 +560,7 @@ describe('User management', function() {
           if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName !== 'safari' ) {
             // invalid nickname
             elemNickname.sendKeys('smi\u0007thy');
-            elemUsername.sendKeys('smithy2@secret.org');
+            elemUsername.sendKeys('smithy2@trip.test');
             elemFirstname.sendKeys('John');
             elemLastname.sendKeys('Smith');
             elemButtonSubmit.click();

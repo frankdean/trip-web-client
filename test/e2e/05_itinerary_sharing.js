@@ -40,7 +40,7 @@ describe('itinerary sharing', function() {
       });
 
       it('should save a share for an existing nickname', function() {
-        element(by.id('input-nickname')).sendKeys('secret');
+        element(by.id('input-nickname')).sendKeys('admin');
         element(by.id('input-active')).click();
         element(by.id('btn-save')).click();
       });

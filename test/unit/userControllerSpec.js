@@ -37,7 +37,7 @@ describe('UserCtrl', function() {
   var expectedUser = {
     id: undefined,
     nickname: 'test nickname',
-    username: 'secret@secret.org',
+    username: 'user@trip.test',
     password: 'secret',
     firstname: 'first name',
     lastname: 'last name'

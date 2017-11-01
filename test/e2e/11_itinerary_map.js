@@ -67,7 +67,10 @@ describe('Itinerary map', function() {
         expect(element(by.id('btn-view-path')).isDisplayed()).toBeFalsy();
       });
 
-      // Protractor/Selenium unreliable at selecting all waypoints
+      /* Commented out disabled tests as pending causes **all** further tests to be disabled
+         not just this section.
+
+      // pending('Disabled as Protractor/Selenium unreliable at selecting all waypoints');
       xdescribe('Waypoint editing', function() {
 
         beforeEach(function() {
@@ -158,7 +161,7 @@ describe('Itinerary map', function() {
           element(by.linkText(cancelControlText)).click();
         });
 
-        pending('Disabled as too random which marker gets deleted');
+        // pending('Disabled as too random which marker gets deleted');
         it('should allow a marker to be deleted', function() {
           var e1 = markerIcons.last();
           e1.click();
@@ -181,6 +184,7 @@ describe('Itinerary map', function() {
         });
 
       });
+      */
 
       describe('Routes', function() {
         var routeMarkerIcons;

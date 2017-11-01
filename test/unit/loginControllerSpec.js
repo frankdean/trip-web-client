@@ -23,8 +23,8 @@ describe('LoginCtrl', function() {
 
   var scope, ctrl, $httpBackend, authRequestHandler;
   var expectedToken = {token: 'eyJzdWIiOiJzZWNyZXRAc2VjcmV0Lm9yZyIsImFsZyI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIn0.EPre_WvMAKIt8kGU8K9AjtqgqCvYTB-6rpOCxdFp1Ro'};
-  var expectedLogin = {email: 'secret@secret.org', password: 'secret'};
-  var expectedAdminLogin = {email: 'secret@secret.org', password: 'secret', admin: 'true'};
+  var expectedLogin = {email: 'user@trip.test', password: 'secret'};
+  var expectedAdminLogin = {email: 'user@trip.test', password: 'secret', admin: 'true'};
   var expectedAdminToken = {token: 'eyJzdWIiOiJzZWNyZXRAc2VjcmV0Lm9yZyIsImFsZyI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.bB7kbfdEyLr4f7gsP5JCKZnHBD9kAz7Jaa2NWUHMMzk'};
   var storage;
 
