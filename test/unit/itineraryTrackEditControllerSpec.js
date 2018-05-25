@@ -54,7 +54,8 @@ describe('ItineraryTrackEditCtrl', function() {
 
   beforeEach(inject(function(_$httpBackend_) {
     _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
-  }));
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+ }));
 
   describe('delete segments', function() {
 
@@ -98,6 +99,7 @@ describe('ItineraryTrackEditCtrl', function() {
       scope = $rootScope;
       $httpBackend = _$httpBackend_;
       $location = _$location_;
+      $httpBackend.when('GET', /^partials\/itinerary.html$/).respond(null);
       $httpBackend.when('GET', /itinerary\/\d+\/track\/\d+\/segment\?offset=0&page_size=\d+$/).respond(splitTrack);
       $httpBackend.when('POST', /itinerary\/\d+\/tracks\/selected$/).respond(testTracks);
       $httpBackend.when('PUT',

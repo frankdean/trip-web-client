@@ -30,6 +30,7 @@ describe('LoginCtrl', function() {
 
   beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, Storage) {
     $httpBackend = _$httpBackend_;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     authRequestHandler = $httpBackend.when('POST', new RegExp("login(\\?access_token=[\\.a-zA-Z0-9]+)?$")).
       respond(expectedToken);
     storage = Storage;

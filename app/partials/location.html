@@ -60,6 +60,13 @@
               type="button"
               class="btn btn-success"
               ng-show="data.position">Record this position</button>
+      <button id="btn-copy" ng-click="copyWaypointForPaste()"
+              class="btn btn-primary">Copy</button>
+    </div>
+    <div ng-messages="messages">
+      <div id="info-copy-message" ng-message="copied" class="alert alert-info" role="alert">
+        Current position copied.  Use the paste button on an itinerary to create a new waypoint using this position.
+      </div>
     </div>
   </div>
   <leaflet ng-if="status.showMap" controls="map.controls" lf-center="map.center" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>

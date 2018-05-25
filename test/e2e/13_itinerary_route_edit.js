@@ -80,6 +80,7 @@ describe('Itinerary Route Edit', function() {
       expect(element(by.id('div-buttons')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-delete')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-split')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('system-error')).isDisplayed()).toBeFalsy();
     });
 
     it('should allow a single point to be deleted', function() {
@@ -183,7 +184,7 @@ describe('Itinerary Route Edit', function() {
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
       element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(1).click();
+      element.all((by.css('.confirm-button'))).get(2).click();
     });
 
   });

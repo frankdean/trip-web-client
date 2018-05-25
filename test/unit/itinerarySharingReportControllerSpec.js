@@ -40,6 +40,7 @@ describe('ItinerarySharingReportCtrl', function() {
     $location = _$location_;
     itinerarySharingReportService = ItinerarySharingReportService;
     $httpBackend.when('GET', /itineraries\/shares/).respond(testItineraryShares);
+    $httpBackend.when('GET', /^partials\/tracks.html/).respond(null);
     $controller('ItinerarySharingReportCtrl', {
       $scope: scope
     });

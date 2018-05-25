@@ -10,10 +10,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TRIP - Trip Recording and Itinerary Planner</title>
   <meta name="description" content="">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" >
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" >
+  <link rel="stylesheet" href="node_modules/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="node_modules/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" >
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -21,23 +21,23 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" >
-  <link rel="stylesheet" href="bower_components/leaflet-draw/dist/leaflet.draw.css" >
-  <link rel="stylesheet" href="bower_components/angular-pagedown/angular-pagedown.min.css" >
+  <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" >
+  <link rel="stylesheet" href="node_modules/leaflet-draw/dist/leaflet.draw.css" >
+  <link rel="stylesheet" href="node_modules/angular-pagedown/angular-pagedown.min.css" >
   <link rel="stylesheet" href="css/app.css">
-  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
-  <script src="bower_components/angular-i18n/angular-locale_en-gb.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-  <script src="bower_components/pagedown/Markdown.Converter.js"></script>
-  <script src="bower_components/leaflet/dist/leaflet.js"></script>
-  <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
-  <script src="bower_components/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
-  <script src="bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
+  <script src="node_modules/html5-boilerplate/dist/js/vendor/modernizr-3.5.0.min.js"></script>
+  <script src="node_modules/angular/angular.min.js"></script>
+  <script src="node_modules/angular-i18n/angular-locale_en-gb.js"></script>
+  <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="node_modules/pagedown/Markdown.Converter.js"></script>
+  <script src="node_modules/leaflet/dist/leaflet.js"></script>
+  <script src="node_modules/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="node_modules/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
+  <script src="node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
   <script>
     // include angular loader, which allows the files to load in any order
     //@@NG_LOADER_START@@
-    // You need to run `npm run update-index-async` to inject the angular async code here
+    // You need to run `yarn run update-index-async` to inject the angular async code here
     //@@NG_LOADER_END@@
 
     // include a third-party async loader library
@@ -52,26 +52,26 @@
 
     // load all of the dependencies asynchronously.
     $script([
-      'bower_components/angular-messages/angular-messages.min.js',
-      'bower_components/angular-route/angular-route.min.js',
-      'bower_components/angular-resource/angular-resource.min.js',
-      'bower_components/angular-paging/dist/paging.min.js',
-      'bower_components/angular-jwt/dist/angular-jwt.min.js',
-      'bower_components/angular-simple-logger/dist/angular-simple-logger.min.js',
-      'bower_components/angular-validation-match/dist/angular-validation-match.min.js',
-      'bower_components/angular-animate/angular-animate.min.js',
-      'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-      'bower_components/lodash/dist/lodash.min.js',
-      'bower_components/socket.io-client/dist/socket.io.min.js',
-      'bower_components/angular-socket-io/socket.min.js',
-      'bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js',
-	  'bower_components/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
-      'bower_components/open-location-code/js/src/openlocationcode.min.js',
-      'bower_components/proj4/dist/proj4.js',
-      'bower_components/pagedown/Markdown.Sanitizer.js',
-      'bower_components/pagedown/Markdown.Extra.js',
-      'bower_components/pagedown/Markdown.Editor.js',
-      'bower_components/angular-pagedown/angular-pagedown.min.js',
+      'node_modules/angular-messages/angular-messages.min.js',
+      'node_modules/angular-route/angular-route.min.js',
+      'node_modules/angular-resource/angular-resource.min.js',
+      'node_modules/angular-paging/dist/paging.min.js',
+      'node_modules/angular-jwt/dist/angular-jwt.min.js',
+      'node_modules/angular-simple-logger/dist/angular-simple-logger.min.js',
+      'node_modules/angular-validation-match/dist/angular-validation-match.min.js',
+      'node_modules/angular-animate/angular-animate.min.js',
+      'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+      'node_modules/lodash/dist/lodash.min.js',
+      'node_modules/socket.io-client/dist/socket.io.min.js',
+      'node_modules/angular-socket-io/socket.min.js',
+      'node_modules/angular-file-saver/dist/angular-file-saver.bundle.min.js',
+	  'node_modules/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
+      'node_modules/open-location-code/js/src/openlocationcode.min.js',
+      'node_modules/proj4/dist/proj4.js',
+      'node_modules/pagedown/Markdown.Sanitizer.js',
+      'node_modules/pagedown/Markdown.Extra.js',
+      'node_modules/pagedown/Markdown.Editor.js',
+      'node_modules/angular-pagedown/angular-pagedown.min.js',
       'js/app.js',
       'js/coord-filter.js',
       'js/admin-password-reset-controller.js',
@@ -151,6 +151,7 @@
               <li><a ng-click="navCollapsed=true" href="/trip/app/location">Location</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/users">Users</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/status">Status</a></li>
+              <li><a ng-click="navCollapsed=true" href="https://www.fdsd.co.uk/trip-web-client-docs/" target="_blank">Help</a></li>
               <li><a ng-click="navCollapsed=true" href="/trip/app/logout">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->

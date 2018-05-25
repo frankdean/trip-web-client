@@ -31,6 +31,7 @@ angular.module('myApp.location.controller', [])
      'UtilsService',
      'GeorefFormatService',
      'UserPreferencesService',
+     'CopyAndPasteService',
      function($scope,
               $routeParams,
               $log,
@@ -41,7 +42,8 @@ angular.module('myApp.location.controller', [])
               MapConfigService,
               UtilsService,
               GeorefFormatService,
-              UserPreferencesService) {
+              UserPreferencesService,
+              CopyAndPasteService) {
 
        var markerLayer,
            drawnItems = new L.FeatureGroup();
@@ -55,6 +57,7 @@ angular.module('myApp.location.controller', [])
            // Delay construction of map object until attribution fetched from server
            showMap: false
          },
+         messages: {},
          map: {}
        });
        $scope.data.uuid = TrackingUuid.query(
@@ -174,6 +177,7 @@ angular.module('myApp.location.controller', [])
        });
 
        $scope.sendLocation = function() {
+         $scope.messages = {};
          $scope.locationNotFound = undefined;
          $scope.updateSuccess = undefined;
          $scope.ajaxRequestError = {error: false};
@@ -205,6 +209,7 @@ angular.module('myApp.location.controller', [])
        };
 
        $scope.updateLocation = function() {
+         $scope.messages = {};
          $scope.locationNotFound = undefined;
          $scope.updateSuccess = undefined;
          $scope.ajaxRequestError = {error: false};
@@ -213,6 +218,23 @@ angular.module('myApp.location.controller', [])
          }
          $scope.map.center.enableHighAccuracy = $scope.data.highAccuracy;
          $scope.map.center.autoDiscover = true;
+       };
+
+       $scope.copyWaypointForPaste = function() {
+         $scope.messages = {};
+         CopyAndPasteService.copy('current-position', {
+           latitude: $scope.data.latitude,
+           longitude: $scope.data.longitude,
+           time: new Date($scope.data.time),
+           altitude: $scope.data.altitude,
+           vdop: $scope.data.vdop,
+           heading: $scope.data.heading,
+           speed: $scope.data.speed,
+           hdop: $scope.data.hdop,
+           note: $scope.data.note,
+           provider: $scope.data.provider
+         });
+         $scope.messages.copied = true;
        };
 
        $scope.$on('leafletDirectiveDraw.draw:edited', function(e, payload) {

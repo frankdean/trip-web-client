@@ -53,6 +53,8 @@ describe('ItineraryWaypointCtrl', function() {
     $httpBackend = _$httpBackend_;
     scope = $rootScope;
     itineraryWaypointService = ItineraryWaypointService;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+    _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
     getWaypointRequestHandler = $httpBackend.when('GET', /itinerary\/\d+\/waypoint\/\d+$/).respond(testWaypoint);
     getWaypointSymbolsRequestHandler = $httpBackend.when('GET', /waypoint\/symbols$/).respond(testWaypointSymbols);
     getGeoRefFormatsRequestHandler = $httpBackend.when('GET', /georef\/formats$/).respond(testWaypointSymbols);

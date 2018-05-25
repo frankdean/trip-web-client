@@ -49,6 +49,7 @@ describe('UserCtrl', function() {
                              _$location_,
                              UserService,
                              PasswordResetService) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     userService = UserService;

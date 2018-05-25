@@ -49,6 +49,7 @@ describe('ItinerarySharingCtrl', function() {
                              $controller,
                              _$location_,
                              ItinerarySharingService) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     $httpBackend = _$httpBackend_;
     saveNicknameRequestHandler = $httpBackend.when('PUT', /itinerary\/share\/\d+/,
                       function(data) {

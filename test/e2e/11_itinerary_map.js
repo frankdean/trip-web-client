@@ -428,7 +428,7 @@ describe('Itinerary map', function() {
         element(by.id('input-route-' + v)).click();
       });
       element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(1).click();
+      element.all((by.css('.confirm-button'))).get(2).click();
     });
 
   });

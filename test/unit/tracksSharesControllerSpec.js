@@ -55,6 +55,7 @@ describe('SharesCtrl', function() {
                              $controller,
                              SharesService,
                              _$location_) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     $httpBackend = _$httpBackend_;
     scope = $rootScope;
     sharesService = SharesService;

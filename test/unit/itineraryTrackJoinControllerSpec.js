@@ -44,6 +44,7 @@ describe('ItineraryTrackJoinCtrl', function() {
       testTracks = [testTrack1];
 
   beforeEach(inject(function(_$httpBackend_) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
     _$httpBackend_.when('GET', /path\/colors$/).respond(null);
   }));
@@ -55,6 +56,7 @@ describe('ItineraryTrackJoinCtrl', function() {
       $httpBackend = _$httpBackend_;
       $location = _$location_;
       selectionService = ItinerarySelectionService;
+      $httpBackend.when('GET', /^partials\/itinerary.html$/).respond(null);
       $httpBackend.when('POST', /itinerary\/\d+\/tracks\/selected/).respond(testTracks);
       $httpBackend.when('POST', /itinerary\/\d+\/track$/).respond(null);
       createController = function(routeParams) {

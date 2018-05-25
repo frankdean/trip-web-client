@@ -32,6 +32,21 @@ angular.module('myApp.itinerary.factory.js', [] )
      };
    }])
 
+  .service(
+  'CopyAndPasteService',
+  ['$log',
+   function($log) {
+     this.type = undefined;
+     this.options = undefined;
+     this.copy = function(type, choices) {
+       this.type = type;
+       this.options = choices;
+     };
+     this.paste = function() {
+       return this.options;
+     };
+   }])
+
   .factory(
     'ItineraryService',
     ['$resource', 'ConfigService',

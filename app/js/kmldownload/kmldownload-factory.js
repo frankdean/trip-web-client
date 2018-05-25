@@ -28,7 +28,7 @@ angular.module('myApp.kmldownload.factory', [] )
            url: ConfigService.restUrlPrefix + '/download/itinerary/:id/kml',
            method: 'POST',
            headers: {
-             'Content-type' : 'application/vnd.google-earth.kml+xml',
+             'Content-type' : 'application/json',
              'Accept' : 'application/vnd.google-earth.kml+xml,application/octet-stream'
            },
            cache: false,

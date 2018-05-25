@@ -56,8 +56,8 @@ angular.module('myApp.config.factory', [])
        };
        service.getDefaultMarkerIcon = function() {
          return {
-           iconUrl: 'bower_components/leaflet/dist/images/marker-icon.png',
-           shadowUrl: 'bower_components/leaflet/dist/images/marker-shadow.png',
+           iconUrl: 'node_modules/leaflet/dist/images/marker-icon.png',
+           shadowUrl: 'node_modules/leaflet/dist/images/marker-shadow.png',
            iconSize: [25, 41],
            iconAnchor: [12, 41],
            popupAnchor: [1, -34],

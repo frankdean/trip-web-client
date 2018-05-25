@@ -293,7 +293,7 @@ describe('Itinerary Track Edit', function() {
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
       element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(1).click();
+      element.all((by.css('.confirm-button'))).get(2).click();
     });
 
   });

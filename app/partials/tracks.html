@@ -100,7 +100,14 @@
               on-confirm="gpxDownload(tracks.search)"
               confirm-button-type="success"
               >Download tracks</button>
+      <button id="btn-copy" ng-click="copyTrackForPaste(downloads)"
+              class="btn btn-lg btn-primary">Copy</button>
       <button id="btn-reset" ng-click="reset(form)" value="Reset" class="btn btn-lg btn-danger">Reset</button>
     </form>
+    <div ng-messages="messages">
+      <div id="info-copy-message" ng-message="copied" class="alert alert-info" role="alert">
+        Track copied.  Use the paste button on an intinerary to create an itinerary track for this track.
+      </div>
+    </div>
   </div>
 </div>

@@ -336,6 +336,20 @@ angular.module('myApp', [
   .run(
     ['$rootScope', 'Storage', 'jwtHelper', 'confirmationPopoverDefaults',
      function($rootScope, Storage, jwtHelper, confirmationPopoverDefaults) {
+       /*
+       // Debug routing issues
+       $rootScope.$on('$routeChangeStart', function(angularEvent, next, current) {
+         var currentPath = current === undefined ? null : current.originalPath;
+         var nextPath = next.originalPath;
+         console.log('routeChangeStart for current path:', currentPath, 'next:', nextPath);
+       });
+       $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl, newState, oldState) {
+         console.log('Location leaving', oldUrl, 'for', newUrl);
+       });
+       $rootScope.$on('$locationChangeSuccess', function(event, newUrl, oldUrl, newState, oldState) {
+         console.log('Location left', oldUrl, 'arrived', newUrl);
+       });
+       */
        confirmationPopoverDefaults.confirmButtonType = "danger";
        var jwtToken = Storage.getItem('id_token');
        if (jwtToken) {

@@ -37,6 +37,7 @@ describe('ItinerariesCtrl', function() {
                              $controller,
                              _$location_,
                              ItineraryService) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     $httpBackend = _$httpBackend_;
     scope = $rootScope;
     requestHandler = $httpBackend.when('GET', /itineraries\?offset=0&page_size=[0-9]+$/).respond({payload: testItineraries, count: testItineraries.length});

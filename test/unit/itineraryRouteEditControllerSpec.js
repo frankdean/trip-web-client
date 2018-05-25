@@ -55,7 +55,8 @@ describe('ItineraryRouteEditCtrl', function() {
       };
 
     beforeEach(inject(function(_$httpBackend_) {
-    _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
+      _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+      _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
   }));
 
 
@@ -107,6 +108,7 @@ describe('ItineraryRouteEditCtrl', function() {
       scope = $rootScope;
       $httpBackend = _$httpBackend_;
       $location = _$location_;
+      _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
       $httpBackend.when('GET', /\/itinerary\/\d+\/route\/\d+$/).respond(testSplitRouteInfo);
       $httpBackend.when('POST', /\/itinerary\/\d+\/route$/,
                         function(data) {

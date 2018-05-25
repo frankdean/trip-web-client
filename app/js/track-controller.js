@@ -31,10 +31,12 @@ angular.module('myApp.track.controller', [])
      'jwtHelper',
      'SaveAs',
      'StateService',
+     'CopyAndPasteService',
      function($scope, $log, $location, SharedLocationNickname,
-              RecentPoints, InitGpxDownload, Storage, jwtHelper, SaveAs, StateService) {
+              RecentPoints, InitGpxDownload, Storage, jwtHelper, SaveAs, StateService, CopyAndPasteService) {
        $scope.data = {};
        $scope.master = {};
+       $scope.messages = {};
        $scope.page = StateService.getTracksPage();
        $scope.pageSize = 10;
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;
@@ -121,6 +123,7 @@ angular.module('myApp.track.controller', [])
        }
        $scope.master = angular.copy($scope.tracks.search);
        $scope.doListTracks = function(parms) {
+         $scope.messages = {};
          if ($scope.form && $scope.form.$valid) {
            $scope.offset = 0;
            $scope.listTracks(parms);
@@ -140,6 +143,7 @@ angular.module('myApp.track.controller', [])
          }
        };
        $scope.gpxDownload = function(parms) {
+         $scope.messages = {};
          if ($scope.form && $scope.form.$valid) {
            $scope.ajaxRequestError = {error: false};
            $scope.master = angular.copy($scope.tracks.search);
@@ -161,13 +165,27 @@ angular.module('myApp.track.controller', [])
              });
          }
        };
+       $scope.copyTrackForPaste = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         $scope.messages = {};
+         CopyAndPasteService.copy('location-history', {
+           nickname: $scope.tracks.search.nicknameSelect,
+           from: $scope.tracks.search.dateFrom,
+           to: $scope.tracks.search.dateTo,
+           max_hdop: $scope.tracks.search.hdop,
+           notesOnlyFlag: $scope.tracks.search.notesOnlyFlag
+         });
+         $scope.messages.copied = true;
+       };
        // Fetch first page of results using the initial default values
        $scope.DoPagingAction = function(text, page, pageSize, total) {
+         $scope.messages = {};
          $scope.offset = pageSize * (page -1);
          StateService.saveTracksPage(page);
          $scope.listTracks();
        };
        $scope.reset = function(form) {
+         $scope.messages = {};
          $scope.ajaxRequestError = {error: false};
          if (form) {
            form.$setPristine();

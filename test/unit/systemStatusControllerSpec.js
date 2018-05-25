@@ -39,6 +39,7 @@ describe('SystemStatusCtrl', function() {
     scope = $rootScope;
     systemStatusService = SystemStatusService;
     $location = _$location_;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     requestHandler = $httpBackend.when('GET', /admin\/system\/status/).respond(testResponse);
     createController = function() {
       return $controller('SystemStatusCtrl', {$scope: scope});

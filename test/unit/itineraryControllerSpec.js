@@ -21,6 +21,10 @@ describe('ItineraryCtrl', function() {
 
   beforeEach(module('myApp'));
 
+  beforeEach(inject(function(_$httpBackend_) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+  }));
+
   var mockValidForm = {$valid: true,
                        $setPristine: function() {},
                        $setUntouched: function() {}

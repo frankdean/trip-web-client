@@ -32,6 +32,7 @@ describe('LocationCtrl', function() {
       scope = $rootScope;
       $httpBackend = _$httpBackend_;
       $location = _$location_;
+      _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
       $httpBackend.when('GET', /\/georef\/formats$/).respond(null);
       $httpBackend.when('GET', /\/tracking_uuid$/).respond();
       $httpBackend.when('GET', /\/config\/map\/layers$/).respond([{text: 'simple test'}]);

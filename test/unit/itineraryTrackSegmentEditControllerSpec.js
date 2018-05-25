@@ -62,6 +62,7 @@ describe('ItineraryTrackSegmentEditCtrl', function() {
       ];
 
   beforeEach(inject(function(_$httpBackend_) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
   }));
 
@@ -113,6 +114,7 @@ describe('ItineraryTrackSegmentEditCtrl', function() {
       scope = $rootScope;
       $httpBackend = _$httpBackend_;
       $location = _$location_;
+      $httpBackend.when('GET', /^partials\/itinerary-track-edit.html$/).respond(null);
       $httpBackend.when('GET', /itinerary\/\d+\/track\/\d+\/segment\/\d+\?offset=0&page_size=\d+$/).respond(splitSegments);
       $httpBackend.when('GET', /itinerary\/\d+\/track\/\d+\/segment\/\d+$/).respond(testSegment);
       $httpBackend.when('POST', /itinerary\/\d+\/tracks\/selected$/).respond(testTracks);

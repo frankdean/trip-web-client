@@ -29,6 +29,7 @@ describe('MapPointCtrl', function() {
     scope = $rootScope.$new();
     configService = ConfigService;
     $httpBackend = _$httpBackend_;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     $httpBackend.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
     ctrl = $controller('MapPointCtrl', {$scope: scope,
                                         $routeParams: routeParams,

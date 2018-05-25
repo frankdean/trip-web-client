@@ -32,6 +32,7 @@ describe('TrackerInfoCtrl', function() {
   beforeEach(inject(function(_$httpBackend_, $rootScope, $controller,
                              ConfigService, TrackingUuid) {
     $httpBackend = _$httpBackend_;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
     scope = $rootScope;
     configService = ConfigService;
     trackingUuid = TrackingUuid;

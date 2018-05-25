@@ -30,6 +30,11 @@ describe('ItineraryEditCtrl', function() {
                          $setUntouched: function() {}
                         };
 
+  beforeEach(inject(function(_$httpBackend_) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+    _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
+  }));
+
   describe('new', function() {
     var scope, form, $location, $httpBackend, requestHandler, createController, itineraryService;
     var testStrDate = '2016-06-05T00:00:00Z';

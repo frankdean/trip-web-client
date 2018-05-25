@@ -6,18 +6,18 @@ This is the README of the TRIP web client application.  See the README of the
 
 ## Installing required packages
 
-		$ npm install
+		$ yarn install
 
 
 ## Production Build Procedure
 
-1.  Run `npm run lint`
-1.  Run unit tests with `npm run test-single-run`
-1.  Optionally or if first time, run `npm update-webdriver`
-1.  Run end-to-end tests with `npm run protractor`
+1.  Run `yarn run lint`
+1.  Run unit tests with `yarn run test-single-run`
+1.  Optionally or if first time, run `yarn update-webdriver`
+1.  Run end-to-end tests with `yarn run protractor`
 1.  Update the version number in `./app/js/version/version.js`
 1.  Check in the change
-1.  Run `npm run build-release`
+1.  Run `yarn run build-release`
 1.  Modify static file web server to serve TRIP web client files from the
 	`./dist/` folder. e.g.
 
@@ -26,7 +26,7 @@ This is the README of the TRIP web client application.  See the README of the
 
 1.  Perform a simple test with `index.html` and `index-async.html` in the
     browser
-1.  Run `npm run protractor`
+1.  Run `yarn run protractor`
 1.  chdir to `./dist/` and tar up the contents of the `app/` sub-folder
 1.  untar to deployment target
 

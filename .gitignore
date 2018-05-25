@@ -8,4 +8,5 @@ npm-debug.log
 /README.html
 app/third_party/
 /dist/*
-/app/bower_components
+/app/node_modules
+/yarn-error.log

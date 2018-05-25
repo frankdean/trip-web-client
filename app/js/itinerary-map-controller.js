@@ -579,10 +579,6 @@ angular.module('myApp.itinerary.map.controller', [])
              mySocket.on('disconnect', function() {
                $scope.state.connected = false;
              });
-             $scope.$on('$destroy', function() {
-               mySocket.disconnect();
-               mySocket.removeAllListeners();
-             });
            }
            SharedLocationNickname.query({})
              .$promise.then(function(nicknames) {
@@ -604,6 +600,17 @@ angular.module('myApp.itinerary.map.controller', [])
            $scope.state.connected = false;
          }
        };
+       // Injected factory service connects during injection only on the
+       // first occasion the socket factory is injected.  In scenarios where
+       // we don't acutally need the websocket, it would be nice to close it
+       // in this first use scenario, but it cannot be closed before it is
+       // established and if we close it on a timer it may be too early or
+       // so late that the user has changed options such that we do need the
+       // websocket.  Decided to leave it connected until we leave the page.
+       $scope.$on('$destroy', function() {
+         mySocket.disconnect();
+         mySocket.removeAllListeners();
+       });
 
        $scope.selectNickname = function(nickname) {
          $scope.state.locationFound = {error: false, success: false};

@@ -24,7 +24,9 @@ describe('GPX Upload Controller', function() {
   var scope, $httpBackend, routeParams, createController, service;
 
   beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, gpxUploadService) {
-    $httpBackend = _$httpBackend_;
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+    _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
+   $httpBackend = _$httpBackend_;
     scope = $rootScope;
     service = gpxUploadService;
     routeParams = {id: 243};

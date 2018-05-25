@@ -45,6 +45,8 @@ describe('ItineraryMapCtrl', function() {
       };
 
   beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, ItineraryTrackService, ItinerarySelectionService) {
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
+    _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
     $httpBackend = _$httpBackend_;
     scope = $rootScope;
     service = ItineraryTrackService;

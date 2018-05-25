@@ -42,6 +42,7 @@ describe('ItineraryRouteJoinCtrl', function() {
   beforeEach(inject(function(_$httpBackend_) {
     _$httpBackend_.when('GET', /config\/map\/layers$/).respond([{text: 'simple test'}]);
     _$httpBackend_.when('GET', /path\/colors$/).respond(null);
+    _$httpBackend_.when('GET', /^partials\/tracks.html$/).respond(null);
   }));
 
   describe('join routes', function() {
@@ -68,12 +69,21 @@ describe('ItineraryRouteJoinCtrl', function() {
       $httpBackend.flush();
     });
 
-    it('should join the selected routes', function() {
-      selectionService.setChoices({routes: [1, 2]});
-      createController(testRouteParams);
-      $httpBackend.flush();
-      scope.join();
-      $httpBackend.flush();
+
+    describe('join and save', function() {
+
+      beforeEach(inject(function(_$httpBackend_) {
+        _$httpBackend_.when('GET', /^partials\/itinerary.html$/).respond(null);
+      }));
+
+      it('should join the selected routes', function() {
+        selectionService.setChoices({routes: [1, 2]});
+        createController(testRouteParams);
+        $httpBackend.flush();
+        scope.join();
+        $httpBackend.flush();
+      });
+
     });
 
   });

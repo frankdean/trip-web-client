@@ -27,7 +27,6 @@ angular.module('myApp.gpxdownload.factory', [] )
          downloadTracks: {
            url: ConfigService.restUrlPrefix + '/download/tracks/:nickname',
            headers: {
-             'Content-type' : 'application/gpx+xml',
              'Accept' : 'application/gpx+xml,application/octet-stream'
            },
            cache: false,
@@ -42,7 +41,7 @@ angular.module('myApp.gpxdownload.factory', [] )
            url: ConfigService.restUrlPrefix + '/download/itinerary/:id/gpx',
            method: 'POST',
            headers: {
-             'Content-type' : 'application/gpx+xml',
+             'Content-type' : 'application/json',
              'Accept' : 'application/gpx+xml,application/octet-stream'
            },
            cache: false,
@@ -57,8 +56,8 @@ angular.module('myApp.gpxdownload.factory', [] )
            url: ConfigService.restUrlPrefix + '/download/itinerary/:id/delete-gpx',
            method: 'PUT',
            headers: {
-             'Content-type' : 'application/gpx+xml',
-             'Accept' : 'application/gpx+xml,application/octet-stream'
+             'Content-type' : 'application/json',
+             'Accept' : 'application/json'
            },
            cache: false
          }

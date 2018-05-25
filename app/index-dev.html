@@ -10,10 +10,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TRIP - Trip Recording and Itinerary Planner</title>
   <meta name="description" content="">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" >
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" >
+  <link rel="stylesheet" href="node_modules/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="node_modules/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" >
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -21,19 +21,19 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" >
-  <link rel="stylesheet" href="bower_components/leaflet-draw/dist/leaflet.draw.css" >
-  <link rel="stylesheet" href="bower_components/angular-pagedown/angular-pagedown.min.css" >
+  <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" >
+  <link rel="stylesheet" href="node_modules/leaflet-draw/dist/leaflet.draw.css" >
+  <link rel="stylesheet" href="node_modules/angular-pagedown/angular-pagedown.min.css" >
   <link rel="stylesheet" href="css/app.css">
-  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-i18n/angular-locale_en-gb.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="bower_components/pagedown/Markdown.Converter.js"></script>
-  <script src="bower_components/leaflet/dist/leaflet.js"></script>
-  <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
-  <script src="bower_components/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
-  <script src="bower_components/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
+  <script src="node_modules/html5-boilerplate/dist/js/vendor/modernizr-3.5.0.min.js"></script>
+  <script src="node_modules/angular/angular.js"></script>
+  <script src="node_modules/angular-i18n/angular-locale_en-gb.js"></script>
+  <script src="node_modules/angular-sanitize/angular-sanitize.js"></script>
+  <script src="node_modules/pagedown/Markdown.Converter.js"></script>
+  <script src="node_modules/leaflet/dist/leaflet.js"></script>
+  <script src="node_modules/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="node_modules/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
+  <script src="node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js"></script>
 </head>
 <body role="document">
   <noscript>
@@ -61,6 +61,7 @@
               <li><a ng-click="navCollapsed=true" href="/trip/app/location">Location</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/users">Users</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/status">Status</a></li>
+              <li><a ng-click="navCollapsed=true" href="https://www.fdsd.co.uk/trip-web-client-docs/" target="_blank">Help</a></li>
               <li><a ng-click="navCollapsed=true" href="/trip/app/logout">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -83,26 +84,26 @@
       </footer>
     </div>
   </div>
-  <script src="bower_components/angular-messages/angular-messages.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="bower_components/angular-paging/dist/paging.js"></script>
-  <script src="bower_components/angular-jwt/dist/angular-jwt.js"></script>
-  <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
-  <script src="bower_components/angular-validation-match/dist/angular-validation-match.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="bower_components/lodash/dist/lodash.js"></script>
-  <script src="bower_components/socket.io-client/dist/socket.io.js"></script>
-  <script src="bower_components/angular-socket-io/socket.js"></script>
-  <script src="bower_components/angular-file-saver/dist/angular-file-saver.bundle.js"></script>
-  <script src="bower_components/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.js"></script>
-  <script src="bower_components/open-location-code/js/src/openlocationcode.js"></script>
-  <script src="bower_components/proj4/dist/proj4.js"></script>
-  <script src="bower_components/pagedown/Markdown.Sanitizer.js"></script>
-  <script src="bower_components/pagedown/Markdown.Extra.js"></script>
-  <script src="bower_components/pagedown/Markdown.Editor.js"></script>
-  <script src="bower_components/angular-pagedown/angular-pagedown.js"></script>
+  <script src="node_modules/angular-messages/angular-messages.js"></script>
+  <script src="node_modules/angular-route/angular-route.js"></script>
+  <script src="node_modules/angular-resource/angular-resource.js"></script>
+  <script src="node_modules/angular-paging/dist/paging.js"></script>
+  <script src="node_modules/angular-jwt/dist/angular-jwt.js"></script>
+  <script src="node_modules/angular-simple-logger/dist/angular-simple-logger.js"></script>
+  <script src="node_modules/angular-validation-match/dist/angular-validation-match.js"></script>
+  <script src="node_modules/angular-animate/angular-animate.js"></script>
+  <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+  <script src="node_modules/lodash/dist/lodash.js"></script>
+  <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+  <script src="node_modules/angular-socket-io/socket.js"></script>
+  <script src="node_modules/angular-file-saver/dist/angular-file-saver.bundle.js"></script>
+  <script src="node_modules/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.js"></script>
+  <script src="node_modules/open-location-code/js/src/openlocationcode.js"></script>
+  <script src="node_modules/proj4/dist/proj4.js"></script>
+  <script src="node_modules/pagedown/Markdown.Sanitizer.js"></script>
+  <script src="node_modules/pagedown/Markdown.Extra.js"></script>
+  <script src="node_modules/pagedown/Markdown.Editor.js"></script>
+  <script src="node_modules/angular-pagedown/angular-pagedown.js"></script>
   <script src="js/app.js"></script>
   <script src="js/coord-filter.js"></script>
   <script src="js/admin-password-reset-controller.js"></script>
