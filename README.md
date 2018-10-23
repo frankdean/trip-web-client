@@ -116,7 +116,7 @@ for the latest information.
     years old.  See
     [Safari (Mac OS X Lion) returns wrong epochtime value to position.timestamp call](https://stackoverflow.com/questions/10870138/safari-mac-os-x-lion-returns-wrong-epochtime-value-to-position-timestamp-call)
 
-[trip-server]: https://github.com/frankdean/trip-server
+[trip-server]: https://www.fdsd.co.uk/trip-server/ "TRIP - Trip Recording and Itinerary Planner"
 
 1.  iOS Safari names downloads as `unknown.gpx` - See
     [FileSaver.js issue #12](https://github.com/eligrey/FileSaver.js/issues/12)

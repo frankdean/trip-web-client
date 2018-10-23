@@ -50,11 +50,10 @@ describe('Itinerary Waypoints', function() {
       browser.get(browser.baseUrl + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
     });
 
-    it('should show an error message if the name is blank', function() {
-      expect(element(by.id('name-required')).isDisplayed()).toBeFalsy();
+    it('should not show an error message if the name is blank', function() {
       eleName.clear();
       btnSave.click();
-      expect(element(by.id('name-required')).isDisplayed()).toBeTruthy();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
     it('should show an error message if the position is blank', function() {
@@ -112,6 +111,7 @@ describe('Itinerary Waypoints', function() {
     });
 
     it('should not display an error message if other fields are left blank', function() {
+      eleName.clear();
       eleAltitude.clear();
       eleSymbol.sendKeys('-');
       eleComment.clear();
@@ -251,10 +251,8 @@ describe('Itinerary Waypoints', function() {
     });
 
     it('should show error messages if no details are entered when the form is submitted', function() {
-      expect(element(by.id('name-required')).isDisplayed()).toBeFalsy();
       expect(element(by.id('position-required')).isDisplayed()).toBeFalsy();
       btnSave.click();
-      expect(element(by.id('name-required')).isDisplayed()).toBeTruthy();
       expect(element(by.id('position-required')).isDisplayed()).toBeTruthy();
     });
 

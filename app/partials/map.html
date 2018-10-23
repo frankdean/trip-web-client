@@ -14,11 +14,11 @@
   <input id="auto-update" type="checkbox" ng-model="autocenter" />
 </div>
 <div class="map-page-div well" ng-show="distance || highest">
-  <span ng-show="distance">{{distance | number:1}}&nbsp;km</span>
+  <span ng-show="distance">{{distance | number:2}}&nbsp;km</span>
   <span ng-show="highest">↗︎{{ascent | number:0}}&nbsp;m ↘︎{{descent | number:0}}&nbsp;m</span>
   <span ng-show="highest">{{highest | number:0}}⇅{{lowest | number:0}}&nbsp;m</span>
 <br/>
-  <span ng-show="distance">{{distance / 1.609344 | number:1}}&nbsp;mi</span>
+  <span ng-show="distance">{{distance / 1.609344 | number:2}}&nbsp;mi</span>
   <span ng-show="highest">↗︎{{ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>
   <span ng-show="highest">{{highest / 0.0254 / 12 | number:0}}&#x21c5;{{lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span>
 

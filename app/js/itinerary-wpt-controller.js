@@ -81,6 +81,9 @@ angular.module('myApp.itinerary.wpt.controller', [])
        }
        $scope.save = function(form) {
          if (form && form.$valid) {
+           if ($scope.data.name != null && $scope.data.name.length == 0) {
+             $scope.data.name = null;
+           }
            itineraryWaypointService.save({},
                                          {id: $scope.itineraryId,
                                           wptId: $scope.wptId,

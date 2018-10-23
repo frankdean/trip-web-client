@@ -69,10 +69,11 @@
                   <label for="input-route-{{route.id}}"><span ng-show="!route.name">ID: {{route.id}}</span>{{route.name}}</label>
                 </td>
                 <td>{{route.color}}</td>
-                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance | number:1}} km</span></td>
-                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance / 1.609344 | number:1}} mi</span></td>
-                <td><span ng-show="route.highest">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span></td>
-                <td><span ng-show="route.highest">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
+                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance | number:2}}&nbsp;km</span></td>
+                <td style="text-align: right;"><span ng-show="route.distance">{{route.distance / 1.609344 | number:2}}&nbsp;mi</span></td>
+                <td><span ng-show="route.hours != null && route.minutes != null">{{route.hours | number:0}}&nbsp;hrs {{ route.minutes | number:0 }}&nbsp;mins</span></td>
+                <td><span ng-show="route.ascent != null && route.descent != null">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span></td>
+                <td><span ng-show="route.ascent != null && route.descent != null">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
                 <td><span ng-show="route.highest">{{route.highest | number:0}}⇅{{route.lowest | number:0}}&nbsp;m</span></td>
                 <td><span ng-show="route.highest">{{route.highest / 0.0254 / 12 | number:0}}&#x21c5;{{route.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
               </tr>
@@ -116,8 +117,8 @@
                       {{track.id}}</span>{{track.name}}</label>
                 </td>
                 <td>{{track.color}}</td>
-                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance | number:1}} km</span></td>
-                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance / 1.609344 | number:1}} mi</span></td>
+                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance | number:2}} km</span></td>
+                <td style="text-align: right;"><span ng-show="track.distance">{{track.distance / 1.609344 | number:2}} mi</span></td>
                 <td><span ng-show="track.highest">↗︎{{track.ascent | number:0}}&nbsp;m ↘︎{{track.descent | number:0}}&nbsp;m</span></td>
                 <td><span ng-show="track.highest">↗︎{{track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></td>
                 <td><span ng-show="track.highest">{{track.highest | number:0}}⇅{{track.lowest | number:0}}&nbsp;m</span></td>

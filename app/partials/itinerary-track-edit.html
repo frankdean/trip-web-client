@@ -19,8 +19,8 @@
           <p>
             <span class="view-label">Name:</span> {{data.track.name === '' ? 'ID: ' + data.track.id : data.track.name}}</p>
           <p>
-            <span ng-show="data.track.distance">{{data.track.distance | number:1}} km</span>
-            <span ng-show="data.track.distance">{{data.track.distance / 1.609344 | number:1}} mi</span>
+            <span ng-show="data.track.distance">{{data.track.distance | number:2}} km</span>
+            <span ng-show="data.track.distance">{{data.track.distance / 1.609344 | number:2}} mi</span>
 
             <span ng-show="data.track.highest" style="padding-left: 20px;">↗︎{{data.track.ascent | number:0}}&nbsp;m ↘︎{{data.track.descent | number:0}}&nbsp;m</span>
             <span ng-show="data.track.highest">↗︎{{data.track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{data.track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>

@@ -223,6 +223,7 @@ angular.module('myApp.itinerary.controller', [])
          }
        };
        $scope.pasteItems = function() {
+         var newWaypoints, newWaypoint;
          $scope.ajaxRequestError = {error: false};
          $scope.messages = {};
          var options = CopyAndPasteService.paste();
@@ -363,9 +364,21 @@ angular.module('myApp.itinerary.controller', [])
            ).$promise.then(function(result) {
              $scope.locations = result;
 
+             newWaypoints = [];
              result.payload.forEach(function(point) {
                newTrack.segments[0].points.push(point);
-             });
+               if (point.note != null) {
+                 newWaypoint = {};
+                 newWaypoint.lat = point.lat;
+                 newWaypoint.lng = point.lng;
+                 newWaypoint.altitude = point.altitude;
+                 newWaypoint.time = point.time;
+                 newWaypoint.comment = point.note;
+                 newWaypoint.description = 'Created from track log note';
+                 newWaypoints.push(newWaypoint);
+               }
+
+             }); // payload for Each (point)
 
              ItineraryTrackService.save(
                {id: $scope.itineraryId,
@@ -381,8 +394,30 @@ angular.module('myApp.itinerary.controller', [])
                  };
                });
 
+             newWaypoints.forEach(function(w) {
+               ItineraryWaypointService.save({},
+                                             {id: $scope.itineraryId,
+                                              wptId: undefined,
+                                              name: w.name,
+                                              lat: w.lat,
+                                              lng: w.lng,
+                                              altitude: w.altitude,
+                                              time: w.time,
+                                              symbol: w.symbol,
+                                              comment: w.comment,
+                                              description: w.description,
+                                              samples: w.samples,
+                                              type: w.type,
+                                              color: w.color
+                                             }).$promise.then(function(saveWaypointResponse) {
+                                               //
+                                             }).catch(function(response) {
+                                               $log.error('Creating new waypoint from pasting track log failed');
+                                             });
+             }); // forEach
+             newWaypoints = null;
            }).catch(function(response) {
-             $log.warn('Failed to fetch location history for paste');
+             $log.warn('Failed to fetch location history for paste', response);
              $scope.ajaxRequestError = {
                error: true,
                status: response.status

@@ -12,10 +12,7 @@
     </div>
     <form name="form" class="css-form" novalidate>
       <label for="input-name">Name:</label>
-      <input id="input-name" ng-model="data.name" name="name" type="text" size="30" required="" />
-      <div ng-show="form.$submitted || form.name.$touched">
-        <div id="name-required" class="alert alert-warning" role="alert" ng-show="form.name.$error.required">Enter the name for the itinerary waypoint</div>
-      </div>
+      <input id="input-name" ng-model="data.name" name="name" type="text" size="30" />
       <div>
         <label for="input-position">Position:</label>
         <input id="input-position" ng-model="data.position" name="position" type="text" size="30" required="" ng-model-options="{debounce: 250}" position/>

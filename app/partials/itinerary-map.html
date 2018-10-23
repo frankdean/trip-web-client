@@ -56,13 +56,13 @@
           <input id="input-my-nickname" type="checkbox" ng-click="selectNickname(data.myNickname)" ng-model="data.selfSelected"/>
           <label for="input-my-nickname">{{data.myNickname}}</label>
           <span ng-show="data.myColor"> ({{data.myColor}})</span>
-          <span ng-show="data.myDistance && data.selfSelected" style="padding-left: 20px;">{{data.myDistance | number:1}}&nbsp;km {{data.myDistance / 1.609344 | number:1}}&nbsp;mi</span>
+          <span ng-show="data.myDistance && data.selfSelected" style="padding-left: 20px;">{{data.myDistance | number:2}}&nbsp;km {{data.myDistance / 1.609344 | number:2}}&nbsp;mi</span>
         </div>
         <div ng-repeat="nickname in data.nicknames" style="padding-left: 15px;">
           <input id="input-nickname-{{nickname.nickname}}" type="checkbox" ng-click="selectNickname(nickname)"/>
           <label for="input-nickname-{{nickname.nickname}}">{{nickname.nickname}}</label>
           <span ng-show="nickname.color"> ({{nickname.color}})</span>
-          <span ng-show="nickname.distance && nickname.selected" style="padding-left: 20px;">{{nickname.distance | number:1}}&nbsp;km {{nickname.distance / 1.609344 | number:1}}&nbsp;mi</span>
+          <span ng-show="nickname.distance && nickname.selected" style="padding-left: 20px;">{{nickname.distance | number:2}}&nbsp;km {{nickname.distance / 1.609344 | number:2}}&nbsp;mi</span>
         </div>
       </div>
       <div>

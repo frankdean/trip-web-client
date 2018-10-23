@@ -18,8 +18,8 @@
         <div>
           <p><span class="view-label">Name:</span> {{route.name === '' ? 'ID: ' + route.id : route.name}}</p>
           <p>
-            <span ng-show="route.distance">{{route.distance | number:1}} km</span>
-            <span ng-show="route.distance">{{route.distance / 1.609344 | number:1}} mi</span>
+            <span ng-show="route.distance">{{route.distance | number:2}} km</span>
+            <span ng-show="route.distance">{{route.distance / 1.609344 | number:2}} mi</span>
 
             <span ng-show="route.highest" style="padding-left: 20px;">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span>
             <span ng-show="route.highest">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span>

@@ -169,9 +169,9 @@ angular.module('myApp.itinerary.map.controller', [])
                if (response.status === 401) {
                  $location.path('/login');
                } else if (response.status === 400) {
-                 $log.warn('Invalid request for itinerary tracks: ', response.statusText);
+                 $log.warn('Invalid request for itinerary tracks:', response.statusText);
                } else {
-                 $log.warn('Error fetching itinerary tracks: ', response.status, response.statusText);
+                 $log.warn('Error fetching itinerary tracks:', response.status, response.statusText);
                }
              });
          }
@@ -214,9 +214,9 @@ angular.module('myApp.itinerary.map.controller', [])
                if (response.status === 401) {
                  $location.path('/login');
                } else if (response.status === 400) {
-                 $log.warn('Invalid request for itinerary routes: ', response.statusText);
+                 $log.warn('Invalid request for itinerary routes:', response.statusText);
                } else {
-                 $log.warn('Error fetching itinerary routes: ', response.status, response.statusText);
+                 $log.warn('Error fetching itinerary routes:', response.status, response.statusText);
                }
              });
          }
@@ -258,14 +258,14 @@ angular.module('myApp.itinerary.map.controller', [])
                if (response.status === 401) {
                  $location.path('/login');
                } else if (response.status === 400) {
-                 $log.warn('Invalid request for itinerary waypoints: ', response.statusText);
+                 $log.warn('Invalid request for itinerary waypoints:', response.statusText);
                } else {
-                 $log.warn('Error fetching itinerary waypoints: ', response.status, response.statusText);
+                 $log.warn('Error fetching itinerary waypoints:', response.status, response.statusText);
                }
              });
          }
        } else {
-         $log.warn('Display selection not set - no routes, waypoints or tracks specified');
+         $log.debug('No routes, waypoints or tracks specified for display');
          $location.path('/itinerary');
          $location.search({id: encodeURIComponent($scope.itineraryId)});
        }
@@ -290,7 +290,7 @@ angular.module('myApp.itinerary.map.controller', [])
            $scope.state.showMap = true;
          })
          .catch(function(error) {
-           $log.error('Failed to get the map layer configuration: ', error);
+           $log.error('Failed to get the map layer configuration:', error);
            $scope.mapLayersError = {error: error};
          });
        if (choices && choices.canEdit) {
@@ -760,23 +760,23 @@ angular.module('myApp.itinerary.map.controller', [])
                        zoom: 16
                      };
                    }
-                   if (nickname === $scope.data.myNickname) {
-                     $scope.data.myDistance = trackData.distance;
-                     $scope.data.myColor = liveItem.path.color;
-                   } else if (Array.isArray($scope.data.nicknames)) {
-                     $scope.data.nicknames.forEach(function(v) {
-                       if (v.nickname === nickname) {
-                         v.distance = trackData.distance;
-                         v.color = liveItem.path.color;
-                       }
-                     });
-                   }
                  } else if (latlng && $scope.state.autocenter) {
                    $scope.map.center = {
                      lat: latlng.lat,
                      lng: latlng.lng,
                      zoom: 14
                    };
+                 }
+                 if (nickname === $scope.data.myNickname) {
+                   $scope.data.myDistance = trackData.distance;
+                   $scope.data.myColor = liveItem.path.color;
+                 } else if (Array.isArray($scope.data.nicknames)) {
+                   $scope.data.nicknames.forEach(function(v) {
+                     if (v.nickname === nickname) {
+                       v.distance = trackData.distance;
+                       v.color = liveItem.path.color;
+                     }
+                   });
                  }
                  $timeout(function() {
                    liveItem.updating = false;
