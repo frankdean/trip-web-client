@@ -94,7 +94,7 @@
                   <input id="input-waypoints-{{waypoint.id}}" type="checkbox" ng-model="waypoint.selected" />
                   <label for="input-waypoints-{{waypoint.id}}"><span ng-show="!waypoint.name">ID: {{waypoint.id}}</span>{{waypoint.name}}</label>
                 </td>
-                <td>{{waypoint.symbol}}</td>
+                <td><span ng-show="!waypoint.symbol_text">{{waypoint.symbol}}</span><span ng-show="waypoint.symbol_txt != ''">{{waypoint.symbol_text}}</span></td>
                 <td>{{waypoint.comment}}</td>
                 <td>{{waypoint.type}}</td>
               </tr>
