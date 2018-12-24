@@ -34,7 +34,7 @@
       </div>
       <div>
         <label for="input-description" style="vertical-align:top;">Description:</label>
-        <pagedown-editor id="input-description" content="data.description" help="markdownHelp()"></pagedown-editor>
+        <pagedown-editor id="input-description" content="data.description" help="markdownHelp()" ng-model="dummy1"></pagedown-editor>
       </div>
       <div id="div-form-buttons" style="margin-top: 20px;">
         <button id="btn-save" ng-click="saveItinerary(data)" class="btn btn-lg btn-success">Save</button>

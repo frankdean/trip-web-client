@@ -30,6 +30,7 @@ angular.module('myApp.state.service', [] )
          this.itinerariesPage = 1;
          this.itinerarySharingReportPage = 1;
          this.admin = undefined;
+         this.message = undefined;
          this.pageMap = [];
        };
        this.reset();
@@ -77,6 +78,13 @@ angular.module('myApp.state.service', [] )
        };
        this.getItinerarySharingReportPage = function() {
          return this.itinerarySharingReportPage;
+       };
+
+       this.setMessage = function(message) {
+         this.message = message;
+       };
+       this.getMessage = function() {
+         return this.message;
        };
 
      }]);

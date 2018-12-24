@@ -106,11 +106,16 @@ angular.module('myApp.itinerary.controller', [])
                $scope.waypoints = result;
                $scope.status.waypointsOpen = $scope.waypoints.length > 0;
              }).catch(function(response) {
-               $log.warn('Error fetching itinerary waypoints');
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
+               if (response.status === 401) {
+                 $location.path('/login');
+                 $location.search('');
+               } else {
+                 $log.warn('Error fetching itinerary waypoints');
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               }
              });
          };
          $scope.updateRouteNames = function() {
@@ -119,11 +124,16 @@ angular.module('myApp.itinerary.controller', [])
                $scope.routeNames = result;
                $scope.status.routesOpen = $scope.routeNames.length > 0;
              }).catch(function(response) {
-               $log.warn('Error fetching itinerary route names');
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
+               if (response.status === 401) {
+                 $location.path('/login');
+                 $location.search('');
+               } else {
+                 $log.warn('Error fetching itinerary route names');
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               }
              });
          };
          $scope.updateTrackNames = function() {
@@ -132,11 +142,16 @@ angular.module('myApp.itinerary.controller', [])
                $scope.trackNames = result;
                $scope.status.tracksOpen = $scope.trackNames.length > 0;
              }).catch(function(response) {
-               $log.warn('Error fetching itinerary track names');
-               $scope.ajaxRequestError = {
-                 error: true,
-                 status: response.status
-               };
+               if (response.status === 401) {
+                 $location.path('/login');
+                 $location.search('');
+               } else {
+                 $log.warn('Error fetching itinerary track names');
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               }
              });
          };
          $scope.updateWaypoints();
@@ -705,11 +720,16 @@ angular.module('myApp.itinerary.controller', [])
                $log.warn('Downloaded response contained no data');
              }
            }).catch(function(response) {
-             $scope.ajaxRequestError = {
-               error: true,
-               status: response.status
-             };
-             $log.warn('GPX itinerary download failed', response.status);
+             if (response.status === 401) {
+               $location.path('/login');
+               $location.search('');
+             } else {
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+               $log.warn('GPX itinerary download failed', response.status);
+             }
            });
        };
        $scope.downloadKml = function(form) {
@@ -744,11 +764,16 @@ angular.module('myApp.itinerary.controller', [])
                $log.warn('Downloaded response contained no data');
              }
            }).catch(function(response) {
-             $scope.ajaxRequestError = {
-               error: true,
-               status: response.status
-             };
-             $log.warn('KML itinerary download failed', response.status);
+             if (response.status === 401) {
+               $location.path('/login');
+               $location.search('');
+             } else {
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+               $log.warn('KML itinerary download failed', response.status);
+             }
            });
        };
        $scope.deleteUploads = function(form) {

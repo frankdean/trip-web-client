@@ -8,6 +8,7 @@ module.exports = function(config){
       'app/node_modules/angular-messages/angular-messages.js',
       'app/node_modules/angular-route/angular-route.js',
       'app/node_modules/angular-resource/angular-resource.js',
+      'node_modules/angular-cookies/angular-cookies.js',
       'app/node_modules/angular-mocks/angular-mocks.js',
       'app/node_modules/angular-paging/dist/paging.js',
       'app/node_modules/angular-jwt/dist/angular-jwt.js',

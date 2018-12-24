@@ -25,7 +25,18 @@ angular.module('myApp.user.factory', [])
     ['$resource', 'ConfigService',
      function($resource, ConfigService){
        return $resource(ConfigService.restUrlPrefix + '/login', null, {
-         save: { method: 'POST', isArray: false}
+         save: { method: 'POST', isArray: false},
+         renew: {url: ConfigService.restUrlPrefix + '/login/token/renew'}
+       });
+     }])
+
+  .factory(
+    'UserPasswordChangeService',
+    ['$resource', 'ConfigService',
+     function($resource, ConfigService){
+       var url = ConfigService.restUrlPrefix + '/account/password';
+       return $resource(url, {}, {
+         update: { method: 'PUT' }
        });
      }])
 

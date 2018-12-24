@@ -83,7 +83,7 @@ describe('service', function() {
          expect(Storage.getItem).toHaveBeenCalled();
          expect(configService.getTileUrl(0)).toMatch(/http:\/\/server:80.*\/tile\?id=\d+&z=\{z\}&x=\{x\}&y=\{y\}&access_token=test2/);
          expect(Storage.getItem).toHaveBeenCalled();
-         expect(Storage.getItem.calls.allArgs()).toEqual([['id_token'], ['id_token']]);
+         expect(Storage.getItem.calls.allArgs()).toEqual([['id_token_maptile'], ['id_token_maptile']]);
        }));
 
     it('should return the URL prefix for the OsmAnd tracker client', function() {

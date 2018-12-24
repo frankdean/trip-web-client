@@ -21,6 +21,12 @@ body {
 	position: relative;
 	padding-bottom: 40px;
 }
+#pw-strength-wrapper {
+    max-width: 400px;
+}
+#feedback-warning {
+    max-width: 400px;
+}
 .starter-template {
   padding: 40px 15px;
   text-align: center;

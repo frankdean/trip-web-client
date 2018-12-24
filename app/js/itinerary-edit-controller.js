@@ -130,7 +130,12 @@ angular.module('myApp.itinerary.edit.controller', [])
            $location.path('/itineraries');
            $location.search('');
          }).catch(function(response) {
-           $log.warn('Delete failed');
+           if (response.status === 401) {
+             $location.path('/login');
+             $location.search('');
+           } else {
+             $log.warn('Delete failed');
+           }
          });
        };
      }]);

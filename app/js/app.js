@@ -303,6 +303,14 @@ angular.module('myApp', [
            templateUrl: 'partials/user-edit.html',
            controller: 'UserEditCtrl'
          }).
+         when('/account', {
+           templateUrl: 'partials/account.html',
+           controller: 'AccountCtrl'
+         }).
+         when('/change-password', {
+           templateUrl: 'partials/change-password.html',
+           controller: 'ChangePasswordCtrl'
+         }).
          when('/admin-password-reset', {
            templateUrl: 'partials/admin_password_reset.html',
            controller: 'AdminPasswordResetCtrl'
@@ -315,27 +323,79 @@ angular.module('myApp', [
            redirectTo: '/tracks'
          });
        jwtOptionsProvider.config({
-         urlParam: 'access_token',
-         tokenGetter: ['$log', 'Storage', 'options',
-                       function($log, Storage, options) {
+         tokenGetter: ['$log', 'Storage', 'options', 'jwtHelper', '$location', 'Login', '$rootScope',
+                       function($log, Storage, options, jwtHelper, $location, Login, $rootScope) {
+                         var renewWithin, iat, token, decodedToken;
                          try {
                            // Don't append to template requests e.g. ui-bootstrap templates
                            if (options.url.substr(options.url.length - 5) == '.html') {
                              return null;
                            }
-                           return Storage.getItem('id_token');
-                         } catch(ex) {
-	                       $log.warn("Local storage is not enabled!");
+                           token = Storage.getItem('id_token');
+                           if (token) {
+                             try {
+                               decodedToken = jwtHelper.decodeToken(token);
+                             } catch (e) {
+                               $log.error('Failure decoding current token');
+                             }
+                             renewWithin = decodedToken && decodedToken.uk_co_fdsd_trip_renewWithin || 60;
+                           }
+                           if (!token || jwtHelper.isTokenExpired(token)) {
+                             $log.debug('Token missing or has expired');
+                           } else if (!$rootScope.tokenRenewalGuard && jwtHelper.isTokenExpired(token, renewWithin)) {
+                             $rootScope.tokenRenewalGuard = true;
+                             $log.debug('Token will expire soon - renewing');
+                             Login.renew({},
+                                         {},
+                                         function(value) {
+                                           $rootScope.tokenRenewalGuard = false;
+                                           if (value.resourceToken != null) {
+                                             Storage.setItem('id_token_maptile', value.resourceToken);
+                                           }
+                                           if (value.token !== undefined) {
+                                             Storage.setItem('id_token', value.token);
+                                             try {
+                                               token = jwtHelper.decodeToken(value.token);
+                                             } catch (e) {
+                                               $log.error('Failure decoding renewal token');
+                                             }
+                                             $rootScope.admin = token.uk_co_fdsd_trip_admin;
+                                             iat = new Date(0);
+                                             if (token && token.iat) {
+                                               iat.setUTCSeconds(token.iat);
+                                               $log.debug('Renewed token issued at:', iat);
+                                             }
+                                             try {
+                                               $log.debug('Renewed token expires:', jwtHelper.getTokenExpirationDate(value.token));
+                                             } catch (e) {
+                                               $log.error('Failure extracting expiration date from token');
+                                             }
+                                           } else {
+                                             $log.warn('No token received in response:', value);
+                                           }
+                                         }, function(response) {
+                                           $rootScope.tokenRenewalGuard = false;
+                                           $log.warn('Token renewal failed.  Status code:', response.status);
+                                           $rootScope.admin = undefined;
+                                           $location.path('/login');
+                                         });
+                           }
+                           return token;
+                         } catch(e) {
+	                   $log.warn("Error handling token renewal", e);
                          }
                          return null;
                        }]
+         // unauthenticatedRedirectPath: '/login'
        });
        $httpProvider.interceptors.push('jwtInterceptor');
+       $httpProvider.defaults.xsrfCookieName = 'TRIP-XSRF-TOKEN';
+       $httpProvider.defaults.xsrfHeaderName = 'X-TRIP-XSRF-TOKEN';
      }])
 
   .run(
-    ['$rootScope', 'Storage', 'jwtHelper', 'confirmationPopoverDefaults',
-     function($rootScope, Storage, jwtHelper, confirmationPopoverDefaults) {
+    ['$rootScope', 'Storage', 'jwtHelper', 'confirmationPopoverDefaults', '$log',
+     function($rootScope, Storage, jwtHelper, confirmationPopoverDefaults, $log) {
        /*
        // Debug routing issues
        $rootScope.$on('$routeChangeStart', function(angularEvent, next, current) {
@@ -353,9 +413,14 @@ angular.module('myApp', [
        confirmationPopoverDefaults.confirmButtonType = "danger";
        var jwtToken = Storage.getItem('id_token');
        if (jwtToken) {
-         var token = jwtHelper.decodeToken(jwtToken);
-         if (token) {
-           $rootScope.admin = token.admin;
+         try {
+           var token = jwtHelper.decodeToken(jwtToken);
+           if (token) {
+             $rootScope.admin = token.uk_co_fdsd_trip_admin;
+           }
+         } catch (e) {
+           $log.error('Failure decoding token from local storage');
+           delete $rootScope.admin;
          }
        }
      }]);

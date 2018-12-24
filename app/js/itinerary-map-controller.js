@@ -374,6 +374,9 @@ angular.module('myApp.itinerary.map.controller', [])
                      error: true,
                      status: response.status
                    };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   }
                  });
              } else {
                $log.warn('Invalid marker position',
@@ -413,6 +416,9 @@ angular.module('myApp.itinerary.map.controller', [])
                    error: true,
                    status: response.status
                  };
+                 if (response.status === 401) {
+                   $location.path('/login');
+                 }
                });
            } else {
              $log.error('Create Route. One or more coordinates are out of range: -90 <= lat <= 90, -180 <= lng <= 180');
@@ -448,10 +454,14 @@ angular.module('myApp.itinerary.map.controller', [])
                                                 lng: layer.getLatLng().lng
                                                })
                    .$promise.catch(function(response) {
+                     $log.error('Edit marker failed');
                      $scope.ajaxRequestError = {
                        error: true,
                        status: response.status
                      };
+                     if (response.status === 401) {
+                       $location.path('/login');
+                     }
                    });
                } else {
                  $log.warn('Invalid marker position', layer.getLatLng().lat, layer.getLatLng().lng);
@@ -484,6 +494,9 @@ angular.module('myApp.itinerary.map.controller', [])
                        error: true,
                        status: response.status
                      };
+                     if (response.status === 401) {
+                       $location.path('/login');
+                     }
                    });
                } else {
                  $log.error('One or more coordinates are out of range: -90 <= lat <= 90, -180 <= lng <= 180');
@@ -509,10 +522,14 @@ angular.module('myApp.itinerary.map.controller', [])
                                                {id: $scope.itineraryId,
                                                 wptId: layer.tl_id})
                  .$promise.catch(function(response) {
+                   $log.error('Delete marker failed');
                    $scope.ajaxRequestError = {
                      error: true,
                      status: response.status
                    };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   }
                  });
              }
            } else if (layer instanceof L.Polyline) {
@@ -526,6 +543,9 @@ angular.module('myApp.itinerary.map.controller', [])
                      error: true,
                      status: response.status
                    };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   }
                  });
              }
            }
@@ -561,6 +581,9 @@ angular.module('myApp.itinerary.map.controller', [])
                error: true,
                status: response.status
              };
+             if (response.status === 401) {
+               $location.path('/login');
+             }
            });
        };
        $scope.goBack = function() {
@@ -787,6 +810,9 @@ angular.module('myApp.itinerary.map.controller', [])
                    error: true,
                    status: response.status
                  };
+                 if (response.status === 401) {
+                   $location.path('/login');
+                 }
                  $timeout(function() {
                    liveItem.updating = false;
                  }, 10000);

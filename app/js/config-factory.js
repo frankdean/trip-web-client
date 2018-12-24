@@ -35,7 +35,7 @@ angular.module('myApp.config.factory', [])
          return $location.protocol() + '://' + $location.host() +
            ':' + $location.port() + service.restUrlPrefix +
            '/tile?' + 'id=' + index + '&z={z}&x={x}&y={y}&access_token=' +
-           encodeURIComponent(Storage.getItem('id_token'));
+           encodeURIComponent(Storage.getItem('id_token_maptile'));
        };
        service.getOsmAndTrackerUrlPrefix = function() {
          // Don't include the protocol or port as the client does not support https.

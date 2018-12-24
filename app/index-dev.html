@@ -61,6 +61,7 @@
               <li><a ng-click="navCollapsed=true" href="/trip/app/location">Location</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/users">Users</a></li>
               <li ng-show="admin === true"><a ng-click="navCollapsed=true" href="/trip/app/status">Status</a></li>
+              <li><a ng-click="navCollapsed=true" href="/trip/app/account">Account</a></li>
               <li><a ng-click="navCollapsed=true" href="https://www.fdsd.co.uk/trip-web-client-docs/" target="_blank">Help</a></li>
               <li><a ng-click="navCollapsed=true" href="/trip/app/logout">Logout</a></li>
             </ul>
@@ -87,6 +88,7 @@
   <script src="node_modules/angular-messages/angular-messages.js"></script>
   <script src="node_modules/angular-route/angular-route.js"></script>
   <script src="node_modules/angular-resource/angular-resource.js"></script>
+  <script src="node_modules/angular-cookies/angular-cookies.js"></script>
   <script src="node_modules/angular-paging/dist/paging.js"></script>
   <script src="node_modules/angular-jwt/dist/angular-jwt.js"></script>
   <script src="node_modules/angular-simple-logger/dist/angular-simple-logger.js"></script>
@@ -104,6 +106,7 @@
   <script src="node_modules/pagedown/Markdown.Extra.js"></script>
   <script src="node_modules/pagedown/Markdown.Editor.js"></script>
   <script src="node_modules/angular-pagedown/angular-pagedown.js"></script>
+  <script src="node_modules/zxcvbn/dist/zxcvbn.js"></script>
   <script src="js/app.js"></script>
   <script src="js/coord-filter.js"></script>
   <script src="js/admin-password-reset-controller.js"></script>

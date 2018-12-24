@@ -28,12 +28,11 @@ angular.module('myApp.track.controller', [])
      'RecentPoints',
      'InitGpxDownload',
      'Storage',
-     'jwtHelper',
      'SaveAs',
      'StateService',
      'CopyAndPasteService',
      function($scope, $log, $location, SharedLocationNickname,
-              RecentPoints, InitGpxDownload, Storage, jwtHelper, SaveAs, StateService, CopyAndPasteService) {
+              RecentPoints, InitGpxDownload, Storage, SaveAs, StateService, CopyAndPasteService) {
        $scope.data = {};
        $scope.master = {};
        $scope.messages = {};

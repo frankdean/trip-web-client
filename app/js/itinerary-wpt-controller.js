@@ -52,11 +52,16 @@ angular.module('myApp.itinerary.wpt.controller', [])
          .$promise.then(function(georefFormats) {
            $scope.georefFormats = georefFormats;
          }).catch(function(response) {
-           $log.warn('Error fetching Georef Formats', response.status, response.statusText);
-           $scope.ajaxRequestError = {
-             error: true,
-             status: response.status
-           };
+           if (response.status === 401) {
+             $location.path('/login');
+             $location.search('');
+           } else {
+             $log.warn('Error fetching Georef Formats', response.status, response.statusText);
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+           }
          });
        if ($scope.wptId) {
          itineraryWaypointService.get({id: $scope.itineraryId, wptId: $scope.wptId})

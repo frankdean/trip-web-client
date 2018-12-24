@@ -17,9 +17,19 @@
  */
 'use strict';
 
+var fs = require('fs');
+
 describe('itinerary sharing', function() {
   // Just needs to be the ID of an existing itinerary that we will modify
   var testItineraryId = 929;
+
+var takeScreenshots = false;
+
+  function writeScreenshot(png, filename) {
+    var stream = fs.createWriteStream(filename);
+    stream.write(new Buffer(png, 'base64'));
+    stream.end();
+  }
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/itinerary-sharing?id=' + testItineraryId);
@@ -43,6 +53,7 @@ describe('itinerary sharing', function() {
         element(by.id('input-nickname')).sendKeys('admin');
         element(by.id('input-active')).click();
         element(by.id('btn-save')).click();
+        expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=\d+/);
       });
 
       it('should save another share for an existing nickname', function() {
@@ -110,7 +121,14 @@ describe('itinerary sharing', function() {
       it('should allow delete of multiple items', function() {
         element(by.id('btn-delete')).click();
         element.all((by.css('.confirm-button'))).get(0).click();
-        expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
+        if (takeScreenshots) {
+          browser.takeScreenshot().then(function(png) {
+            writeScreenshot(png, 'e2e-05-delete-multiple-itinerary-shares.png');
+          });
+        }
+        browser.sleep(300).then(function() {
+          expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
+        });
       });
 
     });

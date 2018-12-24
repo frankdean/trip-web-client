@@ -504,4 +504,17 @@ angular.module('myApp.utils.factory', [])
          convertMapAttributesToHtml: convertMapAttributesToHtml,
          createMapLayers: createMapLayers
        };
+     }])
+
+  .factory(
+    'zxcvbn',
+    ['$log',
+     function($log) {
+       return {
+         analyze: function() {
+           var result = zxcvbn.apply(null, arguments);
+           $log.debug('zxcvbn.apply()');
+           return result;
+         }
+       };
      }]);
