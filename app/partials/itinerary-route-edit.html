@@ -29,7 +29,7 @@
           <table id="table-points" class="wide-table table table-striped">
             <tr>
               <th>
-                <input id="select-all-points" type="checkbox" ng-model="data.selectAll" ng-click="selectAll(form)"/>
+                <input id="select-all-points" type="checkbox" ng-model="data.selectAll" ng-change="selectAll(form)"/>
                 <label for="select-all-points">Point ID</label>
               </th>
               <th>Latitude</th>
@@ -42,7 +42,7 @@
             </tr>
             <tr ng-repeat="point in data.points">
               <td>
-                <input id="input-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-click="showMarker(point)" />
+                <input id="input-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-change="showMarker(point)" />
                 <label for="input-point-{{point.id}}">{{point.id}}</label>
               </td>
               <td>{{point.lat | number:6}}</td>

@@ -60,7 +60,7 @@ angular.module('myApp.itinerary.controller', [])
        $scope.formError = {editOnlyOne: false};
        $scope.selection = {
          allGeoItemsSelected: false,
-         allRoutesSelection: false,
+         allRoutesSelected: false,
          allWaypointsSelected: false,
          allTracksSelected: false
        };

@@ -29,7 +29,7 @@
           <table id="table-segment-points" class="wide-table table table-striped">
             <tr>
               <th>
-                <input id="select-all-points" type="checkbox" ng-model="data.selectAll" ng-click="selectAll(form)"/>
+                <input id="select-all-points" type="checkbox" ng-model="data.selectAll" ng-change="selectAll(form)"/>
                 <label for="select-all-points">ID</label>
               </th>
               <th>Time</th>
@@ -40,7 +40,7 @@
             </tr>
             <tr ng-repeat="point in points">
               <td>
-                <input id="select-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-click="showMarker(point)" />
+                <input id="select-point-{{point.id}}" type="checkbox" ng-model="point.selected" ng-change="showMarker(point)" />
                 <label for="select-point-{{point.id}}">{{point.id}}</label>
               </td>
               <td>{{point.time | date:'medium'}}</td>

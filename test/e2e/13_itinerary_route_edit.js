@@ -75,6 +75,18 @@ describe('Itinerary Route Edit', function() {
       points = element.all(by.repeater('point in data.points'));
     });
 
+    it('should select all points', function() {
+      var pointElements = element.all(by.repeater('point in data.points'));
+      element(by.id('select-all-points')).click();
+      expect(pointElements.all(by.model('point.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(pointElements.all(by.model('point.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(pointElements.all(by.model('point.selected')).get(9).getAttribute('checked').isSelected()).toBeTruthy();
+      element(by.id('select-all-points')).click();
+      expect(pointElements.all(by.model('point.selected')).first().getAttribute('checked').isSelected()).toBeFalsy();
+      expect(pointElements.all(by.model('point.selected')).get(1).getAttribute('checked').isSelected()).toBeFalsy();
+      expect(pointElements.all(by.model('point.selected')).get(9).getAttribute('checked').isSelected()).toBeFalsy();
+    });
+
     it('should display the edit buttons', function() {
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-route-edit\?itineraryId=\d+&routeId=\d+&shared=false/);
       expect(element(by.id('div-buttons')).isDisplayed()).toBeTruthy();

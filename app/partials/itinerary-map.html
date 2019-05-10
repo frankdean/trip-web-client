@@ -33,7 +33,7 @@
   <div style="padding-left: 20px;">
     <div>
       <label for="input-live-map">Enable live map</label>
-      <input id="input-live-map" type="checkbox" ng-model="state.liveMap" ng-click="initLiveMapSettings()" style="margin-right: 15px;"/>
+      <input id="input-live-map" type="checkbox" ng-model="state.liveMap" ng-change="initLiveMapSettings()" style="margin-right: 15px;"/>
     </div>
     <div>
       <label for="input-gps-accuracy">Request high accuracy location:</label>
@@ -53,7 +53,7 @@
       </div>
       <div id="div-nicknames">
         <div style="padding-left: 15px;">
-          <input id="input-my-nickname" type="checkbox" ng-click="selectNickname(data.myNickname)" ng-model="data.selfSelected"/>
+          <input id="input-my-nickname" type="checkbox" ng-change="selectNickname(data.myNickname)" ng-model="data.selfSelected"/>
           <label for="input-my-nickname">{{data.myNickname}}</label>
           <span ng-show="data.myColor"> ({{data.myColor}})</span>
           <span ng-show="data.myDistance && data.selfSelected" style="padding-left: 20px;">{{data.myDistance | number:2}}&nbsp;km {{data.myDistance / 1.609344 | number:2}}&nbsp;mi</span>

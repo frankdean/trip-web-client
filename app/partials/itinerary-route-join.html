@@ -63,8 +63,8 @@
   <leaflet ng-if="status.showMap" controls="map.controls" paths="map.paths" bounds="map.bounds" lf-center="map.center" layers="map.layers" defaults="map.defaults" height="{{map.height}}"></leaflet>
   <div class="div-autozoom" ng-show="status.showMap">
     <label for="auto-zoom">Auto-zoom:</label>
-    <input id="auto-zoom" type="checkbox" ng-model="autozoom" />
+    <input id="auto-zoom" type="checkbox" ng-change="updateMap()" ng-model="autozoom" />
     <label for="join-routes">Show joined routes:</label>
-    <input id="join-routes" type="checkbox" ng-click="updateMap()" ng-model="joinRoutes" />
+    <input id="join-routes" type="checkbox" ng-change="updateMap()" ng-model="joinRoutes" />
   </div>
 </div>

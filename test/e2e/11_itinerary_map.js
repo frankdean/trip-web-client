@@ -53,11 +53,49 @@ describe('Itinerary map', function() {
   });
 
   describe('Itinerary owned by user', function() {
+    var routesList, waypointsList, tracksList;
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
       browser.wait(EC.visibilityOf(selectAllWaypoints), 5000);
       browser.waitForAngular();
+      routesList = element.all(by.repeater('route in routeNames'));
+      waypointsList = element.all(by.repeater('waypoint in waypoints'));
+      tracksList = element.all(by.repeater('track in trackNames'));
+    });
+
+    it('should select all routes', function() {
+      element(by.id('input-select-all-routes')).click();
+      expect(routesList.all(by.model('route.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(routesList.all(by.model('route.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+    });
+
+    it('should select all waypoints', function() {
+      element(by.id('input-select-all-waypoints')).click();
+      expect(waypointsList.all(by.model('waypoint.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(2).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(3).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(4).getAttribute('checked').isSelected()).toBeTruthy();
+    });
+
+    it('should select all tracks', function() {
+      element(by.id('input-select-all-tracks')).click();
+      expect(tracksList.all(by.model('track.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(tracksList.all(by.model('track.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+    });
+
+    it('should select all routes, waypoints and tracks', function() {
+      element(by.id('input-select-all')).click();
+      expect(routesList.all(by.model('route.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(routesList.all(by.model('route.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(2).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(3).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(waypointsList.all(by.model('waypoint.selected')).get(4).getAttribute('checked').isSelected()).toBeTruthy();
+      expect(tracksList.all(by.model('track.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(tracksList.all(by.model('track.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
     });
 
     describe('editing', function() {
@@ -224,14 +262,14 @@ describe('Itinerary map', function() {
 
         });
 
-        describe('deleting routes', function() {
+        xdescribe('deleting routes', function() {
 
           beforeEach(function() {
             browser.element(by.id('btn-map')).click();
             browser.wait(EC.elementToBeClickable(elemCreatePolylineControl), 5000);
           });
 
-          pending('Disabled as mouseMove functions have proven unreliable');
+          // pending('Disabled as mouseMove functions have proven unreliable');
           it('should allow a route to be deleted', function() {
             elemCreatePolylineControl.click();
             if (takeScreenshots) {
@@ -312,6 +350,28 @@ describe('Itinerary map', function() {
 
       it('should display the tracks', function() {
         expect(element.all(by.tagName('path')).count()).toBeGreaterThan(0);
+      });
+
+    });
+
+    describe('live updates', function() {
+      var nicknames;
+
+      beforeEach(function() {
+        element(by.id('input-select-all-tracks')).click();
+        browser.element(by.id('btn-map')).click();
+        // browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
+        element(by.id('input-live-map')).click();
+        nicknames = element.all(by.repeater('nickname in data.nicknames'));
+      });
+
+      it('should display user\'s own nickname when live map enabled', function() {
+        // expect(browser.isElementPresent(by.tagName('label'))).toBeTruthy();
+        // var label1 = element(by.binding('data.myNickname'));
+        // expect(label1.getText()).toBe('user');
+        expect(element(by.binding('data.myNickname')).getText()).toBe('user');
+        expect(nicknames.all(by.binding('nickname.nickname')).first().getText()).toBe('Fred');
+        expect(nicknames.all(by.binding('nickname.nickname')).get(1).getText()).toBe('test2');
       });
 
     });

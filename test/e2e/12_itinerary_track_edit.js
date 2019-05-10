@@ -75,6 +75,16 @@ describe('Itinerary Track Edit', function() {
       segments = element.all(by.repeater('segment in data.track.segments'));
     });
 
+    it('should select all segments', function() {
+      var segmentElements = element.all(by.repeater('segment in data.track.segments'));
+      element(by.model('data.selectAll')).click();
+      expect(segmentElements.all(by.model('segment.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+      expect(segmentElements.all(by.model('segment.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+      element(by.model('data.selectAll')).click();
+      expect(segmentElements.all(by.model('segment.selected')).first().getAttribute('checked').isSelected()).toBeFalsy();
+      expect(segmentElements.all(by.model('segment.selected')).get(1).getAttribute('checked').isSelected()).toBeFalsy();
+    });
+
     it('should display the track segment list', function() {
       // There should be two segments with the second column showing the segment ID
       expect(segments.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/\d+/);
@@ -90,6 +100,17 @@ describe('Itinerary Track Edit', function() {
       beforeEach(function() {
         segments.get(1).all(by.tagName('a')).get(0).click();
         points = element.all(by.repeater('point in points'));
+      });
+
+      it('should select all points', function() {
+        element(by.model('data.selectAll')).click();
+        expect(points.all(by.model('point.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
+        expect(points.all(by.model('point.selected')).get(1).getAttribute('checked').isSelected()).toBeTruthy();
+        expect(points.all(by.model('point.selected')).get(9).getAttribute('checked').isSelected()).toBeTruthy();
+        element(by.model('data.selectAll')).click();
+        expect(points.all(by.model('point.selected')).first().getAttribute('checked').isSelected()).toBeFalsy();
+        expect(points.all(by.model('point.selected')).get(1).getAttribute('checked').isSelected()).toBeFalsy();
+        expect(points.all(by.model('point.selected')).get(9).getAttribute('checked').isSelected()).toBeFalsy();
       });
 
       it('should display the edit buttons', function() {

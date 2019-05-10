@@ -23,7 +23,7 @@ module.exports = function(config){
       'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
       'app/node_modules/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
       'app/node_modules/lodash/dist/lodash.min.js',
-      'app/node_modules/socket.io-client/dist/socket.io.min.js',
+      'app/node_modules/socket.io-client/dist/socket.io.js',
       'app/node_modules/angular-socket-io/socket.js',
       'app/node_modules/angular-file-saver/dist/angular-file-saver.bundle.min.js',
       'app/node_modules/open-location-code/js/src/openlocationcode.min.js',

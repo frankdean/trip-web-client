@@ -49,7 +49,7 @@
   <div id="downloads" ng-show="waypoints.length > 0 || routeNames.length > 0 || trackNames.length > 0">
     <form name="downloads" class="css-form" novalidate>
       <div id="select-all" ng-show="waypoints.length + routeNames.length + trackNames.length > 1">
-        <input id="input-select-all" ng-click="selectAllGeoItems()" type="checkbox"
+        <input id="input-select-all" ng-change="selectAllGeoItems()" type="checkbox"
                ng-model="selection.allGeoItemsSelected" />
         <label for="input-select-all" class="select-all-option">Select all</label>
       </div>
@@ -59,7 +59,7 @@
             <table id="table-routes" class="itinerary-route-table wide-table table table-striped">
               <tr ng-show="routeNames.length > 1">
                 <th colspan="8">
-                  <input id="input-select-all-routes" ng-click="selectAllRoutes()" type="checkbox" ng-model="selection.allRoutesSelected" />
+                  <input id="input-select-all-routes" ng-change="selectAllRoutes()" type="checkbox" ng-model="selection.allRoutesSelected" />
                   <label for="input-select-all-routes" class="select-all-option">Select all routes</label>
                 </th>
               </tr>
@@ -85,7 +85,7 @@
             <table id="table-waypoints" class="itinerary-waypoint-table wide-table table table-striped">
               <tr ng-show="waypoints.length > 1">
                 <th colspan="4">
-                  <input id="input-select-all-waypoints" ng-click="selectAllWaypoints()" type="checkbox" ng-model="selection.allWaypointsSelected" />
+                  <input id="input-select-all-waypoints" ng-change="selectAllWaypoints()" type="checkbox" ng-model="selection.allWaypointsSelected" />
                   <label for="input-select-all-waypoints" class="select-all-option">Select all waypoints</label>
                 </th>
               </tr>
@@ -106,7 +106,7 @@
             <table id="tracks-table" class="itinerary-track-table wide-table table table-striped">
               <tr ng-show="trackNames.length > 1">
                 <th colspan="8">
-                  <input id="input-select-all-tracks" ng-click="selectAllTracks()" type="checkbox" ng-model="selection.allTracksSelected" />
+                  <input id="input-select-all-tracks" ng-change="selectAllTracks()" type="checkbox" ng-model="selection.allTracksSelected" />
                   <label for="input-select-all-tracks" class="select-all-option">Select all tracks</label>
                 </th>
               </tr>
