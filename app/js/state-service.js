@@ -26,9 +26,11 @@ angular.module('myApp.state.service', [] )
 
        this.reset = function() {
          this.tracksSearch = undefined;
+         this.itinerarySearch = undefined;
          this.tracksPage = 1;
          this.itinerariesPage = 1;
          this.itinerarySharingReportPage = 1;
+         this.itinerarySearchResultsPage = 1;
          this.admin = undefined;
          this.message = undefined;
          this.pageMap = [];
@@ -50,6 +52,14 @@ angular.module('myApp.state.service', [] )
 
        this.getSearch = function() {
          return this.tracksSearch;
+       };
+
+       this.saveItinerarySearch = function(search) {
+         this.itinerarySearch = search;
+       };
+
+       this.getItinerarySearch = function(search) {
+         return this.itinerarySearch;
        };
 
        this.saveTracksPage = function(page) {
@@ -78,6 +88,13 @@ angular.module('myApp.state.service', [] )
        };
        this.getItinerarySharingReportPage = function() {
          return this.itinerarySharingReportPage;
+       };
+
+       this.saveItinerarySearchResultsPage = function(page) {
+         this.itinerarySearchResultsPage = page;
+       };
+       this.getItinerarySearchResultsPage = function() {
+         return this.itinerarySearchResultsPage;
        };
 
        this.setMessage = function(message) {

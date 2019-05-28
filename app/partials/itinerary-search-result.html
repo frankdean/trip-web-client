@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Search Results</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="alert alert-info" ng-show="itineraries.payload.length === 0">
+    <p>There are no itineraries to display</p>
+  </div>
+  <div id="itineraries" ng-show="itineraries.payload.length > 0">
+    <div class="box column-heading">
+      <div class="column column-one">Start Date</div>
+      <div class="column column-two">Title</div>
+      <div class="column column-three">Owner</div>
+    </div>
+    <div class="box" ng-repeat="itinerary in itineraries.payload">
+      <div class="column column-one">{{itinerary.start | date :'EEE dd-MMM-yyyy'}}&nbsp;</div>
+      <div class="column column-two"><a ng-href="/trip/app/itinerary?id={{itinerary.id}}&routing=itinerary-search-results">{{itinerary.title}}</a>&nbsp;</div>
+      <div class="column column-three">{{itinerary.nickname}}&nbsp;</div>
+    </div>
+  </div>
+  <div id="div-paging">
+    <paging
+      class="small"
+      page="page"
+      page-size="pageSize"
+      total="totalCount"
+      hide-if-empty="true"
+      show-prev-next="true"
+      show-first-last="true"
+      paging-action="doPagingAction('Paging clicked', page, pageSize, total)">
+    </paging>
+  </div>
+</div>

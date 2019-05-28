@@ -148,6 +148,8 @@ angular.module('myApp', [
   'myApp.itinerary.map.controller',
   'myApp.itinerary.sharing.controller',
   'myApp.itinerary.sharing.report.controller',
+  'myApp.itinerary.search.controller',
+  'myApp.itinerary.search.result.controller',
   'myApp.itinerary.wpt.controller',
   'myApp.itinerary.wpt.view.controller',
   'myApp.itinerary.route.name.controller',
@@ -246,6 +248,14 @@ angular.module('myApp', [
          when('/itinerary-sharing-report', {
            templateUrl: 'partials/itinerary-sharing-report.html',
            controller: 'ItinerarySharingReportCtrl'
+         }).
+         when('/itinerary-search', {
+           templateUrl: 'partials/itinerary-search.html',
+           controller: 'ItinerarySearchCtrl'
+         }).
+         when('/itinerary-search-result', {
+           templateUrl: 'partials/itinerary-search-result.html',
+           controller: 'ItinerarySearchResultCtrl'
          }).
          when('/itinerary-map', {
            templateUrl: 'partials/itinerary-map.html',

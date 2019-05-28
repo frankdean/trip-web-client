@@ -58,6 +58,17 @@ angular.module('myApp.itinerary.factory.js', [] )
   }])
 
   .factory(
+    'ItinerarySearchService',
+    ['$resource', 'ConfigService',
+  function($resource, ConfigService){
+    return $resource(ConfigService.restUrlPrefix + '/itineraries', {}, {
+      query: {
+         isArray: false
+      }
+    });
+  }])
+
+  .factory(
     'ItineraryWaypointService',
     ['$resource', 'ConfigService',
   function($resource, ConfigService){

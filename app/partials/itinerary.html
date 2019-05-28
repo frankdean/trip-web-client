@@ -42,7 +42,8 @@
         </div>
       </div>
       <div style="margin-top: 10px;">
-        <button id="btn-close" ng-click="close()" class="btn btn-lg btn-danger">Close</button>
+        <button id="btn-close" ng-click="close()" class="btn btn-lg btn-danger" ng-show="routing !== 'itinerary-search-results'">Close</button>
+        <button id="btn-back" ng-click="back()" class="btn btn-lg btn-danger" ng-show="routing == 'itinerary-search-results'">Back</button>
       </div>
     </div>
   </div>

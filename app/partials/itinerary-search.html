@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Itinerary Search by Location</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div class="well">
+    <form name="form" class="css-form" novalidate>
+      <div>
+        <label for="input-position">Position:</label>
+        <input id="input-position" ng-model="data.position" name="position" type="text" size="30" required="" ng-model-options="{debounce: 250}" position/>
+        <div ng-show="form.$submitted || form.position.$touched">
+          <div id="position-required" class="alert alert-warning" role="alert" ng-show="form.position.$error.required">Enter the position for the itinerary waypoint</div>
+        </div>
+        <div id="position-invalid" class="alert alert-warning" role="alert" ng-show="form.position.$error.position">Invalid latitude/longitude.  Many common formats are recognised, but try entering numeric only values, separated by a comma, e.g. 51.3,-2.3 for N5.31&deg; W2.3&deg;.  Then look at the various supported formats by changing the Display position format below.  You can use a letter 'd' instead of the &deg; symbol.  Single and double quotes are accepted for minutes and seconds.  Latitudes must be between -90 and 90 degrees.  Longitudes must be between -180 and 180 degrees.</div>
+      </div>
+      <div>
+        <label for="input-coord-format">Display position format:</label>
+        <select id="input-coord-format" ng-model="coordFormat" >
+          <option ng-repeat="format in georefFormats" value="{{format.key}}">{{format.value}}</option>
+        </select>
+      </div>
+      <div ng-show="coordFormat !== 'plus+code' && coordFormat !== 'osgb36' && coordFormat !== 'IrishGrid' && coordFormat !== 'ITM'">
+        <label for="position-separator">Position ordering and separator:</label>
+        <select id="position-separator" ng-model="positionFormat">
+          <option value="lat-lng">lat lng</option>
+          <option value="lat,lng">lat,lng</option>
+          <option value="lng-lat">lng lat (Proj4 reversed)</option>
+          <option value="lng,lat">lng,lat (Reversed)</option>
+        </select>
+      </div>
+      <div ng-show="!form.position.$error.position && data.position && data.lat !== undefined && data.lng !== undefined">
+        <span class="view-label" ng-repeat="format in georefFormats | filter:coordFormat:true">Converted to "{{format.value}}" format: </span><span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng"></span>
+        <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
+      </div>
+      <div>
+        <label for="input-distance">Distance (kilometres):</label>
+        <input id="input-distance" style="width: 7em;" ng-model="data.distance" name="distance" type="number" size="8" required="" min="0" max="50" />
+        <div ng-show="form.$submitted || form.distance.$touched">
+          <div id="distance-required" class="alert alert-warning" role="alert" ng-show="form.distance.$error.required">Enter the search radius distance in kilometres</div>
+          <div id="range-error-distance" class="alert alert-warning" role="alert" ng-show="form.distance.$error.min || form.distance.$error.max">Distance is out of range.  Must be between 0 and 50 kilometres.</div>
+        </div>
+      </div>
+      <div>
+        <button id="btn-search" ng-click="search(form)" class="btn btn-lg btn-success">Search</button>
+        <button id="btn-paste"
+                ng-click="pasteWaypoint()"
+                class="btn btn-lg btn-primary"
+                type="button"
+                ng-show="canPaste"
+                >Paste</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -40,6 +40,8 @@ exports.config = {
     'e2e/*.js'
   ],
 
+  SELENIUM_PROMISE_MANAGER: true,
+
   getMultiCapabilities: exports.getBrowserProfiles,
 
   maxSessions: 1,

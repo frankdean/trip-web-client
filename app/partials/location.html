@@ -39,8 +39,8 @@
             <option value="lng,lat">lng,lat (Reversed)</option>
           </select>
         </div>
-        <div>
-          <span class="view-label" ng-repeat="format in georefFormats | filter:coordFormat:true">Converted to "{{format.value}}" format: </span><span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng" ng-show="!form.position.$error.position && data.position && data.lat && data.lng"></span>
+        <div ng-show="!form.position.$error.position && data.position && data.lat !== undefined && data.lng !== undefined">
+          <span class="view-label" ng-repeat="format in georefFormats | filter:coordFormat:true">Converted to "{{format.value}}" format: </span><span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng"></span>
           <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
         </div>
         <span class="view-label">HDOP:</span>&nbsp;{{data.hdop | number:1}}</br>

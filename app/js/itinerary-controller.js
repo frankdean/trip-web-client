@@ -72,6 +72,7 @@ angular.module('myApp.itinerary.controller', [])
          tracksOpen: true
        };
        $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
+       $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
        if ($scope.itineraryId) {
          $scope.state = {new: false, edit: false};
          ItineraryService.get({id: $scope.itineraryId})
@@ -164,6 +165,10 @@ angular.module('myApp.itinerary.controller', [])
        };
        $scope.close = function() {
          $location.path('/itineraries');
+         $location.search('');
+       };
+       $scope.back = function() {
+         $location.path('/itinerary-search-result');
          $location.search('');
        };
        $scope.sharing = function() {

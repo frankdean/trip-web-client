@@ -93,4 +93,7 @@ angular.module('myApp.itineries.controller', [])
        $scope.showSharesReport = function() {
          $location.path('/itinerary-sharing-report');
        };
+       $scope.showSearchPage = function() {
+         $location.path('/itinerary-search');
+       };
      }]);

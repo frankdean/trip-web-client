@@ -37,7 +37,7 @@
         </select>
       </div>
       <div>
-        <span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng" ng-show="!form.position.$error.position && data.position && data.lat && data.lng"></span>
+        <span id="position-text" tl-coord-format="coordFormat" position-format="positionFormat" lat="data.lat" lng="data.lng" ng-show="!form.position.$error.position && data.position && data.lat !== undefined && data.lng !== undefined"></span>
         <span tl-lat-lng="data.position" lat="data.lat" lng="data.lng"></span>
       </div>
       <div>
