@@ -20,10 +20,11 @@
 var fs = require('fs');
 
 describe('itinerary sharing', function() {
+  var EC = protractor.ExpectedConditions;
   // Just needs to be the ID of an existing itinerary that we will modify
   var testItineraryId = 929;
 
-var takeScreenshots = false;
+  var takeScreenshots = false;
 
   function writeScreenshot(png, filename) {
     var stream = fs.createWriteStream(filename);
@@ -89,19 +90,41 @@ var takeScreenshots = false;
     });
 
     describe('select all operations', function() {
+      var selectAllShares;
 
       beforeEach(function() {
+        selectAllShares = element(by.id('input-select-all'));
+        browser.wait(EC.visibilityOf(selectAllShares), 1000);
         element(by.id('input-select-all')).click();
       });
 
       it('should de-activate all shares', function() {
+        if (takeScreenshots) {
+          browser.takeScreenshot().then(function(png) {
+            writeScreenshot(png, 'e2e-05-itinerary-shares-before-deactivate-click.png');
+          });
+        }
         element(by.id('btn-deactivate')).click();
         expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('');
       });
 
       it('should activate all shares', function() {
+        if (takeScreenshots) {
+          browser.takeScreenshot().then(function(png) {
+            writeScreenshot(png, 'e2e-05-itinerary-shares-before-activate-click.png');
+          });
+        }
         element(by.id('btn-activate')).click();
-        expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
+        if (takeScreenshots) {
+          browser.takeScreenshot().then(function(png) {
+            writeScreenshot(png, 'e2e-05-itinerary-shares-after-activate-click.png');
+          });
+        }
+        // This test often fails when the entire test suite is run, but never fails
+        // when we take a screenshot.  Hoping this delay fixes it.
+        browser.sleep(300).then(function(done) {
+          expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
+        });
       });
 
       it('should not allow edit of multiple items', function() {
@@ -119,13 +142,13 @@ var takeScreenshots = false;
       });
 
       it('should allow delete of multiple items', function() {
-        element(by.id('btn-delete')).click();
-        element.all((by.css('.confirm-button'))).get(0).click();
         if (takeScreenshots) {
           browser.takeScreenshot().then(function(png) {
             writeScreenshot(png, 'e2e-05-delete-multiple-itinerary-shares.png');
           });
         }
+        element(by.id('btn-delete')).click();
+        element.all((by.css('.confirm-button'))).get(0).click();
         browser.sleep(300).then(function() {
           expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
         });
