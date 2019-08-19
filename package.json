@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.1.1",
+  "version": "1.1.2-rc.1",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -76,7 +76,7 @@
   "scripts": {
     "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').relative('app', 'node_modules'), 'app/node_modules', 'junction') } catch (e) { }\"",
     "prestart": "yarn install",
-    "start": "http-server -a localhost -p 8000 -c-1",
+    "start": "cd ../trip-server && node index.js",
     "pretest": "yarn install",
     "test": "karma start test/karma.conf.js",
     "test-single-run": "karma start test/karma.conf.js  --single-run",

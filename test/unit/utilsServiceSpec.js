@@ -558,6 +558,96 @@ describe('UtilsService', function() {
       });
     });
 
+    // https://www.theguardian.com/environment/2019/aug/17/greta-thunberg-four-days-into-atlantic-crossing
+    it('should parse the DM+ formatted position of Greta Thunberg published in the Guardian', function() {
+      expect(utilsService.parseGeoLocation('Day 4. Pos 46° 20‘ N 015° 46‘ W')).toEqual({lat: {deg: 46, min: 20, sec: NaN, c:'N'}, lng: {deg: 15, min: 46, sec: NaN, c:'W'}});
+    });
+
+    it('should match expected unicode values for the postion published by Greta Thunberg in the Guardian', function() {
+      expect('Day 4. Pos 46° 20‘ N 015° 46‘ W').toEqual('Day 4. Pos 46\u00b0 20\u2018 N 015\u00b0 46\u2018 W');
+    });
+
+    it('should parse URL format from ukcampsite.co.uk', function() {
+      expect(utilsService.parseGeoLocation('https://www.ukcampsite.co.uk/sites/calcdist.asp?md=10&l=-48.85822&lg=-2.2945')).toEqual({lat: {deg: -48.85822}, lng: {deg: -2.2945}});
+    });
+
+  });
+
+  // spacing
+  // 002C comma
+  // 00A0 no-break space
+  // 200B zero width space // not supported
+  // 2060 word joiner // not supported
+  // FEFF zero width no-break space
+
+  // degrees
+  // 00B0 degree sign
+  // 00BA masculine ordinal indicator (spanish)
+  // 0044 latin capital letter D
+  // 0064 latin small letter d
+  // 02DA ring above
+  // 030A combining ring above
+  // 0325 ring below
+  // 2070 superscript zero
+  // 2218 ring operator
+  // 309a han-daku-on, combining japanese
+  // 309c han-daku-on, japanese
+
+  // Minutes
+  // 05F3 hebrew punctuation geresh
+  // 02B9 modifier letter prime
+  // 02BC modifier letter apostrophe
+  // 02C8 modifier letter vertical line
+  // 0301 combining acute accent
+  // 05F3 hebrew punctuation geresh
+  // 2018 left single quotation mark
+  // 2019 right single quotation mark
+  // 201A single low-9 quotation mark
+  // 201B single high-reversed-9 quotation mark
+  // 2032 prime
+  // 2035 reversed prime
+  // A78C latin small letter saltillo
+
+  // seconds - quotation mark
+  // 02BA modifier letter double prime
+  // 030B combining double acute accent
+  // 030E combining doulbe vertical line above
+  // 05F4 hebrew punctuation gershayim
+  // 201C left double quotation
+  // 201D right double quotation mark
+  // 201E double low-9 quotation mark
+  // 201F double high-reverseed-9 quotation mark
+  // 2033 double prime
+  // 2036 reversed double prime
+  // 3003 ditto mark
+
+  describe('Recognise all likely characters', function() {
+    var text, result, spaces = ['\u0020', '\u00a0', '\ufeff'],
+        degrees = ['\u00ba','D', 'd', '\u02da', '\u030a', '\u030a', '\u0325', '\u2070', '\u2218', '\u309a', '\u309c'],
+        minutes = ['\u05f3', '\u02b9', '\u02bc', '\u02c8', '\u0301', '\u05f3', '\u2018', '\u2019', '\u201a', '\u201b', '\u2032', '\u2035', '\ua78c'],
+        seconds = ['\u02ba', '\u030b', '\u030e', '\u05f4', '\u201c', '\u201d', '\u201e', '\u201f', '\u2033', '\u2036', '\u3003'];
+
+    it('should accept all sensible symbols for spacing, degrees, minutes and seconds', function() {
+      for (var xs = 0, xn = spaces.length; xs < xn; ++xs) {
+        // console.log('>> spaces', xs);
+        for (var ds = 0, dn = degrees.length; ds < dn; ++ds) {
+          // console.log('>> degrees', ds);
+          for (var ms = 0, mn = minutes.length; ms < mn; ++ms) {
+            // console.log('>> minutes', ms);
+            for (var ss = 0, sn = seconds.length; ss < sn; ++ss) {
+              // console.log('>> seconds', ss);
+              text = '65' + degrees[ds] + spaces[xs] + '34' + minutes[ms] + spaces[xs] + '24' + seconds[ss] + spaces[xs] + 'N' + spaces[xs] +
+                '24' + degrees[ds] + spaces[xs] + '18' + minutes[ms] + spaces[xs] + '45' + seconds[ss] + spaces[xs] + 'W';
+              // console.log('Testing:', text);
+              result = utilsService.parseGeoLocation(text);
+              // console.log('Result:', result);
+              expect(result).toEqual({lat: {deg: 65, min: 34, sec: 24, c: 'N'}, lng: {deg: 24, min: 18, sec: 45, c: 'W'}});
+            }
+          }
+        }
+      }
+    });
+
   });
 
   describe('convertDmsCoordsToDegreeCoords', function() {

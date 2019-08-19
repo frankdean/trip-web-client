@@ -248,7 +248,7 @@ describe('Itinerary map', function() {
               .click()
               .mouseMove(elemMap, {x:600, y:200})
               .click()
-              .mouseMove(elemMap, {x:700, y:250})
+              .mouseMove(elemMap, {x:550, y:190})
               .click()
               .perform();
             element(by.linkText(finishControlText)).click();
