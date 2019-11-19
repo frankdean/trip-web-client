@@ -21,12 +21,13 @@ angular.module('myApp.user.controller', [])
 
   .controller(
     'UserCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      'UserService',
      'PasswordResetService',
-     function($scope, $log, $location, UserService, PasswordResetService) {
+     function($rootScope, $scope, $log, $location, UserService, PasswordResetService) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        $scope.search = {};

@@ -21,7 +21,7 @@ angular.module('myApp.itinerary.wpt.view.controller', [])
 
   .controller(
     'ItineraryWaypointViewCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      '$log',
@@ -29,9 +29,10 @@ angular.module('myApp.itinerary.wpt.view.controller', [])
      'WaypointSymbolService',
      'GeorefFormatService',
      'ItineraryWaypointService',
-     function ($scope, $routeParams, $location, $log, UserPreferencesService,
+     function ($rootScope, $scope, $routeParams, $location, $log, UserPreferencesService,
                WaypointSymbolService, GeorefFormatService,
                itineraryWaypointService) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.coordFormat = UserPreferencesService.getCoordFormat();
        $scope.positionFormat = UserPreferencesService.getPositionFormat();

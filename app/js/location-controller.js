@@ -20,7 +20,7 @@
 angular.module('myApp.location.controller', [])
   .controller(
     'LocationCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$log',
      '$location',
@@ -32,7 +32,7 @@ angular.module('myApp.location.controller', [])
      'GeorefFormatService',
      'UserPreferencesService',
      'CopyAndPasteService',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $log,
               $location,
@@ -44,6 +44,7 @@ angular.module('myApp.location.controller', [])
               GeorefFormatService,
               UserPreferencesService,
               CopyAndPasteService) {
+       $rootScope.pageTitle = null;
 
        var markerLayer,
            drawnItems = new L.FeatureGroup();

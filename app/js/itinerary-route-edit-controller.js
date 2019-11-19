@@ -22,7 +22,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
 
   .controller(
     'ItineraryRouteEditCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      '$log',
@@ -31,7 +31,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
      'MapConfigService',
      'leafletBoundsHelpers',
      'ItineraryRouteService',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $location,
               $log,
@@ -40,6 +40,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
               MapConfigService,
               leafletBoundsHelpers,
               ItineraryRouteService) {
+       $rootScope.pageTitle = null;
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.routeId = $routeParams.routeId !== undefined ? decodeURIComponent($routeParams.routeId) : undefined;
        $scope.shared = $routeParams.shared !== undefined ? decodeURIComponent($routeParams.shared) === "true" : false;

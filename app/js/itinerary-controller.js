@@ -21,7 +21,8 @@ angular.module('myApp.itinerary.controller', [])
 
   .controller(
     'ItineraryCtrl',
-    ['$scope',
+    ['$rootScope',
+     '$scope',
      '$routeParams',
      '$log',
      '$location',
@@ -38,7 +39,8 @@ angular.module('myApp.itinerary.controller', [])
      'CopyAndPasteService',
      'RecentPoints',
      'UtilsService',
-     function ($scope,
+     function ($rootScope,
+               $scope,
                $routeParams,
                $log,
                $location,
@@ -83,6 +85,7 @@ angular.module('myApp.itinerary.controller', [])
              $scope.data.start = itinerary.start;
              $scope.data.finish = itinerary.finish;
              $scope.data.title = itinerary.title;
+             $rootScope.pageTitle = ' - ' + itinerary.title;
              $scope.data.description = itinerary.description;
              $scope.master = angular.copy($scope.data);
            }).catch(function(response) {

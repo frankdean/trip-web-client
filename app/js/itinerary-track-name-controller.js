@@ -21,18 +21,19 @@ angular.module('myApp.itinerary.track.name.controller', [])
 
   .controller(
     'ItineraryTrackNameCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      'ItineraryTrackNameService',
      'PathColorService',
      '$log',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $location,
               ItineraryTrackNameService,
               PathColorService,
               $log) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;

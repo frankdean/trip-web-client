@@ -21,11 +21,12 @@ angular.module('myApp.admin.system.status.controller', [])
 
   .controller(
     'SystemStatusCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      'SystemStatusService',
      '$location',
-     function($scope, $log, SystemStatusService, $location) {
+     function($rootScope, $scope, $log, SystemStatusService, $location) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        SystemStatusService.get({})
          .$promise.then(function(status) {

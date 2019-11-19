@@ -21,12 +21,14 @@ angular.module('myApp.itineries.controller', [])
 
   .controller(
     'ItinerariesCtrl',
-    ['$scope',
+    ['$rootScope',
+     '$scope',
      '$location',
      '$log',
      'ItineraryService',
      'StateService',
-     function ($scope, $location, $log, ItineraryService, StateService) {
+     function ($rootScope, $scope, $location, $log, ItineraryService, StateService) {
+       $rootScope.pageTitle = null;
        $scope.page = StateService.getItinerariesPage();
        $scope.pageSize = 10;
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;

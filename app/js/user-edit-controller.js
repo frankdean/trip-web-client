@@ -21,12 +21,13 @@ angular.module('myApp.user.edit.controller', [])
 
   .controller(
     'UserEditCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$location',
      '$routeParams',
      'UserService',
      '$log',
-     function($scope, $location, $routeParams, UserService, $log) {
+     function($rootScope, $scope, $location, $routeParams, UserService, $log) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        var id = $routeParams !== undefined ? decodeURIComponent($routeParams.id) : undefined;

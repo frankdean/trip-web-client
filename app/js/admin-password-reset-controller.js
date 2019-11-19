@@ -21,13 +21,15 @@ angular.module('myApp.admin.password.reset.controller', [])
 
   .controller(
     'AdminPasswordResetCtrl',
-    ['$scope',
+    ['$rootScope',
+     '$scope',
      '$location',
      '$routeParams',
      'UserService',
      'PasswordService',
      '$log',
-     function($scope, $location, $routeParams, UserService, PasswordService, $log) {
+     function($rootScope, $scope, $location, $routeParams, UserService, PasswordService, $log) {
+       $rootScope = null;
        $scope.data = {};
        $scope.master = {};
        var id = $routeParams !== undefined ? decodeURIComponent($routeParams.id) : undefined;

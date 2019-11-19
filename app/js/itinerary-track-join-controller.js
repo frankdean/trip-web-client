@@ -20,7 +20,7 @@
 angular.module('myApp.itinerary.track.join.controller', [])
   .controller(
     'ItineraryTrackJoinCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$log',
      '$location',
@@ -29,7 +29,7 @@ angular.module('myApp.itinerary.track.join.controller', [])
      'PathColorService',
      'MapConfigService',
      'leafletBoundsHelpers',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $log,
               $location,
@@ -38,6 +38,7 @@ angular.module('myApp.itinerary.track.join.controller', [])
               PathColorService,
               MapConfigService,
               leafletBoundsHelpers) {
+       $rootScope.pageTitle = null;
 
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        var i, t, choices = ItinerarySelectionService.getChoices();

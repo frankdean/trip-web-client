@@ -21,7 +21,7 @@ angular.module('myApp.track.controller', [])
 
   .controller(
     'TracksCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      'SharedLocationNickname',
@@ -31,8 +31,9 @@ angular.module('myApp.track.controller', [])
      'SaveAs',
      'StateService',
      'CopyAndPasteService',
-     function($scope, $log, $location, SharedLocationNickname,
+     function($rootScope, $scope, $log, $location, SharedLocationNickname,
               RecentPoints, InitGpxDownload, Storage, SaveAs, StateService, CopyAndPasteService) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        $scope.messages = {};

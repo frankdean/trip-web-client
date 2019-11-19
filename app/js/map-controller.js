@@ -21,7 +21,7 @@ angular.module('myApp.map.controller', [])
 
   .controller(
     'MapCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$sanitize',
      '$routeParams',
      '$location',
@@ -36,7 +36,8 @@ angular.module('myApp.map.controller', [])
      '$window',
      '$log',
      'mySocket',
-     function($scope, $sanitize, $routeParams, $location, RecentPoints, Storage, ConfigService, MapConfigService, UtilsService, leafletData, leafletBoundsHelpers, $timeout, $window, $log, mySocket) {
+     function($rootScope, $scope, $sanitize, $routeParams, $location, RecentPoints, Storage, ConfigService, MapConfigService, UtilsService, leafletData, leafletBoundsHelpers, $timeout, $window, $log, mySocket) {
+       $rootScope.pageTitle = null;
        var dateFrom, dateTo, now;
 
        angular.extend($scope, {

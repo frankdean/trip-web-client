@@ -21,11 +21,12 @@ angular.module('myApp.shares.controller', [])
 
   .controller(
     'SharesCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      'SharesService',
-     function($scope, $log, $location, SharesService) {
+     function($rootScope, $scope, $log, $location, SharesService) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        $scope.selectAllCheckbox = false;

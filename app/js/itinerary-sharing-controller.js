@@ -21,12 +21,13 @@ angular.module('myApp.itinerary.sharing.controller', [])
 
   .controller(
     'ItinerarySharingCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$log',
      '$location',
      'ItinerarySharingService',
-     function($scope, $routeParams, $log, $location, ItinerarySharingService) {
+     function($rootScope, $scope, $routeParams, $log, $location, ItinerarySharingService) {
+       $rootScope.pageTitle = null;
        $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
        $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
        $scope.data = {};

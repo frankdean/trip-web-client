@@ -21,7 +21,7 @@ angular.module('myApp.itinerary.search.controller', [])
 
   .controller(
     'ItinerarySearchCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      'UserPreferencesService', 
@@ -29,7 +29,7 @@ angular.module('myApp.itinerary.search.controller', [])
      'CopyAndPasteService',
      'ItineraryWaypointService',
      'StateService',
-     function($scope,
+     function($rootScope, $scope,
               $log,
               $location,
               UserPreferencesService,
@@ -38,6 +38,7 @@ angular.module('myApp.itinerary.search.controller', [])
               ItineraryWaypointService,
               StateService
              ) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.coordFormat = UserPreferencesService.getCoordFormat();
        $scope.positionFormat = UserPreferencesService.getPositionFormat();

@@ -21,14 +21,15 @@ angular.module('myApp.itinerary.route.name.controller', [])
 
   .controller(
     'ItineraryRouteNameCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      'ItineraryRouteNameService',
      'ItineraryRouteService',
      'PathColorService',
      '$log',
-     function($scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, PathColorService, $log) {
+     function($rootScope, $scope, $routeParams, $location, ItineraryRouteNameService, ItineraryRouteService, PathColorService, $log) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.data.reverse = true;
        $scope.master = {};

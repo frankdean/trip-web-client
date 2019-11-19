@@ -21,8 +21,9 @@ angular.module('myApp.trackinfo.controller', [])
 
   .controller(
     'TrackerInfoCtrl',
-    ['$scope', '$log', '$location', 'ConfigService', 'TrackingUuid',
-     function($scope, $log, $location, ConfigService, TrackingUuid) {
+    ['$rootScope', '$scope', '$log', '$location', 'ConfigService', 'TrackingUuid',
+     function($rootScope, $scope, $log, $location, ConfigService, TrackingUuid) {
+       $rootScope.pageTitle = null;
        $scope.now = Date.now();
        $scope.uuid = TrackingUuid.query(
          {},

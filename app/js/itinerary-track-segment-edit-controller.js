@@ -21,7 +21,7 @@ angular.module('myApp.itinerary.track.segment.edit.controller', [])
 
   .controller(
     'ItineraryTrackSegmentEditCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      '$log',
@@ -31,7 +31,7 @@ angular.module('myApp.itinerary.track.segment.edit.controller', [])
      'leafletBoundsHelpers',
      'ItineraryTrackService',
      'ItineraryTrackSegmentService',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $location,
               $log,
@@ -41,6 +41,7 @@ angular.module('myApp.itinerary.track.segment.edit.controller', [])
               leafletBoundsHelpers,
               ItineraryTrackService,
               ItineraryTrackSegmentService) {
+       $rootScope.pageTitle = null;
 
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.trackId = $routeParams.trackId !== undefined ? decodeURIComponent($routeParams.trackId) : undefined;

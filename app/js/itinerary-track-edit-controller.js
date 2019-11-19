@@ -21,7 +21,7 @@ angular.module('myApp.itinerary.track.edit.controller', [])
 
   .controller(
     'ItineraryTrackEditCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      '$log',
@@ -32,7 +32,7 @@ angular.module('myApp.itinerary.track.edit.controller', [])
      'ItineraryTrackService',
      'ItineraryTrackSegmentService',
      'StateService',
-     function($scope,
+     function($rootScope, $scope,
               $routeParams,
               $location,
               $log,
@@ -43,6 +43,7 @@ angular.module('myApp.itinerary.track.edit.controller', [])
               ItineraryTrackService,
               ItineraryTrackSegmentService,
               StateService) {
+       $rootScope.pageTitle = null;
        $scope.data={};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.trackId = $routeParams.trackId !== undefined ? decodeURIComponent($routeParams.trackId) : undefined;

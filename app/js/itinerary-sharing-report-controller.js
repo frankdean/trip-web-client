@@ -21,16 +21,17 @@ angular.module('myApp.itinerary.sharing.report.controller', [])
 
   .controller(
     'ItinerarySharingReportCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      'StateService',
      'ItinerarySharingReportService',
-     function($scope,
+     function($rootScope, $scope,
               $log,
               $location,
               StateService,
               ItinerarySharingReportService) {
+       $rootScope.pageTitle = null;
        $scope.page = StateService.getItinerarySharingReportPage();
        $scope.pageSize = 10;
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;

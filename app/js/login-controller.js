@@ -30,6 +30,7 @@ angular.module('myApp.login.controller', ['ngCookies'])
      'jwtHelper',
      'StateService',
      function($scope, $rootScope, $log, $location, Storage, Login, jwtHelper, StateService) {
+       $rootScope.pageTitle = null;
        var token;
        $scope.data = {};
        $scope.ajaxRequestError = {error: false};

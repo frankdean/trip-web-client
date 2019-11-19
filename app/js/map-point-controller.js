@@ -21,7 +21,7 @@ angular.module('myApp.map.point.controller', [])
 
   .controller(
     'MapPointCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$location',
      'ConfigService',
@@ -29,7 +29,8 @@ angular.module('myApp.map.point.controller', [])
      'UtilsService',
      '$window',
      '$log',
-     function($scope, $routeParams, $location, ConfigService, MapConfigService, UtilsService, $window, $log) {
+     function($rootScope, $scope, $routeParams, $location, ConfigService, MapConfigService, UtilsService, $window, $log) {
+       $rootScope.pageTitle = null;
        var lat, lng;
        angular.extend($scope, {
          height: $window.innerHeight - 120,

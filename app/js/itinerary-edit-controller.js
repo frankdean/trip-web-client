@@ -21,20 +21,21 @@ angular.module('myApp.itinerary.edit.controller', [])
 
   .controller(
     'ItineraryEditCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$routeParams',
      '$log',
      '$location',
      '$window',
      'ItineraryService',
      'UtilsService',
-     function ($scope,
+     function ($rootScope, $scope,
                $routeParams,
                $log,
                $location,
                $window,
                ItineraryService,
                UtilsService) {
+       $rootScope.pageTitle = null;
        $scope.data = {};
        $scope.master = {};
        $scope.markdownHelp = function() {

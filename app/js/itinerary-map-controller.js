@@ -21,7 +21,7 @@ angular.module('myApp.itinerary.map.controller', [])
 
   .controller(
     'ItineraryMapCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$sanitize',
      '$routeParams',
      '$location',
@@ -40,7 +40,7 @@ angular.module('myApp.itinerary.map.controller', [])
      'UserService',
      'mySocket',
      'SharedLocationNickname',
-     function($scope,
+     function($rootScope, $scope,
               $sanitize,
               $routeParams,
               $location,
@@ -59,6 +59,7 @@ angular.module('myApp.itinerary.map.controller', [])
               UserService,
               mySocket,
               SharedLocationNickname) {
+       $rootScope.pageTitle = null;
        var choices = ItinerarySelectionService.getChoices(),
            drawnItems = new L.FeatureGroup(),
            autoDiscover = true,

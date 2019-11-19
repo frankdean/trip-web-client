@@ -21,19 +21,20 @@ angular.module('myApp.itinerary.search.result.controller', [])
 
   .controller(
     'ItinerarySearchResultCtrl',
-    ['$scope',
+    ['$rootScope', '$scope',
      '$log',
      '$location',
      '$routeParams',
      'StateService',
      'ItinerarySearchService',
-     function($scope,
+     function($rootScope, $scope,
               $log,
               $location,
               $routeParams,
               StateService,
               ItinerarySearchService
              ) {
+       $rootScope.pageTitle = null;
        var searchState, lat, lng, distance;
        $log.debug('Itinerary search results', $routeParams);
        lat = $routeParams.lat === undefined ? undefined : decodeURIComponent($routeParams.lat);
