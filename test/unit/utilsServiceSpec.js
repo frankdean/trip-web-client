@@ -424,22 +424,22 @@ describe('UtilsService', function() {
 
     it('should parse a 10 digit Open Location Code (aka plus+code)', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
-      expect(utilsService.parseGeoLocation('8FW4V75V+8Q')).toEqual({lat: {deg: 48.8583125}, lng: {deg: 2.294437500000001}});
+      expect(utilsService.parseGeoLocation('8FW4V75V+8Q')).toEqual({lat: {deg: 48.8583125}, lng: {deg: 2.2944375}});
     });
 
     it('should parse an 11 digit Open Location Code (aka plus+code)', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
-      expect(utilsService.parseGeoLocation('8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+      expect(utilsService.parseGeoLocation('8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.294484375}});
     });
 
     it('should parse an Open Location Code (aka plus+code) URL', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
-      expect(utilsService.parseGeoLocation('https://plus.codes/8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+      expect(utilsService.parseGeoLocation('https://plus.codes/8FW4V75V+8QX')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.294484375}});
     });
 
     it('should parse an Open Location Code (aka plus+code) URL allowing lower case', function() {
       // https://en.wikipedia.org/wiki/Open_Location_Code
-      expect(utilsService.parseGeoLocation('https://plus.codes/8fw4v75v+8qx')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.2944843750000024}});
+      expect(utilsService.parseGeoLocation('https://plus.codes/8fw4v75v+8qx')).toEqual({lat: {deg: 48.8583625}, lng: {deg: 2.294484375}});
     });
 
     it('should cope with bad values for an Open Location Code (aka plus+code)', function() {
