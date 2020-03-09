@@ -183,7 +183,7 @@ angular.module('myApp.itinerary.controller', [])
          $location.search({id: encodeURIComponent($scope.data.id)});
        };
        $scope.showMap = function(form) {
-         var waypoints = [], routes = [], tracks = [];
+         var searchParams, waypoints = [], routes = [], tracks = [];
          $scope.waypoints.forEach(function(v) {
            if (v.selected) {
              waypoints.push(v.id);
@@ -205,15 +205,21 @@ angular.module('myApp.itinerary.controller', [])
            routes: routes,
            tracks: tracks
          });
+         searchParams = {
+           id: encodeURIComponent($scope.data.id)
+         };
+         if ($scope.routing === 'itinerary-search-results') {
+           searchParams.routing = 'itinerary-search-results';
+         }
          $location.path('/itinerary-map');
-         $location.search({id: encodeURIComponent($scope.data.id)});
-       };
+         $location.search(searchParams);
+      };
        $scope.copyItemsForPaste = function(form) {
+         var options = [], selectedCount = 0,
+             waypoints = [], routes = [], tracks = [];
          $scope.ajaxRequestError = {error: false};
          $scope.messages = {};
          $scope.formError = {editOnlyOne: false};
-         var selectedCount = 0,
-             waypoints = [], routes = [], tracks = [];
          $scope.waypoints.forEach(function(v) {
            if (v.selected) {
              waypoints.push(v.id);
@@ -233,12 +239,13 @@ angular.module('myApp.itinerary.controller', [])
            }
          });
          if (selectedCount > 0) {
-           CopyAndPasteService.copy('itinerary-features', {
-             itineraryId: $scope.itineraryId,
-             waypoints: waypoints,
-             routes: routes,
-             tracks: tracks
-           });
+             options.push({
+               itineraryId: $scope.itineraryId,
+               routes: routes,
+               waypoints: waypoints,
+               tracks: tracks
+             });
+           CopyAndPasteService.copy('itinerary-features', options);
            $scope.messages.copied = true;
            $scope.canPaste = true;
          } else {
@@ -250,127 +257,129 @@ angular.module('myApp.itinerary.controller', [])
          $scope.ajaxRequestError = {error: false};
          $scope.messages = {};
          var options = CopyAndPasteService.paste();
-         if (CopyAndPasteService.type == 'itinerary-features') {
-           if (options.tracks && options.tracks.length > 0) {
-             ItineraryTrackService.getTracks(
-               {id: options.itineraryId,
-                tracks: options.tracks})
-               .$promise.then(function(tracks) {
-                 tracks.forEach(function(t) {
-                   ItineraryTrackService.save(
-                     {id: $scope.itineraryId,
-                      track: t
-                     })
-                     .$promise.then(function() {
-                       //
-                     }).catch(function(response) {
-                       $log.warn('Error creating new track:', response.status, response.statusText);
-                       $scope.ajaxRequestError = {
-                         error: true,
-                         status: response.status
-                       };
-                     });
-                 }); // tracks forEach
-               }).catch(function(response) {
-                 $scope.ajaxRequestError = {
-                   error: true,
-                   status: response.status
-                 };
-                 if (response.status === 401) {
-                   $location.path('/login');
-                 } else if (response.status === 400) {
-                   $log.warn('Invalid request for pasting itinerary tracks: ', response.statusText);
-                 } else {
-                   $log.warn('Error fetching itinerary tracks for paste: ', response.status, response.statusText);
-                 }
-               });
-             $timeout(function() {
-               $scope.updateTrackNames();
-             }, 1000);
-           }
-           if (options.routes && options.routes.length > 0) {
-             ItineraryRouteService.getRoutes(
-               {id: options.itineraryId,
-                routes: options.routes})
-               .$promise.then(function(routes) {
-                 routes.forEach(function(r) {
-                   ItineraryRouteService.save({},
-                                              {id: $scope.itineraryId,
-                                               name: r.name,
-                                               color: r.color,
-                                               points: r.points})
-                     .$promise.then(function(result) {
-                       //
-                     }).catch(function(response) {
-                       $log.error('Saving pasted route failed:', response);
-                       $scope.ajaxRequestError = {
-                         error: true,
-                         status: response.status
-                       };
-                     });
-
+         if (CopyAndPasteService.type == 'itinerary-features' && Array.isArray(options) && options.length > 0) {
+           options.forEach(function(itineraryOption) {
+             if (itineraryOption.tracks && itineraryOption.tracks.length > 0) {
+               ItineraryTrackService.getTracks(
+                 {id: itineraryOption.itineraryId,
+                  tracks: itineraryOption.tracks})
+                 .$promise.then(function(tracks) {
+                   tracks.forEach(function(t) {
+                     ItineraryTrackService.save(
+                       {id: $scope.itineraryId,
+                        track: t
+                       })
+                       .$promise.then(function() {
+                         //
+                       }).catch(function(response) {
+                         $log.warn('Error creating new track:', response.status, response.statusText);
+                         $scope.ajaxRequestError = {
+                           error: true,
+                           status: response.status
+                         };
+                       });
+                   }); // tracks forEach
+                 }).catch(function(response) {
+                   $scope.ajaxRequestError = {
+                     error: true,
+                     status: response.status
+                   };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   } else if (response.status === 400) {
+                     $log.warn('Invalid request for pasting itinerary tracks: ', response.statusText);
+                   } else {
+                     $log.warn('Error fetching itinerary tracks for paste: ', response.status, response.statusText);
+                   }
                  });
-               }).catch(function(response) {
-                 $scope.ajaxRequestError = {
-                   error: true,
-                   status: response.status
-                 };
-                 if (response.status === 401) {
-                   $location.path('/login');
-                 } else if (response.status === 400) {
-                   $log.warn('Invalid request for pasting itinerary routes: ', response.statusText);
-                 } else {
-                   $log.warn('Error fetching itinerary routes for paste: ', response.status, response.statusText);
-                 }
-               });
-             $timeout(function() {
-               $scope.updateRouteNames();
-             }, 1000);
-           }
-           if (options.waypoints && options.waypoints.length > 0) {
-             ItineraryWaypointService.getSpecifiedWaypoints(
-               {id: options.itineraryId,
-                waypoints: options.waypoints})
-               .$promise.then(function(waypoints) {
-                 waypoints.forEach(function(w) {
-                   ItineraryWaypointService.save({},
-                                                 {id: $scope.itineraryId,
-                                                  wptId: undefined,
-                                                  name: w.name,
-                                                  lat: w.lat,
-                                                  lng: w.lng,
-                                                  altitude: w.altitude,
-                                                  time: w.time,
-                                                  symbol: w.symbol,
-                                                  comment: w.comment,
-                                                  description: w.description,
-                                                  samples: w.samples,
-                                                  type: w.type,
-                                                  color: w.color
-                                                 }).$promise.then(function(saveWaypointResponse) {
-                                                   //
-                                                 }).catch(function(response) {
-                                                   $log.error('Creating new waypoint from paste failed');
-                                                 });
-                 }); // forEach
-                 $timeout(function() {
-                   $scope.updateWaypoints();
-                 }, 1000);
-               }).catch(function(response) {
-                 $log.error('Fetch waypoints failed');
-                 $scope.ajaxRequestError = {
-                   error: true,
-                   status: response.status
-                 };
-                 if (response.status === 401) {
-                   $location.path('/login');
-                 } else if (response.status === 400) {
-                   $log.warn('Invalid request for pasting itinerary waypoints: ', response.statusText);
-                 } else {
-                   $log.warn('Error fetching itinerary waypoints for paste: ', response.status, response.statusText);
-                 }
-               });
-           }
+               $timeout(function() {
+                 $scope.updateTrackNames();
+               }, 1000);
+             }
+             if (itineraryOption.routes && itineraryOption.routes.length > 0) {
+               ItineraryRouteService.getRoutes(
+                 {id: itineraryOption.itineraryId,
+                  routes: itineraryOption.routes})
+                 .$promise.then(function(routes) {
+                   routes.forEach(function(r) {
+                     ItineraryRouteService.save({},
+                                                {id: $scope.itineraryId,
+                                                 name: r.name,
+                                                 color: r.color,
+                                                 points: r.points})
+                       .$promise.then(function(result) {
+                         //
+                       }).catch(function(response) {
+                         $log.error('Saving pasted route failed:', response);
+                         $scope.ajaxRequestError = {
+                           error: true,
+                           status: response.status
+                         };
+                       });
+
+                   });
+                 }).catch(function(response) {
+                   $scope.ajaxRequestError = {
+                     error: true,
+                     status: response.status
+                   };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   } else if (response.status === 400) {
+                     $log.warn('Invalid request for pasting itinerary routes: ', response.statusText);
+                   } else {
+                     $log.warn('Error fetching itinerary routes for paste: ', response.status, response.statusText);
+                   }
+                 });
+               $timeout(function() {
+                 $scope.updateRouteNames();
+               }, 1000);
+             }
+             if (itineraryOption.waypoints && itineraryOption.waypoints.length > 0) {
+               ItineraryWaypointService.getSpecifiedWaypoints(
+                 {id: itineraryOption.itineraryId,
+                  waypoints: itineraryOption.waypoints})
+                 .$promise.then(function(waypoints) {
+                   waypoints.forEach(function(w) {
+                     ItineraryWaypointService.save({},
+                                                   {id: $scope.itineraryId,
+                                                    wptId: undefined,
+                                                    name: w.name,
+                                                    lat: w.lat,
+                                                    lng: w.lng,
+                                                    altitude: w.altitude,
+                                                    time: w.time,
+                                                    symbol: w.symbol,
+                                                    comment: w.comment,
+                                                    description: w.description,
+                                                    samples: w.samples,
+                                                    type: w.type,
+                                                    color: w.color
+                                                   }).$promise.then(function(saveWaypointResponse) {
+                                                     //
+                                                   }).catch(function(response) {
+                                                     $log.error('Creating new waypoint from paste failed');
+                                                   });
+                   }); // forEach
+                   $timeout(function() {
+                     $scope.updateWaypoints();
+                   }, 1000);
+                 }).catch(function(response) {
+                   $log.error('Fetch waypoints failed');
+                   $scope.ajaxRequestError = {
+                     error: true,
+                     status: response.status
+                   };
+                   if (response.status === 401) {
+                     $location.path('/login');
+                   } else if (response.status === 400) {
+                     $log.warn('Invalid request for pasting itinerary waypoints: ', response.statusText);
+                   } else {
+                     $log.warn('Error fetching itinerary waypoints for paste: ', response.status, response.statusText);
+                   }
+                 });
+             }
+           }); // options.forEach
          } else if (CopyAndPasteService.type == 'location-history') {
            options = CopyAndPasteService.paste();
            var newTrack = {
@@ -464,7 +473,7 @@ angular.module('myApp.itinerary.controller', [])
                                          });
 
          } else {
-           $log.debug('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
+           $log.error('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
          }
        };
        $scope.refreshData = function() {

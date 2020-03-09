@@ -60,6 +60,10 @@ angular.module('myApp.itinerary.map.controller', [])
               mySocket,
               SharedLocationNickname) {
        $rootScope.pageTitle = null;
+       // Hack to disable option to clear all layers from the map
+       L.EditToolbar.Delete.include({
+         removeAllLayers: false
+       });
        var choices = ItinerarySelectionService.getChoices(),
            drawnItems = new L.FeatureGroup(),
            autoDiscover = true,
@@ -84,6 +88,7 @@ angular.module('myApp.itinerary.map.controller', [])
              'silver',
              'white'
            ];
+       $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
        start.setHours(0);
        start.setMinutes(0);
        start.setSeconds(0);
@@ -235,9 +240,9 @@ angular.module('myApp.itinerary.map.controller', [])
                  var lmarker = new L.Marker(latlng);
                  lmarker.tl_id = w.id;
                  mText = '';
-                 mText = w.name && w.name.length > 0 ? '<b>' + _.escape(w.name) + '</b>' : '';
+                 mText = w.name && w.name.length > 0 ? '<b>' + w.name + '</b>' : '';
                  mText += w.name && w.name.length > 0 && w.comment && w.comment.length > 0 ? '</br>' : '';
-                 mText += w.comment && w.comment.length > 0 ? _.escape(w.comment) : '';
+                 mText += w.comment && w.comment.length > 0 ? w.comment : '';
                  lmarker.bindPopup(mText && mText.length > 0 ? $sanitize(mText) : '<b>ID: ' + w.id + '</b>');
                  drawnItems.addLayer(lmarker);
                });
@@ -307,6 +312,7 @@ angular.module('myApp.itinerary.map.controller', [])
                  },
                  polygon: false,
                  rectangle: false,
+                 circlemarker: false,
                  circle: false
                },
                edit: {
@@ -324,6 +330,7 @@ angular.module('myApp.itinerary.map.controller', [])
                  polyline: false,
                  polygon: false,
                  rectangle: false,
+                 circlemarker: true,
                  circle: false,
                  marker: false
                },
@@ -588,8 +595,15 @@ angular.module('myApp.itinerary.map.controller', [])
            });
        };
        $scope.goBack = function() {
+         var searchParams;
+         searchParams = {
+             id: encodeURIComponent($scope.itineraryId)
+         };
+         if ($scope.routing === 'itinerary-search-results') {
+           searchParams.routing = 'itinerary-search-results';
+         }
          $location.path('/itinerary');
-         $location.search({id: encodeURIComponent($scope.itineraryId)});
+         $location.search(searchParams);
        };
 
        $scope.initLiveMapSettings = function() {
@@ -753,10 +767,10 @@ angular.module('myApp.itinerary.map.controller', [])
                      lng: latlng.lng,
                      icon: ConfigService.getDefaultMarkerIcon(),
                      focus: /*!$scope.state.updateBounds && */ $scope.state.autocenter && focusMarker ? true : false,
-                     message: $sanitize('<b>' + _.escape(nickname) + '</br>'  + latlng.time)
+                     message: $sanitize('<b>' + nickname + '</br>'  + latlng.time)
                    };
                    if (latlng.note && latlng.note !== '') {
-                     liveItem.marker.message += '</br>' + _.escape(latlng.note);
+                     liveItem.marker.message += $sanitize('</br>' + latlng.note);
                    }
                    $scope.map.markers.push(liveItem.marker);
                  }

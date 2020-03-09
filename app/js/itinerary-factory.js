@@ -64,7 +64,10 @@ angular.module('myApp.itinerary.factory.js', [] )
     return $resource(ConfigService.restUrlPrefix + '/itineraries', {}, {
       query: {
          isArray: false
-      }
+      },
+      routes: {method: 'GET', url: ConfigService.restUrlPrefix + '/itinerary/:id/routes', isArray: true},
+      waypoints: {method: 'GET', url: ConfigService.restUrlPrefix + '/itinerary/:id/waypoints', isArray: true},
+      tracks: {method: 'GET', url: ConfigService.restUrlPrefix + '/itinerary/:id/tracks', isArray: true}
     });
   }])
 

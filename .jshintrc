@@ -1,6 +1,7 @@
 {
     "globalstrict": true,
     "globals": {
+        "Map": false,
         "OpenLocationCode": false,
         "proj4": false,
         "FormData": false,

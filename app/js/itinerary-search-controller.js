@@ -68,10 +68,10 @@ angular.module('myApp.itinerary.search.controller', [])
        $scope.pasteWaypoint = function() {
          var options = CopyAndPasteService.paste();
          if (CopyAndPasteService.type == 'itinerary-features') {
-           if (options.waypoints && options.waypoints.length > 0) {
+           if (Array.isArray(options) && options.length > 0 && options[0].waypoints && options[0].waypoints.length > 0) {
              ItineraryWaypointService.getSpecifiedWaypoints(
-               {id: options.itineraryId,
-                waypoints: options.waypoints})
+               {id: options[0].itineraryId,
+                waypoints: options[0].waypoints})
                .$promise.then(function(waypoints) {
                  if (waypoints.length > 0) {
                    $scope.data.position = waypoints[0].lat.toFixed(6) + ',' + waypoints[0].lng.toFixed(6);
@@ -95,7 +95,7 @@ angular.module('myApp.itinerary.search.controller', [])
            options = CopyAndPasteService.paste();
            $scope.data.position = options.latitude.toFixed(6) + ',' + options.longitude.toFixed(6);
          } else {
-           $log.debug('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
+           $log.error('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
          }
        };
      }]);

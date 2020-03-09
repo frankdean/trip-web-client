@@ -164,11 +164,20 @@ input.days, input.minutes, input.hours {
 	font-weight: bold;
 }
 .box {
-    /* background: #f2f2f2; */
     display: flex;
 }
-.column {
+.odd .column {
+    background-color: #f9f9f9;
+    border-style: solid;
+    border-color: #f9f9f9;
+    border-width: 2px 5px 2px 5px;
+    min-height: 30px;
+}
+.even .column {
     /* border: 1px solid #e6e6e6; */
+    border-style: solid;
+    border-color: white;
+    border-width: 2px 5px 2px 5px;
     min-height: 30px;
 }
 .column-one {
@@ -179,6 +188,53 @@ input.days, input.minutes, input.hours {
 }
 .column-three {
     flex: 1 4 200px;
+}
+.column-select-all {
+    padding-left: 5px;
+    background-color: #f9f9f9;
+}
+.column-name {
+    /* flex-grow flex-shrink flex-basis */
+    flex: 4 0 200px;
+}
+.column-color {
+    flex: 2 0 90px;
+}
+.column-distance {
+    flex: 2 0 70px;
+    text-align: right;
+}
+.column-duration {
+    flex: 3 0 110px;
+    text-align: right;
+}
+.column-ascent {
+    flex: 1 0 75px;
+    text-align: right;
+}
+.column-heights {
+    flex: 0 0 100px;
+    text-align: right;
+}
+.column-symbol {
+    flex: 1 0 200px;
+}
+.column-comment {
+    flex: 2 0 300px;
+}
+.column-category {
+    flex: 1 0 100px;
+}
+#itinerary-search-result .well {
+    padding: 3px;
+    margin: 10px;
+}
+.text-link{
+  color: #337ab7;
+}
+.text-link:focus, .text-link:hover {
+  color: #23527c;
+  text-decoration: underline;
 }
 /* Fix for href attributes inside accordion etc. http://angular-ui.github.io/bootstrap/versioned-docs/2.4.0/ */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

@@ -121,6 +121,7 @@ angular.module('myApp.location.controller', [])
                  polyline: false,
                  polygon: false,
                  rectangle: false,
+                 circlemarker: false,
                  circle: false,
                  marker: false
                },

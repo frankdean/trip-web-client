@@ -189,7 +189,7 @@ angular.module('myApp.map.controller', [])
                        lng: latlng.lng,
                        icon: ConfigService.getDefaultMarkerIcon(),
                        focus: true,
-                       message: $sanitize(latlng.time + (latlng.note && latlng.note !== '' ? '</br>' + _.escape(latlng.note) : ''))
+                       message: $sanitize(latlng.time + (latlng.note && latlng.note !== '' ? '</br>' + latlng.note : ''))
                      }
                    };
                  }

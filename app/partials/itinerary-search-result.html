@@ -12,18 +12,109 @@
   <div class="alert alert-info" ng-show="itineraries.payload.length === 0">
     <p>There are no itineraries to display</p>
   </div>
-  <div id="itineraries" ng-show="itineraries.payload.length > 0">
-    <div class="box column-heading">
-      <div class="column column-one">Start Date</div>
-      <div class="column column-two">Title</div>
-      <div class="column column-three">Owner</div>
-    </div>
-    <div class="box" ng-repeat="itinerary in itineraries.payload">
-      <div class="column column-one">{{itinerary.start | date :'EEE dd-MMM-yyyy'}}&nbsp;</div>
-      <div class="column column-two"><a ng-href="/trip/app/itinerary?id={{itinerary.id}}&routing=itinerary-search-results">{{itinerary.title}}</a>&nbsp;</div>
-      <div class="column column-three">{{itinerary.nickname}}&nbsp;</div>
-    </div>
-  </div>
+  <div id="itinerary-search-result" ng-show="itineraries.payload.length > 0">
+    <uib-accordion close-others="false">
+      <div ng-repeat="itinerary in itineraries.payload">
+        <div class="well">
+          <div id="itinerary-{{itinerary.id}}" class="text-primary h4" ng-click="showItinerary(itinerary)">{{itinerary.title}}</div>
+            <div uib-collapse="!selection[itinerary.id].expanded">
+              <div ng-show="itinerary.start || itinerary.nickname">
+                <div class="box column-heading">
+                  <div class="column column-one" ng-show="itinerary.start">Start Date</div>
+                  <div class="column column-three" ng-show="itinerary.nickname">Owner</div>
+                </div>
+                <div class="box">
+                  <div class="column column-one" ng-show="itinerary.start">{{itinerary.start | date :'EEE dd-MMM-yyyy'}}&nbsp;</div>
+                  <div class="column column-three" ng-show="itinerary.nickname">{{itinerary.nickname}}&nbsp;</div>
+                </div>
+              </div>
+	      <div class="form-group help-block"><a ng-href="/trip/app/itinerary?id={{itinerary.id}}&routing=itinerary-search-results">View itinerary</a></div>
+              <form novalidate>
+                <div id="select-all" ng-show="itinerary.routes.length + itinerary.waypoints.length + itinerary.tracks.length > 1">
+                  <input id="input-select-all-{{itinerary.id}}" ng-change="selectAllGeoItems(itinerary, selection[itinerary.id].allGeoItemsSelected)" type="checkbox" ng-model="selection[itinerary.id].allGeoItemsSelected" />
+                  <label for="input-select-all-{{itinerary.id}}" class="select-all-option" >Select all</label>
+                </div>
+                <uib-accordion close-others="false">
+                  <div uib-accordion-group class="panel-default" heading="Routes" is-open="selection[itinerary.id].routesExpanded" is-disabled="itinerary.routes.length === 0">
+                    <div class="wide-table">
+                      <div class="route-box table-striped">
+                        <div class="column column-name column-select-all" ng-show="itinerary.routes.length > 1">
+                          <input id="input-select-all-routes-{{itinerary.id}}" type="checkbox" ng-model="selection[itinerary.id].allRoutesSelected" ng-change="showRoutes(itinerary, itinerary.routes, selection[itinerary.id].allRoutesSelected)" />
+                          <label for="input-select-all-routes-{{itinerary.id}}" class="select-all-option" ng-click="showRoutes(itinerary, itinerary.routes, !selection[itinerary.id].allRoutesSelected)">Select all routes</label>
+                        </div>
+                        <div ng-repeat="route in itinerary.routes">
+                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                            <div class="column column-name">
+                              <input id="input-route-{{route.id}}" type="checkbox" ng-model="route.selected" ng-change="showRoute(itinerary, route)" />
+                              <label for="input-route-{{route.id}}"><span ng-show="!route.name">ID: {{route.id}}</span>{{route.name}}</label>
+                            </div>
+                            <div class="column column-color">{{route.color}}</div>
+                            <div class="column column-distance"><span ng-show="route.distance">{{route.distance | number:2}}&nbsp;km</span></div>
+                            <div class="column column-distance"><span ng-show="route.distance">{{route.distance / 1.609344 | number:2}}&nbsp;mi</span></div>
+                            <div class="column column-duration"><span ng-show="route.hours != null && route.minutes != null">{{route.hours | number:0}}&nbsp;hrs {{ route.minutes | number:0 }}&nbsp;mins</span></div>
+                            <div class="column column-ascent"><span ng-show="route.ascent != null && route.descent != null">↗︎{{route.ascent | number:0}}&nbsp;m ↘︎{{route.descent | number:0}}&nbsp;m</span></div>
+                            <div class="column column-ascent"><span ng-show="route.ascent != null && route.descent != null">↗︎{{route.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{route.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></div>
+                            <div class="column column-heights"><span ng-show="route.highest">{{route.highest | number:0}}⇅{{route.lowest | number:0}}&nbsp;m</span></div>
+                            <div class="column column-heights"><span ng-show="route.highest">{{route.highest / 0.0254 / 12 | number:0}}&#x21c5;{{route.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div uib-accordion-group class="panel-default" heading="Waypoints" is-open="selection[itinerary.id].waypointsExpanded" is-disabled="itinerary.waypoints.length === 0">
+                    <div class="wide-table">
+                      <div class="waypoint-box table-striped">
+                        <div class="column column-name column-select-all" ng-show="itinerary.waypoints.length > 1">
+                          <input id="input-select-all-waypoints-{{itinerary.id}}" type="checkbox" ng-model="selection[itinerary.id].allWaypointsSelected" ng-change="showWaypoints(itinerary, itinerary.waypoints, selection[itinerary.id].allWaypointsSelected)" />
+                          <label for="input-select-all-waypoints-{{itinerary.id}}" class="select-all-option" ng-click="showWaypoints(itinerary, itinerary.waypoints, !selection[itinerary.id].allWaypointsSelected)" >Select all waypoints</label>
+                        </div>
+                        <div ng-repeat="waypoint in itinerary.waypoints">
+                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                            <div class="column column-name">
+                              <input id="input-waypoints-{{waypoint.id}}" type="checkbox" ng-model="waypoint.selected" ng-change="showWaypoint(itinerary, waypoint)" />
+                              <label for="input-waypoints-{{waypoint.id}}"><span ng-show="!waypoint.name">ID: {{waypoint.id}}</span>{{waypoint.name}}</label>
+                            </div>
+                            <div class="column column-symbol"><span ng-show="!waypoint.symbol_text">{{waypoint.symbol}}</span><span ng-show="waypoint.symbol_txt != ''">{{waypoint.symbol_text}}</span></div>
+                            <div class="column column-comment">{{waypoint.comment}}</div>
+                            <div class="column column-category">{{waypoint.type}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div uib-accordion-group class="panel-default" heading="Tracks" is-open="selection[itinerary.id].tracksExpanded" is-disabled="itinerary.tracks.length === 0">
+                    <div class="column column-name column-select-all" ng-show="itinerary.tracks.length > 1">
+                      <input id="input-select-all-tracks-{{itinerary.id}}" type="checkbox" ng-model="selection[itinerary.id].allTracksSelected" ng-change="showTracks(itinerary, itinerary.tracks, selection[itinerary.id].allTracksSelected)" />
+                      <label for="input-select-all-tracks-{{itinerary.id}}" class="select-all-option" ng-click="showTracks(itinerary, itinerary.tracks, !selection[itinerary.id].allTracksSelected)">Select all tracks</label>
+                    </div>
+                    <div class="wide-table">
+                      <div class="track-box table-striped">
+                        <div ng-repeat="track in itinerary.tracks">
+                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                            <div class="column column-name">
+                              <input id="input-track-{{track.id}}" type="checkbox" ng-model="track.selected" ng-change="showTrack(itinerary, track)" />
+                              <label for="input-track-{{track.id}}"><span ng-show="!track.name">ID:
+                                  {{track.id}}</span>{{track.name}}</label>
+                            </div>
+                            <div class="column column-color">{{track.color}}</div>
+                            <div class="column column-distance"><span ng-show="track.distance">{{track.distance | number:2}} km</span></div>
+                            <div class="column column-distance"><span ng-show="track.distance">{{track.distance / 1.609344 | number:2}} mi</span></div>
+                            <div class="column column-ascent"><span ng-show="track.highest">↗︎{{track.ascent | number:0}}&nbsp;m ↘︎{{track.descent | number:0}}&nbsp;m</span></div>
+                            <div class="column column-ascent"><span ng-show="track.highest">↗︎{{track.ascent / 0.0254 / 12 | number:0}}&nbsp;ft ↘︎{{track.descent / 0.0254 / 12 | number:0}}&nbsp;ft</span></div>
+                            <div class="column column-ascent-heights"><span ng-show="track.highest">{{track.highest | number:0}}⇅{{track.lowest | number:0}}&nbsp;m</span></div>
+                            <div class="column column-ascent-heights"><span ng-show="track.highest">{{track.highest / 0.0254 / 12 | number:0}}&#x21c5;{{track.lowest / 0.0254 / 12 | number:0}}&nbsp;ft</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </uib-accordion>
+              </form>
+            </div><!-- uib-collapse -->
+        </div><!-- class well -->
+      </div><!-- ng-repeat itinerary -->
+  </div><!-- ng-show itineraries.payload.length > 0 -->
+
   <div id="div-paging">
     <paging
       class="small"
@@ -36,4 +127,19 @@
       paging-action="doPagingAction('Paging clicked', page, pageSize, total)">
     </paging>
   </div>
+  <div>
+    <div ng-messages="messages">
+      <div id="info-copy-message" ng-message="copied" class="alert alert-info" role="alert">
+        Attributes copied.  Use the paste button to copy the attributes to an itinerary you own.
+      </div>
+      <div id="error-copy-message" ng-message="copyNothingSelected" class="alert alert-warning" role="alert">
+        You must select at least one waypoint, track or route for copying.
+      </div>
+    </div>
+    <button id="btn-copy" ng-click="copyItemsForPaste(downloads)" class="btn btn-lg btn-primary">Copy</button>
+  </div>
+  <div id="map-layers-error" class="map-page-div" ng-messages="mapLayersError">
+    <div class="alert alert-danger" role="alert" ng-message="error">Unable to display the map.  There was an error when attempting to fetching the map configuration.</div>
+  </div>
+  <leaflet ng-if="state.showMap" controls="map.controls" markers="map.markers" paths="map.paths" bounds="map.bounds" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
 </div>
