@@ -65,7 +65,6 @@ exports.config = {
     browser.privateConfig.testUserPassword = env.testUserPassword;
     browser.privateConfig.testUser = env.testUser;
     browser.privateConfig.testAdminUserPassword = env.testAdminUserPassword;
-    browser.privateConfig.baseUrl = env.baseUrl;
     browser.get(env.baseUrl + '/login');
     browser.findElement(by.id('input-email')).sendKeys(env.testUser);
     browser.findElement(by.id('input-password')).sendKeys(env.testUserPassword);
