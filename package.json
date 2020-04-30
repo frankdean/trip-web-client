@@ -62,7 +62,7 @@
     "bootstrap": "^3.4.0",
     "cf-blob.js": "^0.0.1",
     "html5-boilerplate": "^7.3.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
     "open-location-code": "google/open-location-code#^1.0.4",
