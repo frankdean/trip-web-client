@@ -18,7 +18,8 @@
   ],
   "resolutions": {
     "angular": "^1.7.9",
-    "minimist": "^1.2.3"
+    "minimist": "^1.2.3",
+    "yargs-parser": "13.1.2"
   },
   "devDependencies": {
     "copyfiles": "^2.1.1",
@@ -33,7 +34,7 @@
     "karma-junit-reporter": "^2.0.1",
     "karma-safari-launcher": "^1.0.0",
     "mkdirp": "^1.0.3",
-    "protractor": "^5.3.0",
+    "protractor": "^5.4.4",
     "q": "^1.4.1",
     "rimraf": "^2.5.1",
     "shelljs": "^0.8.1",
@@ -62,7 +63,6 @@
     "bootstrap": "^3.4.0",
     "cf-blob.js": "^0.0.1",
     "html5-boilerplate": "^7.3.0",
-    "jquery": "^3.3.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
     "open-location-code": "google/open-location-code#^1.0.4",
