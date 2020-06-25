@@ -4,7 +4,7 @@
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
-  <base href="/trip/app/index-dev.html">
+  <base href="/trip/app/index-async.html">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +65,7 @@
       'node_modules/socket.io-client/dist/socket.io.js',
       'node_modules/angular-socket-io/socket.min.js',
       'node_modules/angular-file-saver/dist/angular-file-saver.bundle.min.js',
-	  'node_modules/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
+      'node_modules/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.min.js',
       'node_modules/open-location-code/js/src/openlocationcode.min.js',
       'node_modules/proj4/dist/proj4.js',
       'node_modules/pagedown/Markdown.Sanitizer.js',
@@ -90,7 +90,7 @@
       'js/itinerary-wpt-view-controller.js',
       'js/itinerary-route-name-controller.js',
       'js/itinerary-route-edit-controller.js',
-	  'js/itinerary-route-join-controller.js',
+      'js/itinerary-route-join-controller.js',
       'js/itinerary-track-name-controller.js',
       'js/itinerary-track-edit-controller.js',
       'js/itinerary-track-segment-edit-controller.js',
@@ -107,7 +107,7 @@
       'js/track-controller.js',
       'js/track-factory.js',
       'js/trackerinfo-controller.js',
-	  'js/location-controller.js',
+      'js/location-controller.js',
       'js/user-controller.js',
       'js/user-edit-controller.js',
       'js/user-factory.js',
@@ -134,7 +134,7 @@
 <body role="document">
   <div id="wrapper">
     <div id="header" ng-cloak>
-      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container div-body">
           <div class="navbar-header">
             <button type="button" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" class="navbar-toggle collapsed">

@@ -31,6 +31,8 @@ angular.module('myApp.itinerary.route.edit.controller', [])
      'MapConfigService',
      'leafletBoundsHelpers',
      'ItineraryRouteService',
+     'ItineraryRouteNameService',
+     'PathColorService',
      function($rootScope, $scope,
               $routeParams,
               $location,
@@ -39,7 +41,9 @@ angular.module('myApp.itinerary.route.edit.controller', [])
               ConfigService,
               MapConfigService,
               leafletBoundsHelpers,
-              ItineraryRouteService) {
+              ItineraryRouteService,
+              ItineraryRouteNameService,
+              PathColorService) {
        $rootScope.pageTitle = null;
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.routeId = $routeParams.routeId !== undefined ? decodeURIComponent($routeParams.routeId) : undefined;
@@ -48,6 +52,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        $scope.offset = $scope.page ? $scope.pageSize * ($scope.page -1) : 0;
        $scope.totalCount = 0;
        $scope.data = {};
+       $scope.state = {edit: false};
        $scope.data.autozoom = true;
 
        angular.extend($scope, {
@@ -97,6 +102,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
          });
 
        $scope.updateRouteInfo = function() {
+         $scope.ajaxRequestError = undefined;
          ItineraryRouteService.get(
            {id: $scope.itineraryId,
             routeId: $scope.routeId
@@ -116,6 +122,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        };
 
        $scope.showTrack = function() {
+         $scope.ajaxRequestError = undefined;
          $scope.map.paths.splice(0);
          ItineraryRouteService.getPoints(
            {id: $scope.itineraryId,
@@ -157,6 +164,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        };
 
        $scope.listPoints = function() {
+         $scope.ajaxRequestError = undefined;
          $scope.map.markers.splice(0);
          ItineraryRouteService.getPoints(
            {id: $scope.itineraryId,
@@ -188,6 +196,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        $scope.showTrack();
 
        $scope.doPagingAction = function(text, page, pageSize, total) {
+         $scope.ajaxRequestError = undefined;
          $scope.formError = undefined;
          $scope.offset = pageSize * (page - 1);
          $scope.listPoints();
@@ -199,6 +208,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
          });
        };
        $scope.selectAll = function(form) {
+         $scope.ajaxRequestError = undefined;
          $scope.formError = undefined;
          $scope.map.markers.splice(0);
          $scope.data.points.forEach(function(v) {
@@ -207,6 +217,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
          });
        };
        $scope.removeMarker = function(pointId) {
+         $scope.ajaxRequestError = undefined;
          var i = $scope.map.markers.findIndex(function(v) {
            return (v.tripPointId === pointId);
          });
@@ -216,6 +227,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        };
        $scope.showMarker = function(point) {
          var msg;
+         $scope.ajaxRequestError = undefined;
          if (point.selected) {
            if ($scope.data.autozoom) {
              var bounds = L.latLngBounds({lat: point.lat, lng: point.lng});
@@ -254,6 +266,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
          var selectedPoints = [],
              selectedCount = 0;
          $scope.formError = undefined;
+         $scope.ajaxRequestError = undefined;
          $scope.data.points.forEach(function(v) {
            if (v.selected) {
              selectedCount++;
@@ -274,7 +287,6 @@ angular.module('myApp.itinerary.route.edit.controller', [])
             routeId: $scope.routeId,
             points: selectedPoints})
            .$promise.then(function() {
-             $scope.updateRouteInfo();
              $scope.showTrack();
              $scope.listPoints();
            }).catch(function(response) {
@@ -292,6 +304,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
              selectedCount = 0,
              pointIndex;
          $scope.formError = undefined;
+         $scope.ajaxRequestError = undefined;
          $scope.data.points.forEach(function(v) {
            if (v.selected) {
              selectedCount++;
@@ -345,6 +358,90 @@ angular.module('myApp.itinerary.route.edit.controller', [])
              $log.error('Seems to be no points in the route');
            }
          }
+       };
+
+       $scope.startEditAttributes = function() {
+         if ($scope.colors) {
+           $scope.state.edit = true;
+         } else {
+           PathColorService.query()
+             .$promise.then(function(colors) {
+               $scope.colors = colors;
+               $scope.state.edit = true;
+             }).catch(function(response) {
+               $log.warn('Error fetching route colors', response.status, response.statusText);
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+             });
+         }
+       };
+
+       $scope.saveAttributes = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         if (form && form.$valid) {
+           ItineraryRouteNameService.save({},
+                                          {itineraryId: $scope.itineraryId,
+                                           routeId: $scope.routeId,
+                                           name: $scope.route.name,
+                                           color: $scope.route.color
+                                          })
+             .$promise.then(function(value) {
+               $scope.state.edit = false;
+               $scope.updateRouteInfo();
+               $scope.showTrack();
+             }).catch(function(response) {
+               $log.error('Save itinerary route attributes failed');
+               if (response.status === 401) {
+                 $location.path('/login');
+               } else {
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   saveFailed: true,
+                   status: response.status
+                 };
+               }
+             });
+         } else {
+           $log.error('Form is invalid');
+         }
+       };
+
+       $scope.reversePath = function() {
+         $scope.ajaxRequestError = {error: false};
+         // Create a reversed copy
+         ItineraryRouteService.get(
+           {},
+           {id: $scope.itineraryId,
+            routeId: $scope.routeId})
+           .$promise.then(function(route) {
+             var newRoute = angular.copy(route);
+             newRoute.points.forEach(function(v) {
+               v.id = undefined;
+             });
+             if (newRoute.points) {
+               newRoute.points.reverse();
+             }
+             ItineraryRouteService.update({},
+                                          {id: $scope.itineraryId,
+                                           routeId: $scope.routeId,
+                                           points: newRoute.points})
+               .$promise.then(function(result) {
+                 $scope.updateRouteInfo();
+                 $scope.listPoints();
+                 $scope.showTrack();
+               }).catch(function(response) {
+                 $log.error('Reversing route failed:', response);
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               });
+           }).catch(function(fetchRouteFailed) {
+             $log.error('System error fetching route:', fetchRouteFailed);
+             $scope.ajaxRequestError = {error: true};
+           });
        };
 
      }]);

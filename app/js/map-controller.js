@@ -143,14 +143,14 @@ angular.module('myApp.map.controller', [])
          // established and if we close it on a timer it may be too early or
          // so late that the user has changed options such that we do need the
          // websocket.  Decided to leave it connected until we leave the page.
-         $log.debug('$destroy');
+         // $log.debug('$destroy');
          $scope.status.liveupdate = false;
          mySocket.disconnect();
          mySocket.removeAllListeners();
        });
        $scope.updatePaths = function() {
          if ($scope.status.updating) {
-           $log.debug('Update in progress, skipping subsequent request');
+           // $log.debug('Update in progress, skipping subsequent request');
            return;
          }
          $scope.status.updating = true;

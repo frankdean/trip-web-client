@@ -53,11 +53,11 @@ angular.module('myApp.login.controller', ['ngCookies'])
                           $log.error('Failure decoding token');
                         }
                         $rootScope.admin = token.uk_co_fdsd_trip_admin;
-                        try {
-                          $log.debug('Token expires:', jwtHelper.getTokenExpirationDate(value.token));
-                        } catch (e) {
-                          $log.error('Failure extracting expiration date from token');
-                        }
+                        // try {
+                        //   $log.debug('Token expires:', jwtHelper.getTokenExpirationDate(value.token));
+                        // } catch (e) {
+                        //   $log.error('Failure extracting expiration date from token');
+                        // }
                       }
                     }, function(response) {
                       Storage.removeItem('id_token');

@@ -34,6 +34,7 @@ angular.module('myApp.state.service', [] )
          this.admin = undefined;
          this.message = undefined;
          this.pageMap = [];
+         this.keyValuePairs = {};
        };
        this.reset();
 
@@ -102,6 +103,18 @@ angular.module('myApp.state.service', [] )
        };
        this.getMessage = function() {
          return this.message;
+       };
+
+       this.setKey = function(key, value) {
+         this.keyValuePairs[key] = value;
+       };
+
+       this.getKey = function(key) {
+         return this.keyValuePairs[key];
+       };
+
+       this.removeKey = function(key) {
+         delete this.keyValuePairs[key];
        };
 
      }]);

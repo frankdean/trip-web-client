@@ -23,7 +23,7 @@ var takeScreenshots = false;
 
 function writeScreenshot(png, filename) {
   var stream = fs.createWriteStream(filename);
-  stream.write(new Buffer(png, 'base64'));
+  stream.write(new Buffer.from(png, 'base64'));
   stream.end();
 }
 
@@ -35,6 +35,7 @@ describe('Itinerary map', function() {
       elemCreateMarkerControl,
       elemEditControl,
       elemDeleteControl,
+      elemZoomOutControl,
       selectAllWaypoints,
       markerIcons,
       saveControlText = 'Save',
@@ -49,6 +50,7 @@ describe('Itinerary map', function() {
     elemCreatePolylineControl = element(by.css('.leaflet-draw-draw-polyline'));
     elemEditControl = element(by.css('.leaflet-draw-edit-edit'));
     elemDeleteControl = element(by.css('.leaflet-draw-edit-remove'));
+    elemZoomOutControl = element(by.css('.leaflet-control-zoom-out'));
     selectAllWaypoints = element(by.model('selection.allWaypointsSelected'));
   });
 
@@ -57,6 +59,7 @@ describe('Itinerary map', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       browser.wait(EC.visibilityOf(selectAllWaypoints), 5000);
       browser.waitForAngular();
       routesList = element.all(by.repeater('route in routeNames'));
@@ -101,29 +104,28 @@ describe('Itinerary map', function() {
     describe('editing', function() {
 
       it('should display the edit-path button', function() {
+        element(by.id('edit-pill')).click();
         expect(element(by.id('btn-edit-path')).isDisplayed()).toBeTruthy();
         expect(element(by.id('btn-view-path')).isDisplayed()).toBeFalsy();
       });
 
-      /* Commented out disabled tests as pending causes **all** further tests to be disabled
-         not just this section.
-
-      // pending('Disabled as Protractor/Selenium unreliable at selecting all waypoints');
-      xdescribe('Waypoint editing', function() {
+      describe('Waypoint editing', function() {
 
         beforeEach(function() {
-          browser.waitForAngular();
+          // browser.waitForAngular();
+          element(by.id('features-tab')).click();
           browser.wait(
             EC.and(
               EC.visibilityOf(selectAllWaypoints),
               EC.visibilityOf(element(by.id('input-select-all-waypoints'))),
               EC.elementToBeClickable(selectAllWaypoints)
             ),
-            2000, 'Waypoint select-all element not found');
+            5000, 'Waypoint select-all element not found');
           selectAllWaypoints.click().then(function() {
             // expect(selectAllWaypoints.isSelected()).toBeTruthy();
-            browser.sleep(500);
+            // browser.sleep(500);
             expect(element(by.model('selection.allWaypointsSelected')).isDisplayed()).toBeTruthy();
+            element(by.id('view-pill')).click();
             browser.element(by.id('btn-map')).click();
             markerIcons = element.all(by.css('.leaflet-marker-icon'));
             browser.wait(EC.elementToBeClickable(elemEditControl), 5000);
@@ -132,6 +134,30 @@ describe('Itinerary map', function() {
 
         it('should display the waypoints on the map', function() {
           expect(markerIcons.count()).toBeGreaterThan(2);
+        });
+
+        it('should allow a marker to be deleted', function() {
+          browser.wait(EC.elementToBeClickable(elemEditControl), 5000);
+          var count = element.all(by.css('.leaflet-marker-icon')).count();
+          // Test data is set up with 5 markers
+          expect(count).toEqual(5);
+          elemCreateMarkerControl.click();
+          browser.actions()
+            .mouseMove(elemMap, {x:150, y:150})
+            .click()
+            .perform();
+          // Check the number of markers is incremented
+          expect(element.all(by.css('.leaflet-marker-icon')).count()).toEqual(6);
+          // Then delete it at that position
+          browser.actions()
+            .mouseMove(elemMap, {x:150, y:150})
+            .click()
+            .perform();
+          elemDeleteControl.click();
+          markerIcons.last().click();
+          elemZoomOutControl.click();
+          element(by.linkText(saveControlText)).click();
+          expect(element.all(by.css('.leaflet-marker-icon')).count()).toEqual(count);
         });
 
         it('should allow a marker creation to be cancelled', function() {
@@ -199,18 +225,8 @@ describe('Itinerary map', function() {
           element(by.linkText(cancelControlText)).click();
         });
 
-        // pending('Disabled as too random which marker gets deleted');
-        it('should allow a marker to be deleted', function() {
-          var e1 = markerIcons.last();
-          e1.click();
-          elemDeleteControl.click();
-          e1.click();
-          element(by.linkText(saveControlText)).click();
-        });
-
         it('should allow deleting a marker to be cancelled', function() {
-          var e1 = markerIcons.last();
-          e1.click();
+          var e1 = markerIcons.first();
           elemDeleteControl.click();
           e1.click();
           element(by.linkText(cancelControlText)).click();
@@ -222,7 +238,6 @@ describe('Itinerary map', function() {
         });
 
       });
-      */
 
       describe('Routes', function() {
         var routeMarkerIcons;
@@ -231,6 +246,7 @@ describe('Itinerary map', function() {
 
           beforeEach(function() {
             element(by.id('input-select-all-routes')).click();
+            element(by.id('view-pill')).click();
             browser.element(by.id('btn-map')).click();
             routeMarkerIcons = element.all(by.css('.leaflet-editing-icon'));
             browser.wait(EC.elementToBeClickable(elemEditControl), 5000);
@@ -262,9 +278,13 @@ describe('Itinerary map', function() {
 
         });
 
-        xdescribe('deleting routes', function() {
+        describe('deleting routes', function() {
 
           beforeEach(function() {
+            // By selecting a waypoint, we stop the app attempting to establish the
+            // current location which appears to interfere with creating the polyline.
+            element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[2]/td[1]/label')).click();
+            element(by.id('view-pill')).click();
             browser.element(by.id('btn-map')).click();
             browser.wait(EC.elementToBeClickable(elemCreatePolylineControl), 5000);
           });
@@ -284,23 +304,19 @@ describe('Itinerary map', function() {
               .click()
               .mouseMove(elemMap, {x:600, y:200})
               .click()
-              .mouseMove(elemMap, {x:650, y:200})
+              .mouseMove(elemMap, {x:520, y:200})
               .click()
               .mouseMove(elemMap, {x:500, y:300})
               .click()
               .mouseMove(elemMap, {x:450, y:250})
               .click()
-              .perform();
-            browser.sleep(1000);
-            browser.actions()
               .mouseMove(elemMap, {x:150, y:150})
               .click()
               .mouseMove(elemMap, {x:400, y:220})
               .click()
-              .mouseMove(elemMap, {x:700, y:250})
+              .mouseMove(elemMap, {x:540, y:250})
               .click()
               .perform();
-            browser.sleep(1000);
             if (takeScreenshots) {
               browser.takeScreenshot().then(function(png) {
                 writeScreenshot(png, 'e2e-delete-route-test2.png');
@@ -309,7 +325,7 @@ describe('Itinerary map', function() {
             element(by.linkText(finishControlText)).click();
             elemDeleteControl.click();
             browser.actions()
-              .mouseMove(elemMap, {x:700, y:250})
+              .mouseMove(elemMap, {x:540, y:250})
               .click()
               .perform();
             element(by.linkText(saveControlText)).click();
@@ -320,15 +336,15 @@ describe('Itinerary map', function() {
             browser.actions()
               .mouseMove(elemMap, {x:500, y:180})
               .click()
-              .mouseMove(elemMap, {x:600, y:200})
+              .mouseMove(elemMap, {x:530, y:200})
               .click()
-              .mouseMove(elemMap, {x:700, y:250})
+              .mouseMove(elemMap, {x:540, y:250})
               .click()
               .perform();
             element(by.linkText(finishControlText)).click();
             elemDeleteControl.click();
             browser.actions()
-              .mouseMove(elemMap, {x:700, y:250})
+              .mouseMove(elemMap, {x:540, y:250})
               .click()
               .perform();
             element(by.linkText(cancelControlText)).click();
@@ -344,6 +360,7 @@ describe('Itinerary map', function() {
 
       beforeEach(function() {
         element(by.id('input-select-all-tracks')).click();
+        element(by.id('view-pill')).click();
         browser.element(by.id('btn-map')).click();
         browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
       });
@@ -359,6 +376,7 @@ describe('Itinerary map', function() {
 
       beforeEach(function() {
         element(by.id('input-select-all-tracks')).click();
+        element(by.id('view-pill')).click();
         browser.element(by.id('btn-map')).click();
         // browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
         element(by.id('input-live-map')).click();
@@ -382,10 +400,13 @@ describe('Itinerary map', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
+      element(by.id('features-tab')).click();
     });
 
     it('should not display the edit-path button', function() {
-      expect(element(by.id('btn-edit-path')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('edit-pill')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('view-pill')).isDisplayed()).toBeTruthy();
+      element(by.id('view-pill')).click();
       expect(element(by.id('btn-view-path')).isDisplayed()).toBeTruthy();
     });
 
@@ -393,6 +414,7 @@ describe('Itinerary map', function() {
 
       beforeEach(function() {
         element(by.id('input-select-all-waypoints')).click();
+        element(by.id('view-pill')).click();
         browser.element(by.id('btn-map')).click();
         markerIcons = element.all(by.css('.leaflet-marker-icon'));
         browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
@@ -408,6 +430,7 @@ describe('Itinerary map', function() {
 
       beforeEach(function() {
         element(by.id('input-select-all-routes')).click();
+        element(by.id('view-pill')).click();
         browser.element(by.id('btn-map')).click();
         browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
       });
@@ -426,6 +449,7 @@ describe('Itinerary map', function() {
 
       beforeEach(function() {
         element(by.id('input-select-all-tracks')).click();
+        element(by.id('view-pill')).click();
         browser.element(by.id('btn-map')).click();
         browser.wait(EC.visibilityOf(element(by.css('.leaflet-control-scale'))), 5000);
       });
@@ -449,10 +473,12 @@ describe('Itinerary map', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
     });
 
     it('should reset the coordinates of the London waypoint ready for another test run', function() {
       element(by.id('input-waypoints-' + w1)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-selected')).click();
       browser.waitForAngular();
       element(by.id('input-position')).clear();
@@ -462,6 +488,7 @@ describe('Itinerary map', function() {
 
     it('should reset the coordinates of the Montpellier waypoint ready for another test run', function() {
       element(by.id('input-waypoints-' + w2)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-selected')).click();
       browser.waitForAngular();
       element(by.id('input-position')).clear();
@@ -471,6 +498,7 @@ describe('Itinerary map', function() {
 
     it('should reset the coordinates of the Paris waypoint ready for another test run', function() {
       element(by.id('input-waypoints-' + w3)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-selected')).click();
       browser.waitForAngular();
       element(by.id('input-position')).clear();
@@ -487,8 +515,9 @@ describe('Itinerary map', function() {
       routeIds.forEach(function(v) {
         element(by.id('input-route-' + v)).click();
       });
-      element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(2).click();
+      element(by.id('edit-pill')).click();
+      element(by.id('btn-delete')).click();
+      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
     });
 
   });

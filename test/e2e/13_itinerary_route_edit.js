@@ -26,12 +26,77 @@ describe('Itinerary Route Edit', function() {
       testRouteId_02 = 8313,
       list;
 
+  describe('attributes', function() {
+
+    beforeEach(function() {
+      browser.get(browser.baseUrl + '/itinerary-route-edit?itineraryId=' + testItineraryId + '&routeId=' + testRouteId_01 + '&shared=false');
+    });
+
+    it('should show the route name', function() {
+      expect(element(by.id('route-name')).getText()).toEqual('Test route 01');
+      expect(element(by.id('route-color')).getText()).toEqual('Green');
+    });
+
+    it('should allow an empty route name to be saved', function() {
+      element(by.id('btn-edit-attributes')).click();
+      element(by.id('input-name')).clear();
+      element(by.id('btn-save-attributes')).click();
+      expect(element(by.id('route-name')).getText()).toEqual('ID: ' + testRouteId_01);
+    });
+
+    it('should allow an empty route name to be modified', function() {
+      element(by.id('btn-edit-attributes')).click();
+      element(by.id('input-name')).clear();
+      element(by.id('input-name')).sendKeys('Test route 01');
+      element(by.id('btn-save-attributes')).click();
+      expect(element(by.id('route-name')).getText()).toEqual('Test route 01');
+    });
+
+    it('should close the form when the close button is clicked when editing is not active', function() {
+      expect(element(by.id('btn-close')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-close')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+    it('should not close the form when the cancel button is clicked and cancelled', function() {
+      element(by.id('btn-edit-attributes')).click();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-close')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-cancel')).click();
+      element(by.xpath('/html/body/div[4]/div[2]/div/div[2]/button')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-route-edit\?itineraryId=\d+&routeId=\d+&shared=false/);
+    });
+
+    it('should close the form when the cancel button is clicked and confirmed', function() {
+      element(by.id('btn-edit-attributes')).click();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-close')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-cancel')).click();
+      element(by.xpath('/html/body/div[4]/div[2]/div/div[1]/button')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+    it('should reverse the route', function() {
+      expect(element(by.xpath('//*[@id="template"]/div/div/div[3]/div[2]/form/div/p[5]/span[3]')).getText()).toEqual('↗︎1,194 m ↘︎1,445 m');
+      element(by.id('btn-reverse')).click();
+      browser.waitForAngular();
+      expect(element(by.xpath('//*[@id="template"]/div/div/div[3]/div[2]/form/div/p[5]/span[3]')).getText()).toEqual('↗︎1,445 m ↘︎1,194 m');
+      element(by.id('btn-reverse')).click();
+      browser.waitForAngular();
+      expect(element(by.xpath('//*[@id="template"]/div/div/div[3]/div[2]/form/div/p[5]/span[3]')).getText()).toEqual('↗︎1,194 m ↘︎1,445 m');
+    });
+
+  });
+
   describe('Join routes', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-join-path')).click();
       list = element.all(by.repeater('route in routes'));
     });
@@ -69,8 +134,10 @@ describe('Itinerary Route Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       list = element.all(by.repeater('route in routeNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-path')).click();
       points = element.all(by.repeater('point in data.points'));
     });
@@ -134,8 +201,10 @@ describe('Itinerary Route Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
+      element(by.id('features-tab')).click();
       list = element.all(by.repeater('route in routeNames'));
       list.get(0).all(by.tagName('td')).get(0).click();
+      element(by.id('view-pill')).click();
       element(by.id('btn-view-path')).click();
     });
 
@@ -144,6 +213,7 @@ describe('Itinerary Route Edit', function() {
       expect(element(by.id('div-buttons')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-edit-attributes')).isDisplayed()).toBeFalsy();
     });
 
   });
@@ -152,8 +222,10 @@ describe('Itinerary Route Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-join-path')).click();
       list = element.all(by.repeater('route in routes'));
     });
@@ -169,13 +241,15 @@ describe('Itinerary Route Edit', function() {
 
       beforeEach(function() {
         browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+        element(by.id('features-tab')).click();
         element(by.id('input-select-all-routes')).click();
+        element(by.id('edit-pill')).click();
         element(by.id('btn-join-path')).click();
         list = element.all(by.repeater('route in routes'));
       });
 
       // Test expects one of the previous tests to have created a route with no name
-      it('Route names should not be empty, even when route has no name', function() {
+      it('should show route names, even when route has no name', function() {
         expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
         expect(list.get(1).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
         expect(list.get(2).all(by.tagName('td')).get(1).getText()).toMatch(/.+/);
@@ -189,14 +263,17 @@ describe('Itinerary Route Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
     });
 
     it('should remove routes we created during testing', function() {
       element(by.id('input-select-all-routes')).click();
       element(by.id('input-route-' + testRouteId_01)).click();
       element(by.id('input-route-' + testRouteId_02)).click();
-      element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(2).click();
+      element(by.id('edit-pill')).click();
+      element(by.id('btn-delete')).click();
+      // The confirmation to delete button
+      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
     });
 
   });

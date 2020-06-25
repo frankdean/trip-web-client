@@ -26,12 +26,67 @@ describe('Itinerary Track Edit', function() {
       testTrackId_02 = 1028,
       list;
 
+  describe('attributes', function() {
+
+    beforeEach(function() {
+      browser.get(browser.baseUrl + '/itinerary-track-edit?itineraryId=' + testItineraryId + '&trackId=' + testTrackId_01 + '&shared=false');
+    });
+
+    it('should show the track name', function() {
+      expect(element(by.id('track-name')).getText()).toEqual('Test track 01');
+      expect(element(by.id('track-color')).getText()).toEqual('Blue');
+    });
+
+    it('should allow an empty track name to be saved', function() {
+      element(by.id('btn-edit-attributes')).click();
+      element(by.id('input-name')).clear();
+      element(by.id('btn-save-attributes')).click();
+      expect(element(by.id('track-name')).getText()).toEqual('ID: ' + testTrackId_01);
+    });
+
+    it('should allow an empty track name to be modified', function() {
+      element(by.id('btn-edit-attributes')).click();
+      element(by.id('input-name')).clear();
+      element(by.id('input-name')).sendKeys('Test track 01');
+      element(by.id('btn-save-attributes')).click();
+      expect(element(by.id('track-name')).getText()).toEqual('Test track 01');
+    });
+
+    it('should close the form when the close button is clicked when editing is not active', function() {
+      expect(element(by.id('btn-close')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-close')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+    it('should not close the form when the cancel button is clicked and cancelled', function() {
+      element(by.id('btn-edit-attributes')).click();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-close')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-cancel')).click();
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[2]/button')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-track-edit\?itineraryId=\d+&trackId=\d+&shared=false/);
+    });
+
+    it('should close the form when the cancel button is clicked and confirmed', function() {
+      element(by.id('btn-edit-attributes')).click();
+      expect(element(by.id('btn-cancel')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-close')).isDisplayed()).toBeFalsy();
+      element(by.id('btn-cancel')).click();
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[1]/button')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
+    });
+
+  });
+
   describe('Join tracks', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-join-path')).click();
       list = element.all(by.repeater('track in tracks'));
     });
@@ -69,8 +124,10 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-path')).click();
       segments = element.all(by.repeater('segment in data.track.segments'));
     });
@@ -180,8 +237,10 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-path')).click();
       segments = element.all(by.repeater('segment in data.track.segments'));
     });
@@ -208,8 +267,10 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       list = element.all(by.repeater('track in trackNames'));
       list.get(2).all(by.tagName('td')).get(0).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-edit-path')).click();
       segments = element.all(by.repeater('segment in data.track.segments'));
       segments.get(0).all(by.tagName('a')).get(0).click();
@@ -236,7 +297,9 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
+      element(by.id('features-tab')).click();
       element(by.id('input-track-' + testSharedTrackId)).click();
+      element(by.id('view-pill')).click();
       element(by.id('btn-view-path')).click();
       segments = element.all(by.repeater('segment in data.track.segments'));
     });
@@ -248,6 +311,7 @@ describe('Itinerary Track Edit', function() {
       expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-merge')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-edit-attributes')).isDisplayed()).toBeFalsy();
     });
 
     describe('View points', function() {
@@ -257,7 +321,7 @@ describe('Itinerary Track Edit', function() {
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-track-segment-edit\?itineraryId=\d+&trackId=\d+&segmentId=\d+&shared=true/);
       });
 
-      it('should display the track points', function() {
+      it('should not display the edit buttons', function() {
         expect(element(by.id('div-buttons')).isDisplayed()).toBeFalsy();
         expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
         expect(element(by.id('btn-split')).isDisplayed()).toBeFalsy();
@@ -271,8 +335,10 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
+      element(by.id('edit-pill')).click();
       element(by.id('btn-join-path')).click();
       list = element.all(by.repeater('track in tracks'));
     });
@@ -287,7 +353,9 @@ describe('Itinerary Track Edit', function() {
     describe('Display of track names', function() {
       beforeEach(function() {
         browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+        element(by.id('features-tab')).click();
         element(by.id('input-select-all-tracks')).click();
+        element(by.id('edit-pill')).click();
         element(by.id('btn-join-path')).click();
         list = element.all(by.repeater('track in tracks'));
       });
@@ -307,14 +375,16 @@ describe('Itinerary Track Edit', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
     });
 
     it('should remove tracks we created during testing', function() {
       element(by.id('input-select-all-tracks')).click();
       element(by.id('input-track-' + testTrackId_01)).click();
       element(by.id('input-track-' + testTrackId_02)).click();
-      element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(2).click();
+      element(by.id('edit-pill')).click();
+      element(by.id('btn-delete')).click();
+      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
     });
 
   });

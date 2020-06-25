@@ -23,7 +23,7 @@
   </div>
   <leaflet ng-if="state.showMap" markers="map.markers" paths="map.paths" controls="map.controls" lf-center="map.center" bounds="map.bounds" layers="map.layers" defaults="map.defaults" lf-draw="map.drawOptions" height="{{map.height}}"></leaflet>
   <div ng-messages="state.locationFound">
-    <div ng-message="success" class="alert alert-info" role="alert">
+    <div id="location-success" ng-message="success" class="alert alert-info" role="alert">
       Location updated successfully.
     </div>
     <div ng-message="error" class="alert alert-warning" role="alert">

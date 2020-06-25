@@ -28,7 +28,7 @@ describe('itinerary sharing', function() {
 
   function writeScreenshot(png, filename) {
     var stream = fs.createWriteStream(filename);
-    stream.write(new Buffer(png, 'base64'));
+    stream.write(new Buffer.from(png, 'base64'));
     stream.end();
   }
 
@@ -122,7 +122,7 @@ describe('itinerary sharing', function() {
         }
         // This test often fails when the entire test suite is run, but never fails
         // when we take a screenshot.  Hoping this delay fixes it.
-        browser.sleep(300).then(function(done) {
+        browser.sleep(600).then(function(done) {
           expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
         });
       });

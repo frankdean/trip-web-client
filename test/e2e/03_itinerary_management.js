@@ -59,10 +59,10 @@ describe('Itinerary management', function() {
                                protractor.Key.ENTER);
       elemSave.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      expect(element(by.id('text-title')).getText()).toEqual('Test title');
-      expect(element(by.id('text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
+      expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test title');
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
       // cleanup
-      element(by.id('btn-edit')).click();
+      element(by.id('btn-edit-itinerary')).click();
       element(by.id('btn-delete')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
     });
@@ -71,10 +71,10 @@ describe('Itinerary management', function() {
       elemTitle.sendKeys('Test title 2');
       elemSave.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      expect(element(by.id('text-title')).getText()).toEqual('Test title 2');
-      expect(element(by.id('text-date')).getText()).toEqual('');
+      expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test title 2');
+      expect(element(by.id('itinerary-text-date')).getText()).toEqual('');
       // cleanup
-      element(by.id('btn-edit')).click();
+      element(by.id('btn-edit-itinerary')).click();
       element(by.id('btn-delete')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
     });
@@ -118,13 +118,17 @@ describe('Itinerary management', function() {
       }
     });
 
-    it('should show the Add Waypoint button after creating a new waypoint', function() {
+    it('should show the Add Waypoint button after creating a new itinerary', function() {
       elemTitle.sendKeys('Test title 3');
       elemSave.click();
+      element(by.id('features-tab')).click();
+      element(by.id('edit-pill')).click();
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
       // cleanup
-      element(by.id('btn-edit')).click();
-      element(by.id('btn-delete')).click();
+      element(by.id('heading-tab')).click();
+      element(by.id('btn-edit-itinerary')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
+      elemDelete.click();
       element.all((by.css('.confirm-button'))).get(0).click();
     });
 
@@ -132,7 +136,9 @@ describe('Itinerary management', function() {
       elemTitle.sendKeys('Test deleting itinerary');
       elemSave.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      element(by.id('btn-edit')).click();
+      element(by.id('heading-tab')).click();
+      element(by.id('btn-edit-itinerary')).click();
+      expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
       elemDelete.click();
       element.all((by.css('.confirm-button'))).get(0).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itineraries/);
@@ -165,8 +171,8 @@ describe('Itinerary management', function() {
                                protractor.Key.ENTER);
       elemSave.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
-      expect(element(by.id('text-title')).getText()).toEqual('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
-      expect(element(by.id('text-date')).getText()).toMatch(/Date from: (\w+ )?22.Nov.2015 to: (\w+ )?23.Nov.2015/);
+      expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?22.Nov.2015 to: (\w+ )?23.Nov.2015/);
     });
 
     it('should show the date range when both dates are specified', function() {
@@ -180,7 +186,7 @@ describe('Itinerary management', function() {
         elemFinishDate.sendKeys('13122001');
       }
       elemSave.click();
-      expect(element(by.id('text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
     });
 
     it('should show only the start date range when the end date is not specified', function() {
@@ -203,7 +209,7 @@ describe('Itinerary management', function() {
         elemFinishDate.clear();
       }
       elemSave.click();
-      expect(element(by.id('text-date')).getText()).toMatch(/Date: (\w+ )?12.Dec.2001/);
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date: (\w+ )?12.Dec.2001/);
     });
 
     it('should show only the start date range when the end date is not specified', function() {
@@ -222,7 +228,7 @@ describe('Itinerary management', function() {
         elemFinishDate.sendKeys('2001-12-13');
       }
       elemSave.click();
-      expect(element(by.id('text-date')).getText()).toMatch(/Date to: (\w+ )?13.Dec.2001/);
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date to: (\w+ )?13.Dec.2001/);
     });
 
     it('should show only the start date range when the end date is not specified', function() {
@@ -243,7 +249,7 @@ describe('Itinerary management', function() {
                                );
       }
       elemSave.click();
-      expect(element(by.id('text-date-range')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('itinerary-text-date-range')).isDisplayed()).toBeFalsy();
     });
 
     it('should reset the itinerary values when the reset button is clicked', function() {
@@ -297,6 +303,8 @@ describe('Itinerary management', function() {
     });
 
     it('should show the Add Waypoint button whilst the form is not in edit mode', function() {
+      element(by.id('features-tab')).click();
+      element(by.id('edit-pill')).click();
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
     });
 

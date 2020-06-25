@@ -3,6 +3,10 @@ module.exports = function(config){
 
     basePath : '../',
 
+    browserDisconnectTimeout: 2000,
+
+    browserNoActivityTimeout: 1200000,
+
     files : [
       'app/node_modules/angular/angular.js',
       'app/node_modules/angular-messages/angular-messages.js',

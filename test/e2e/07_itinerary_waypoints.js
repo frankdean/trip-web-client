@@ -288,12 +288,14 @@ describe('Itinerary Waypoints', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      element(by.id('features-tab')).click();
     });
 
     it('should delete waypoints that were created', function() {
       element(by.id('input-select-all-waypoints')).click();
-      element(by.id('btn-delete-gpx')).click();
-      element.all((by.css('.confirm-button'))).get(2).click();
+      element(by.id('edit-pill')).click();
+      element(by.id('btn-delete')).click();
+      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
     });
 
   });

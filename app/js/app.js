@@ -350,11 +350,12 @@ angular.module('myApp', [
                              }
                              renewWithin = decodedToken && decodedToken.uk_co_fdsd_trip_renewWithin || 60;
                            }
-                           if (!token || jwtHelper.isTokenExpired(token)) {
-                             $log.debug('Token missing or has expired');
-                           } else if (!$rootScope.tokenRenewalGuard && jwtHelper.isTokenExpired(token, renewWithin)) {
+                           // if (!token || jwtHelper.isTokenExpired(token)) {
+                           //   $log.debug('Token missing or has expired');
+                           // }
+                           if (token && !$rootScope.tokenRenewalGuard && jwtHelper.isTokenExpired(token, renewWithin)) {
                              $rootScope.tokenRenewalGuard = true;
-                             $log.debug('Token will expire soon - renewing');
+                             // $log.debug('Token will expire soon - renewing');
                              Login.renew({},
                                          {},
                                          function(value) {
@@ -373,13 +374,13 @@ angular.module('myApp', [
                                              iat = new Date(0);
                                              if (token && token.iat) {
                                                iat.setUTCSeconds(token.iat);
-                                               $log.debug('Renewed token issued at:', iat);
+                                               // $log.debug('Renewed token issued at:', iat);
                                              }
-                                             try {
-                                               $log.debug('Renewed token expires:', jwtHelper.getTokenExpirationDate(value.token));
-                                             } catch (e) {
-                                               $log.error('Failure extracting expiration date from token');
-                                             }
+                                             // try {
+                                             //   $log.debug('Renewed token expires:', jwtHelper.getTokenExpirationDate(value.token));
+                                             // } catch (e) {
+                                             //   $log.error('Failure extracting expiration date from token');
+                                             // }
                                            } else {
                                              $log.warn('No token received in response:', value);
                                            }

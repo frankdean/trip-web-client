@@ -30,7 +30,9 @@ angular.module('myApp.itinerary.track.edit.controller', [])
      'MapConfigService',
      'leafletBoundsHelpers',
      'ItineraryTrackService',
+     'ItineraryTrackNameService',
      'ItineraryTrackSegmentService',
+     'PathColorService',
      'StateService',
      function($rootScope, $scope,
               $routeParams,
@@ -41,10 +43,13 @@ angular.module('myApp.itinerary.track.edit.controller', [])
               MapConfigService,
               leafletBoundsHelpers,
               ItineraryTrackService,
+              ItineraryTrackNameService,
               ItineraryTrackSegmentService,
+              PathColorService,
               StateService) {
        $rootScope.pageTitle = null;
        $scope.data={};
+       $scope.state = {edit: false};
        $scope.itineraryId = $routeParams.itineraryId !== undefined ? decodeURIComponent($routeParams.itineraryId) : undefined;
        $scope.trackId = $routeParams.trackId !== undefined ? decodeURIComponent($routeParams.trackId) : undefined;
        $scope.shared = $routeParams.shared !== undefined ? decodeURIComponent($routeParams.shared) === "true" : false;
@@ -388,4 +393,50 @@ angular.module('myApp.itinerary.track.edit.controller', [])
            }
          }
        };
+
+       $scope.startEditAttributes = function() {
+         if ($scope.colors) {
+           $scope.state.edit = true;
+         } else {
+           PathColorService.query()
+             .$promise.then(function(colors) {
+               $scope.colors = colors;
+               $scope.state.edit = true;
+             }).catch(function(response) {
+               $log.warn('Error fetching track colors', response.status, response.statusText);
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+             });
+         }
+       };
+
+       $scope.saveAttributes = function(form) {
+         $scope.ajaxRequestError = {error: false};
+         if (form && form.$valid) {
+           ItineraryTrackNameService.save({},
+                                          {itineraryId: $scope.itineraryId,
+                                           trackId: $scope.trackId,
+                                           name: $scope.data.track.name,
+                                           color: $scope.data.track.color
+                                          })
+             .$promise.then(function(value) {
+               $scope.state.edit = false;
+             }).catch(function(response) {
+               $log.warn('Save itinerary track attributes failed');
+               if (response.status === 401) {
+                 $location.path('/login');
+               } else {
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               }
+             });
+         } else {
+           $log.error('Form is invalid');
+         }
+       };
+
      }]);

@@ -154,7 +154,7 @@ angular.module('myApp.location.controller', [])
              // If the timestamp looks more than 24 hours out, let's just play safe and use current time
              if (Math.abs(now.getTime() - eventDate.getTime()) > 86400000) {
                eventDate = now;
-               $log.debug('Timestamp still looks wrong (%s).  Will use the current time', eventDate.toLocaleString('en-GB'));
+               $log.warn('Timestamp of location event looks wrong (%s).  Using the current time', eventDate.toLocaleString('en-GB'));
              }
              $log.warn('Altered event date to %s', eventDate.toLocaleString('en-GB'));
            }

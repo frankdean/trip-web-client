@@ -271,7 +271,6 @@ angular.module('myApp.itinerary.map.controller', [])
              });
          }
        } else {
-         $log.debug('No routes, waypoints or tracks specified for display');
          $location.path('/itinerary');
          $location.search({id: encodeURIComponent($scope.itineraryId)});
        }
@@ -735,9 +734,7 @@ angular.module('myApp.itinerary.map.controller', [])
          });
          if (i !== -1) {
            liveItem = $scope.data.liveTracks[i];
-           if (liveItem.updating) {
-             $log.debug('Already running update for', nickname, 'skipping request');
-           } else {
+           if (!liveItem.updating) {
              liveItem.updating = true;
              if (liveItem.path) {
                $scope.removeLiveItem(liveItem);
@@ -832,6 +829,8 @@ angular.module('myApp.itinerary.map.controller', [])
                    liveItem.updating = false;
                  }, 10000);
                });
+           // } else {
+             // $log.debug('Already running update for', nickname, 'skipping request');
            }
          }
        };

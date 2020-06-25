@@ -34,9 +34,8 @@ angular.module('myApp.gpxupload.gpxupload-controller', [])
         gpxUploadService.save({id: $scope.itineraryId},
                               $scope.formData
                               ).$promise.then(function(value) {
-                                $log.debug('Upload succeeded');
                                 $location.path('/itinerary');
-                                $location.search({id: encodeURIComponent($scope.itineraryId)});
+                                $location.search({id: encodeURIComponent($scope.itineraryId), delay: 'true'});
                               }).catch(function(response) {
                                 $log.debug('Upload failed', response.status);
                                 if (response.status === 401) {
