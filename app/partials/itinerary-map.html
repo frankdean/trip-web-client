@@ -51,6 +51,10 @@
         <label for="auto-update">Auto-centre on live update:</label>
         <input id="auto-update" type="checkbox" ng-model="state.autocenter" />
       </div>
+      <div>
+        <label for="show-popup">Display popup on most recent marker:</label>
+        <input id="show-popup" type="checkbox" ng-model="state.popup" ng-change="updateLiveMapSettings()" />
+      </div>
       <div id="div-nicknames">
         <div style="padding-left: 15px;">
           <input id="input-my-nickname" type="checkbox" ng-change="selectNickname(data.myNickname)" ng-model="data.selfSelected"/>

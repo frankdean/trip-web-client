@@ -452,6 +452,7 @@ angular.module('myApp.itinerary.controller', [])
                 track: newTrack
                })
                .$promise.then(function() {
+                 $scope.status.tracksInitialized = false;
                  $scope.updateTrackNames();
                }).catch(function(response) {
                  $log.warn('Error creating new track:', response.status, response.statusText);
@@ -477,7 +478,8 @@ angular.module('myApp.itinerary.controller', [])
                                               type: w.type,
                                               color: w.color
                                              }).$promise.then(function(saveWaypointResponse) {
-                                               //
+                                               $scope.status.waypointsInitialized = false;
+                                               $scope.updateWaypoints();
                                              }).catch(function(response) {
                                                $log.error('Creating new waypoint from pasting track log failed');
                                              });
@@ -502,6 +504,7 @@ angular.module('myApp.itinerary.controller', [])
                                           time: new Date(),// options.time,
                                           comment: options.note
                                          }).$promise.then(function(saveWaypointResponse) {
+                                           $scope.status.waypointsInitialized = false;
                                            $scope.updateWaypoints();
                                          }).catch(function(response) {
                                            $log.error('Creating new waypoint from pasted location failed');

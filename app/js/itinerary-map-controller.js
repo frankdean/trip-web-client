@@ -105,6 +105,7 @@ angular.module('myApp.itinerary.map.controller', [])
          state: {
            autocenter: false,
            liveMap: false,
+           popup: true,
            updateBounds: true,
            showMap: false,
            locationFound: {error: false, success: false}
@@ -329,7 +330,7 @@ angular.module('myApp.itinerary.map.controller', [])
                  polyline: false,
                  polygon: false,
                  rectangle: false,
-                 circlemarker: true,
+                 circlemarker: false,
                  circle: false,
                  marker: false
                },
@@ -674,7 +675,7 @@ angular.module('myApp.itinerary.map.controller', [])
                apply: function(socket, args) {
                  if (args && args[0] && args[0].update) {
                    $scope.state.updateBounds = false;
-                   $scope.updateLiveTrack(this.nickname, true);
+                   $scope.updateLiveTrack(this.nickname);
                  }
                }
              };
@@ -726,7 +727,7 @@ angular.module('myApp.itinerary.map.controller', [])
          }
        };
 
-       $scope.updateLiveTrack = function(nickname, focusMarker) {
+       $scope.updateLiveTrack = function(nickname) {
          var i, liveItem;
          $scope.ajaxRequestError = {error: false};
          i = $scope.data.liveTracks.findIndex(function(e) {
@@ -763,10 +764,12 @@ angular.module('myApp.itinerary.map.controller', [])
                      lat: latlng.lat,
                      lng: latlng.lng,
                      icon: ConfigService.getDefaultMarkerIcon(),
-                     focus: /*!$scope.state.updateBounds && */ $scope.state.autocenter && focusMarker ? true : false,
+                     focus: $scope.state.popup,
                      message: $sanitize('<b>' + nickname + '</br>'  + latlng.time)
                    };
                    if (latlng.note && latlng.note !== '') {
+                     // Always show a note
+                     liveItem.marker.focus = true;
                      liveItem.marker.message += $sanitize('</br>' + latlng.note);
                    }
                    $scope.map.markers.push(liveItem.marker);
@@ -817,7 +820,7 @@ angular.module('myApp.itinerary.map.controller', [])
                    liveItem.updating = false;
                  }, 1000);
                }).catch(function(response) {
-                 $log.error('Error whilst fetching points - status code:', response.status);
+                 $log.error('Error whilst fetching points - status code:', response);
                  $scope.ajaxRequestError = {
                    error: true,
                    status: response.status
@@ -837,18 +840,19 @@ angular.module('myApp.itinerary.map.controller', [])
 
        $scope.updateLiveMapSettings = function() {
          if ($scope.form  && $scope.form.$valid) {
+           myBounds = null;
            $scope.state.updateBounds = true;
            $scope.state.locationFound = {error: false, success: false};
            if ($scope.data.trackSelf) {
              $scope.addListener($scope.data.myNickname);
-             $scope.updateLiveTrack($scope.data.myNickname, true);
+             $scope.updateLiveTrack($scope.data.myNickname);
            } else {
              $scope.removeListener($scope.data.myNickname);
            }
            $scope.data.nicknames.forEach(function(v) {
              if (v.selected) {
                $scope.addListener(v.nickname);
-               $scope.updateLiveTrack(v.nickname, true);
+               $scope.updateLiveTrack(v.nickname);
              } else {
                $scope.removeListener(v.nickname);
              }
