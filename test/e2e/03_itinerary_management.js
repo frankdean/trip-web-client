@@ -17,6 +17,8 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Itinerary management', function() {
   var EC = protractor.ExpectedConditions;
   var elemTitle, elemStartDate, elemFinishDate, elemDescription,
@@ -37,6 +39,7 @@ describe('Itinerary management', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-edit');
+      browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for lists of shares');
     });
 
     it('should create a new itinerary', function() {
@@ -58,6 +61,7 @@ describe('Itinerary management', function() {
                                '## Lorem ipsum',
                                protractor.Key.ENTER);
       elemSave.click();
+      helper.wait(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test title');
       expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
@@ -70,9 +74,14 @@ describe('Itinerary management', function() {
     it('should create a new itinerary if only the title field is entered', function() {
       elemTitle.sendKeys('Test title 2');
       elemSave.click();
+      helper.wait(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test title 2');
-      expect(element(by.id('itinerary-text-date')).getText()).toEqual('');
+      // expect(element(by.id('itinerary-text-date')).getText()).toEqual('');
+      // 'from' should be hidden
+      expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
+      // 'to' should be hidden
+      expect(element(by.xpath('//*[@id="itinerary-text-date"]/b[2]/span')).getAttribute('class')).toEqual('ng-hide');
       // cleanup
       element(by.id('btn-edit-itinerary')).click();
       element(by.id('btn-delete')).click();
@@ -87,19 +96,9 @@ describe('Itinerary management', function() {
       expect(elemReset.isDisplayed()).toBeTruthy();
     });
 
-    it('should show errors when dates are invalid', function() {
-      // Chrome won't let you enter invalid characters in the first place
-      if (browser.privateConfig.browserName !== 'chrome') {
-        elemStartDate.sendKeys('XX');
-        elemFinishDate.sendKeys('XX');
-        elemSave.click();
-        expect(element(by.id('invalid-start-date')).isDisplayed()).toBeTruthy();
-        expect(element(by.id('invalid-finish-date')).isDisplayed()).toBeTruthy();
-        expect(elemSave.isDisplayed()).toBeTruthy();
-        expect(elemDelete.isDisplayed()).toBeFalsy();
-        expect(elemReset.isDisplayed()).toBeTruthy();
-      }
-    });
+    // it('should show errors when dates are invalid', function() {
+    //   // None of the browsers will allow invalid dates to be entered in their latest versions
+    // });
 
     it('should clear the fields when the reset button is clicked', function() {
       if (browser.privateConfig.browserName !== 'safari') {
@@ -121,11 +120,15 @@ describe('Itinerary management', function() {
     it('should show the Add Waypoint button after creating a new itinerary', function() {
       elemTitle.sendKeys('Test title 3');
       elemSave.click();
+      helper.wait(100);
       element(by.id('features-tab')).click();
+      helper.wait(100);
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
       // cleanup
       element(by.id('heading-tab')).click();
+      helper.wait(100);
       element(by.id('btn-edit-itinerary')).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
       elemDelete.click();
@@ -135,12 +138,14 @@ describe('Itinerary management', function() {
     it('should delete an itinerary when the delete button is clicked', function() {
       elemTitle.sendKeys('Test deleting itinerary');
       elemSave.click();
+      browser.sleep(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       element(by.id('heading-tab')).click();
       element(by.id('btn-edit-itinerary')).click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
       elemDelete.click();
       element.all((by.css('.confirm-button'))).get(0).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itineraries/);
     });
 
@@ -150,6 +155,7 @@ describe('Itinerary management', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-edit?id=' + testItineraryId);
+      browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for lists of shares');
     });
 
     it('should be able to modify each field', function() {
@@ -170,6 +176,7 @@ describe('Itinerary management', function() {
                                '## Lorem ipsum modified too',
                                protractor.Key.ENTER);
       elemSave.click();
+      helper.wait(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
       expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?22.Nov.2015 to: (\w+ )?23.Nov.2015/);
@@ -179,6 +186,8 @@ describe('Itinerary management', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
       if (browser.privateConfig.browserName !== 'chrome') {
+        elemStartDate.clear();
+        elemFinishDate.clear();
         elemStartDate.sendKeys('2001-12-12');
         elemFinishDate.sendKeys('2001-12-13');
       } else {
@@ -186,7 +195,17 @@ describe('Itinerary management', function() {
         elemFinishDate.sendKeys('13122001');
       }
       elemSave.click();
-      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
+      helper.wait(100);
+      if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[1]')).getText()).toMatch(/(\w+ )?12.Dec.2001/);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[2]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
+        // 'from' should not be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('');
+        // 'to' should not be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b[2]/span')).getAttribute('class')).toEqual('');
+      } else {
+        expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
+      }
     });
 
     it('should show only the start date range when the end date is not specified', function() {
@@ -209,7 +228,16 @@ describe('Itinerary management', function() {
         elemFinishDate.clear();
       }
       elemSave.click();
-      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date: (\w+ )?12.Dec.2001/);
+      if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+        browser.sleep(100);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[1]')).getText()).toMatch(/12.Dec.2001/);
+        // 'from' should be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
+        // 'to' should  be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b[2]/span')).getAttribute('class')).toEqual('ng-hide');
+      } else {
+        expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date: (\w+ )?12.Dec.2001/);
+      }
     });
 
     it('should show only the start date range when the end date is not specified', function() {
@@ -225,13 +253,23 @@ describe('Itinerary management', function() {
         elemFinishDate.sendKeys('13122001');
       } else {
         elemStartDate.clear();
+        elemFinishDate.clear();
         elemFinishDate.sendKeys('2001-12-13');
       }
       elemSave.click();
-      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date to: (\w+ )?13.Dec.2001/);
+      helper.wait(200);
+      if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+        // 'from' should be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[2]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
+        // 'to' should not be hidden
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/b[2]/span')).getAttribute('class')).toEqual('');
+      } else {
+        expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date to: (\w+ )?13.Dec.2001/);
+      }
     });
 
-    it('should show only the start date range when the end date is not specified', function() {
+    it('should not show start or end date range when no dates are specified', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
       if (browser.privateConfig.browserName === 'chrome') {
@@ -247,9 +285,17 @@ describe('Itinerary management', function() {
                                 protractor.Key.TAB,
                                 protractor.Key.BACK_SPACE
                                );
+      } else {
+        elemStartDate.clear();
+        elemFinishDate.clear();
       }
       elemSave.click();
-      expect(element(by.id('itinerary-text-date-range')).isDisplayed()).toBeFalsy();
+      if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+        browser.sleep(100);
+        expect(element(by.xpath('//*[@id="itinerary-text-date-range"]')).getAttribute('class')).toMatch(/ng-hide/);
+      } else {
+        expect(element(by.id('itinerary-text-date-range')).isDisplayed()).toBeFalsy();
+      }
     });
 
     it('should reset the itinerary values when the reset button is clicked', function() {
@@ -299,12 +345,16 @@ describe('Itinerary management', function() {
 
     it('should show the sharing page when the sharing button is clicked', function() {
       element(by.id('btn-sharing')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-sharing\?id=\d+/);
+      helper.wait(100);
     });
 
     it('should show the Add Waypoint button whilst the form is not in edit mode', function() {
       element(by.id('features-tab')).click();
+      helper.wait(400);
       element(by.id('edit-pill')).click();
+      helper.wait(400);
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
     });
 

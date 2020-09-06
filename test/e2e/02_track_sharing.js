@@ -17,10 +17,13 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Track Sharing page', function() {
   var sharesList, pageCount, elemNickname, elemRecentDays, elemRecentHours,
       elemRecentMinutes, elemMaxDays, elemMaxHours,
-      elemMaxMinutes, elemActive, elemButtonSave;
+      elemMaxMinutes, elemActive, elemButtonSave,
+      EC = protractor.ExpectedConditions;
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/sharing');
@@ -35,6 +38,7 @@ describe('Track Sharing page', function() {
     elemMaxMinutes = element(by.model('data.maxMinutes'));
     elemActive = element(by.model('data.active'));
     elemButtonSave = element(by.id('btn-save'));
+    helper.wait(400);
   });
 
   it('should create a new location share and display it in the list', function() {
@@ -47,6 +51,7 @@ describe('Track Sharing page', function() {
     elemMaxMinutes.sendKeys('6');
     elemActive.click();
     element(by.id('btn-save')).click();
+    helper.wait(400);
     expect(sharesList.all(by.tagName('td')).get(0).getText()).toEqual('Adam');
     expect(sharesList.all(by.tagName('td')).get(1).getText()).toEqual('1d 2h 3m');
     expect(sharesList.all(by.tagName('td')).get(2).getText()).toEqual('4d 5h 6m');
@@ -64,6 +69,7 @@ describe('Track Sharing page', function() {
     elemMaxMinutes.sendKeys('16');
     elemActive.click();
     element(by.id('btn-save')).click();
+    helper.wait(400);
     expect(sharesList.all(by.tagName('td')).get(0).getText()).toEqual('Adam');
     expect(sharesList.all(by.tagName('td')).get(1).getText()).toEqual('11d 12h 13m');
     expect(sharesList.all(by.tagName('td')).get(2).getText()).toEqual('14d 15h 16m');
@@ -74,6 +80,10 @@ describe('Track Sharing page', function() {
   it('should create another location share and display it in the list', function() {
     elemNickname.sendKeys('Adam2');
     element(by.id('btn-save')).click();
+    if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+      browser.sleep(400);
+    }
+    browser.wait(EC.visibilityOf(element(by.repeater('share in shares.payload'))), 4000, 'Timeout waiting for lists of shares');
     expect(sharesList.all(by.tagName('td')).get(5).getText()).toEqual('Adam2');
     expect(sharesList.all(by.tagName('td')).get(6).getText()).toEqual('0d 0h 0m');
     expect(sharesList.all(by.tagName('td')).get(7).getText()).toEqual('0d 0h 0m');
@@ -97,6 +107,7 @@ describe('Track Sharing page', function() {
     elemMaxMinutes.clear();
     elemActive.click();
     element(by.id('btn-reset')).click();
+    helper.wait(400);
     expect(elemNickname.getAttribute('value')).toEqual('Adam');
     expect(elemRecentDays.getAttribute('value')).toEqual('11');
     expect(elemRecentHours.getAttribute('value')).toEqual('12');
@@ -111,6 +122,7 @@ describe('Track Sharing page', function() {
     sharesList.all(by.model('share.selected')).first().click();
     expect(sharesList.all(by.model('share.selected')).first().getAttribute('checked').isSelected()).toBeTruthy();
     element(by.id('btn-edit')).click();
+    helper.wait(400);
     expect(sharesList.all(by.tagName('td')).get(0).getText()).toEqual('Adam');
     expect(sharesList.all(by.tagName('td')).get(1).getText()).toEqual('11d 12h 13m');
     expect(sharesList.all(by.tagName('td')).get(2).getText()).toEqual('14d 15h 16m');
@@ -144,44 +156,59 @@ describe('Track Sharing page', function() {
 
   it('should show page navigation once the list is big enough', function() {
     var btnSave = element(by.id('btn-save')),
-        btnNew = element(by.id('btn-new'));
+        btnNew = element(by.id('btn-new')),
+        sleep = 100;
+    if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
+      sleep = 1;
+    }
     elemNickname.clear();
     elemNickname.sendKeys('Adam');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('Adam2');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('oswald');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('Fred');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('Jane');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('John');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('test2');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('Adam3');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('oswald4');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('oswald3');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('oswald2');
     btnSave.click();
+    browser.sleep(sleep);
     btnNew.click();
     elemNickname.sendKeys('oswald5');
     btnSave.click();
-    browser.waitForAngular();
+    browser.sleep(sleep);
     // should have a full page now
     expect(sharesList.count()).toBe(10);
     expect(sharesList.first().all(by.tagName('td')).first().getText()).toEqual('Adam');
@@ -250,9 +277,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentDays.sendKeys('-9');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemRecentDays.clear();
     elemRecentDays.sendKeys('999999');
     expect(element(by.id('error-recent-days-max')).isDisplayed()).toBeTruthy();
@@ -267,9 +292,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentHours.sendKeys('-1');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemRecentHours.clear();
     elemRecentHours.sendKeys('0');
     expect(elemError.isDisplayed()).toBeFalsy();
@@ -287,9 +310,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemRecentMinutes.sendKeys('-1');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemRecentMinutes.clear();
     elemRecentMinutes.sendKeys('0');
     expect(elemError.isDisplayed()).toBeFalsy();
@@ -307,9 +328,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxDays.sendKeys('-9');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemMaxDays.clear();
     elemMaxDays.sendKeys('99999');
     expect(elemError.isDisplayed()).toBeFalsy();
@@ -323,9 +342,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxHours.sendKeys('-1');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemMaxHours.clear();
     elemMaxHours.sendKeys('0');
     expect(elemError.isDisplayed()).toBeFalsy();
@@ -343,9 +360,7 @@ describe('Track Sharing page', function() {
     expect(elemError.isDisplayed()).toBeFalsy();
     elemMaxMinutes.sendKeys('-1');
     elemButtonSave.click();
-    if (browser.privateConfig.browserName !== 'safari') {
-      expect(elemError.isDisplayed()).toBeTruthy();
-    }
+    expect(elemError.isDisplayed()).toBeTruthy();
     elemMaxMinutes.clear();
     elemMaxMinutes.sendKeys('0');
     expect(elemError.isDisplayed()).toBeFalsy();
@@ -359,7 +374,7 @@ describe('Track Sharing page', function() {
   });
 
   it('should delete all selected location shares when the delete button is clicked', function() {
-    if (browser.privateConfig.browserName !== 'safari') {
+    if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
       element(by.model('selectAllCheckbox')).click();
       element(by.id('btn-delete')).click();
       element(by.css('.confirm-button')).click();
@@ -373,7 +388,7 @@ describe('Track Sharing page', function() {
   });
 
   it('should not display the location share list when there are no location shares', function() {
-    if (browser.privateConfig.browserName !== 'safari') {
+    if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
       expect(sharesList.count()).toBe(2);
       // sharesList.all(by.model('share.selected')).first().click();
       element(by.model('selectAllCheckbox')).click();

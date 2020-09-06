@@ -17,7 +17,12 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('User management', function() {
+
+  var testName = '50_user_management',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
 
   var EC = protractor.ExpectedConditions;
   var elemNickname, elemUsername, elemPassword, elemPassword2,
@@ -44,16 +49,25 @@ describe('User management', function() {
     email: 'purple@trip.test',
     firstname: 'purple',
     lastname: 'purple'
-  };
+  },
+      adminLoginScreenshotCounter = 0;
+
 
   var adminLogin = function() {
     browser.get(browser.baseUrl + '/logout');
-    browser.waitForAngular();
+    helper.wait(400);
     browser.get(browser.baseUrl + '/login');
+    browser.wait(EC.visibilityOf(element(by.id('input-email'))), 4000, 'Timeout waiting for login page to be visibile');
     browser.findElement(by.id('input-email')).sendKeys(browser.privateConfig.testAdminUser);
+    helper.wait(100);
     browser.findElement(by.id('input-password')).sendKeys(browser.privateConfig.testAdminUserPassword);
+    helper.wait(100);
+    helper.takeScreenshot(testName + '_admin_login_' +
+                          ('0000' + ++adminLoginScreenshotCounter).substr(-4, 4),
+                          takeScreenshots);
     browser.findElement(by.id('btn-submit')).click();
-    browser.waitForAngular();
+    helper.wait(800);
+    expect(browser.getCurrentUrl()).toMatch(/\/tracks$/);
   };
 
   beforeEach(function() {
@@ -63,10 +77,18 @@ describe('User management', function() {
     }
   });
 
+  it('should successfully login', function() {
+    expect(browser.getCurrentUrl()).toMatch(/\/tracks$/);
+  });
+
   describe('User search page', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/users');
+    });
+
+    it('should successfully login as admin and therefore be able to access the Users page', function() {
+      expect(browser.getCurrentUrl()).toMatch(/\/users$/);
     });
 
     describe('Create new user', function() {
@@ -142,15 +164,17 @@ describe('User management', function() {
 
       it('should display an error message if the back-end returns an error', function() {
         // chrome and safari won't let us type in the invalid character
-        if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName !== 'safari' ) {
+        if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName.toLowerCase() !== 'safari' ) {
+          // NOTE: Where the browser ignores invalid characters, creating this record could succeed
           // invalid nickname
-          elemNickname.sendKeys('smi\u0007thy');
+          elemNickname.sendKeys('smi\u0007thy2');
           elemUsername.sendKeys('smithy2@trip.test');
           elemPassword.sendKeys('secret');
           elemPassword2.sendKeys('secret');
           elemFirstname.sendKeys('John');
           elemLastname.sendKeys('Smith');
           elemButtonSubmit.click();
+          helper.takeScreenshot(testName + '_invalid_nickname', takeScreenshots);
           expect(element(by.id('ajax-error')).isDisplayed()).toBeTruthy();
         }
       });
@@ -163,6 +187,7 @@ describe('User management', function() {
         elemFirstname.sendKeys('John');
         elemLastname.sendKeys('Smith');
         elemButtonSubmit.click();
+        helper.wait(400);
         expect(element(by.id('bad-request')).isDisplayed()).toBeTruthy();
       });
 
@@ -174,6 +199,7 @@ describe('User management', function() {
         elemFirstname.sendKeys('John');
         elemLastname.sendKeys('Smith');
         elemButtonSubmit.click();
+        helper.wait(400);
         expect(element(by.id('bad-request')).isDisplayed()).toBeTruthy();
       });
 
@@ -182,10 +208,12 @@ describe('User management', function() {
         browser.get(browser.baseUrl + '/logout');
         browser.waitForAngular();
         browser.get(browser.privateConfig.baseUrl + '/login');
+        browser.wait(EC.visibilityOf(element(by.id('input-email'))), 4000, 'Timeout waiting for login page to be visibile after logout');
         browser.findElement(by.id('input-email')).sendKeys(browser.privateConfig.testUser);
+        helper.wait(100);
         browser.findElement(by.id('input-password')).sendKeys(browser.privateConfig.testUserPassword);
         browser.findElement(by.id('btn-submit')).click();
-        browser.waitForAngular();
+        browser.sleep(100);
         // Start the test
         browser.get(browser.baseUrl + '/users');
         element(by.id('btn-new')).click();
@@ -196,6 +224,7 @@ describe('User management', function() {
         elemFirstname.sendKeys('John');
         elemLastname.sendKeys('Smith');
         elemButtonSubmit.click();
+        browser.sleep(100);
         expect(element(by.id('ajax-error')).isDisplayed()).toBeTruthy();
         adminLogin();
       });
@@ -203,24 +232,21 @@ describe('User management', function() {
       // Note that this test relies on a delete test
       // Search comments for CREATE_AND_DELETE_USER
       it('should create a new user', function() {
-        // Safari can't handle the delete method, so best not create a user
-        if (browser.privateConfig.browserName !== 'safari') {
-          elemNickname.sendKeys('smithy');
-          elemUsername.sendKeys('smithy@trip.test');
-          elemPassword.sendKeys('secret');
-          elemPassword2.sendKeys('secret');
-          elemFirstname.sendKeys('John');
-          elemLastname.sendKeys('Smith');
-          elemButtonSubmit.click();
-          // waitForAngular() doesn't seem sufficient for Safari & Chrome drivers
-          browser.waitForAngular();
-          // so wait for search button to be visible
-          browser.wait(
-            EC.visibilityOf(
-              element(by.id('btn-search'))),
-              5000,
-              'Search button should be visible within 5 seconds');
-        }
+        elemNickname.sendKeys('smithy');
+        elemUsername.sendKeys('smithy@trip.test');
+        elemPassword.sendKeys('secret');
+        elemPassword2.sendKeys('secret');
+        elemFirstname.sendKeys('John');
+        elemLastname.sendKeys('Smith');
+        elemButtonSubmit.click();
+        helper.wait(800);
+        helper.takeScreenshot(testName + '_create_new_user', takeScreenshots);
+        // so wait for search button to be visible
+        browser.wait(
+          EC.visibilityOf(
+            element(by.id('btn-search'))),
+          4000,
+          'Search button should be visible within 5 seconds');
       });
 
     });
@@ -243,7 +269,7 @@ describe('User management', function() {
           var conditionPage2LinkVisible = EC.visibilityOf(element(by.linkText('2')));
           var conditionLastPageLinkVisible = EC.visibilityOf(element(by.linkText('>>')));
           browser.wait(EC.and(conditionPage2LinkVisible, conditionLastPageLinkVisible),
-                       5000,
+                       4000,
                        'Paging elements should be visible within 5 seconds');
           expect(element(by.linkText('2')).isDisplayed()).toBeTruthy();
           element(by.linkText('2')).click();
@@ -310,7 +336,7 @@ describe('User management', function() {
             var conditionPage2LinkVisible = EC.visibilityOf(element(by.linkText('2')));
             var conditionLastPageLinkVisible = EC.visibilityOf(element(by.linkText('>>')));
             browser.wait(EC.and(conditionPage2LinkVisible, conditionLastPageLinkVisible),
-                         5000,
+                         4000,
                          'Paging elements should be visible within 5 seconds');
             expect(element(by.linkText('2')).isDisplayed()).toBeTruthy();
             element(by.linkText('2')).click();
@@ -391,6 +417,7 @@ describe('User management', function() {
     describe('Options multiple selected users', function() {
 
       beforeEach(function() {
+        browser.wait(EC.visibilityOf(element(by.id('radio-email'))), 4000, 'Timeout waiting for user search page to be visibile');
         element(by.id('radio-email')).click();
         element(by.model('search.email')).sendKeys('@trip.test');
         element(by.id('radio-partial-match')).click();
@@ -458,25 +485,28 @@ describe('User management', function() {
     describe('Delete user', function() {
 
       beforeEach(function() {
+        helper.wait(400);
         element(by.id('radio-nickname')).click();
         element(by.model('search.nickname')).sendKeys('smithy');
         element(by.id('radio-exact-match')).click();
         element(by.id('btn-search')).click();
-        // We will have skipped creating the user in safari
-        // TODO Change to test whether userListElem has any elements
-        if (browser.privateConfig.browserName !== 'safari') {
-          userListElem = element.all(by.repeater('user in users.payload'));
-          userListElem.all(by.model('user.selected')).first().click();
-        }
+        userListElem = element.all(by.repeater('user in users.payload'));
+        expect(userListElem.count()).toBeGreaterThan(0);
+        userListElem.all(by.model('user.selected')).first().click();
+        helper.wait(400);
+        helper.takeScreenshot(testName + '_delete_user_01', takeScreenshots);
       });
 
       // Note this test relies on a create test running before this one
       // Search comments for CREATE_AND_DELETE_USER
       it('should allow deleting a single user', function() {
-        if (browser.privateConfig.browserName !== 'safari') {
-          element(by.id('btn-delete')).click();
-          element.all((by.css('.confirm-button'))).get(0).click();
-        }
+        element(by.id('btn-delete')).click();
+        element.all((by.css('.confirm-button'))).get(0).click();
+        browser.sleep(800);
+        // Check the user has been deleted
+        userListElem = element.all(by.repeater('user in users.payload'));
+        expect(userListElem.count()).toEqual(0);
+        helper.takeScreenshot(testName + '_delete_user_02', takeScreenshots);
       });
 
     });
@@ -486,6 +516,7 @@ describe('User management', function() {
   describe('Edit user', function() {
 
     function clearUserEditForm() {
+      browser.wait(EC.visibilityOf(element(by.model('data.nickname'))), 4000, 'Timeout waiting for edit user form to be displayed');
       element(by.model('data.nickname')).clear();
       element(by.model('data.email')).clear();
       element(by.model('data.firstname')).clear();
@@ -494,6 +525,7 @@ describe('User management', function() {
 
     function fillInUserEditForm(user) {
       clearUserEditForm();
+      helper.wait(400);
       element(by.model('data.nickname')).sendKeys(user.nickname);
       element(by.model('data.email')).sendKeys(user.email);
       element(by.model('data.firstname')).sendKeys(user.firstname);
@@ -507,7 +539,7 @@ describe('User management', function() {
         browser.wait(
           EC.visibilityOf(
             element(by.id('btn-submit'))),
-          5000,
+          4000,
           'Save button should be visible within 5 seconds');
       });
 
@@ -557,7 +589,7 @@ describe('User management', function() {
 
         it('should display an error message if the back-end returns an error', function() {
           // chrome and safari won't let us type in the invalid character
-          if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName !== 'safari' ) {
+          if (browser.privateConfig.browserName !== 'chrome' && browser.privateConfig.browserName.toLowerCase() !== 'safari' ) {
             // invalid nickname
             elemNickname.sendKeys('smi\u0007thy');
             elemUsername.sendKeys('smithy2@trip.test');
@@ -575,6 +607,7 @@ describe('User management', function() {
         beforeEach(function() {
           fillInUserEditForm(testUser2);
           element(by.id('btn-submit')).click();
+          helper.wait(400);
         });
 
         it('should display the user search page', function() {
@@ -599,6 +632,7 @@ describe('User management', function() {
         beforeEach(function() {
           fillInUserEditForm(testUser1);
           element(by.id('btn-submit')).click();
+          helper.wait(400);
         });
 
         it('should display the user search page', function() {
@@ -682,7 +716,7 @@ describe('User management', function() {
           browser.wait(
             EC.visibilityOf(
               element(by.model('data.admin'))),
-              5000,
+              4000,
               'Admin checkbox should be visible within 5 seconds');
             expect(elemAdmin.getAttribute('checked').isSelected()).toBeTruthy();
           });
@@ -704,7 +738,7 @@ describe('User management', function() {
             browser.wait(
               EC.visibilityOf(
                 element(by.model('data.admin'))),
-              5000,
+              4000,
               'Admin checkbox should be visible within 5 seconds');
             expect(elemAdmin.getAttribute('checked').isSelected()).toBeFalsy();
           });
@@ -719,6 +753,7 @@ describe('User management', function() {
 
       beforeEach(function() {
         browser.get(browser.baseUrl + '/edit-user?id=' + testUser3.id);
+        helper.wait(800);
       });
 
       describe('Form not altered', function() {
@@ -739,8 +774,12 @@ describe('User management', function() {
         beforeEach(function() {
           if (browser.privateConfig.browserName !== 'safari') {
             fillInUserEditForm(testUser2);
+            helper.wait(400);
+            helper.takeScreenshot(testName + '_fill_edit_form', takeScreenshots);
             element(by.id('btn-cancel')).click();
             element.all((by.css('.confirm-button'))).get(0).click();
+            helper.takeScreenshot(testName + '_cancel_edit_form', takeScreenshots);
+            browser.wait(EC.visibilityOf(element(by.id('input-search-nickname'))), 4000, 'Timeout waiting for user search form to be visibile');
           }
         });
 
@@ -782,6 +821,7 @@ describe('User management', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/admin-password-reset?id=' + testUser1.id);
+      browser.wait(EC.visibilityOf(element(by.id('input-password'))), 4000, 'Timeout waiting for password reset page to be visibile');
     });
 
     it('should display error messages for mandatory fields', function() {
@@ -802,6 +842,7 @@ describe('User management', function() {
       element(by.model('data.password')).sendKeys('testTwo');
       element(by.model('data.password2')).sendKeys('testTwo');
       element(by.id('btn-submit')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/users$/);
     });
 

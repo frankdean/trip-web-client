@@ -62,22 +62,11 @@ See
 [Protractor Browser Support page](http://www.protractortest.org/#/browser-support)
 for the latest information.
 
-1.  Latest Firefox Protractor testing requires using
-    [geckdriver](https://github.com/mozilla/geckodriver).  Seel also
-    <http://www.seleniumeasy.com/selenium-tutorials/launching-firefox-browser-with-geckodriver-selenium-3>.
-	Not yet tested as documentation says it doesn't yet fully support the
-    webdriver standard.
+1.  Safari tests are unreliable - WaitForAngular doesn't work, so the
+    workaround is to keep adding delays at various points where the tests
+    fail.
 
-1.  The Safari web browser seems to cache the last interactively used versions
-    of the JavaScript, therefore runs the tests against the wrong version.
-    Run Safari interactively with the application and refresh the page to
-    ensure the latest version is being loaded.
-
-1.  Safari not working -
-    [Protractor bug #3588](https://github.com/angular/protractor/issues/3588).
-
-	Also need to enable 'Allow Remote Automation' option in Safari's 'Develop'
-    menu, but fails when attempting to script the login.
+	Enable 'Allow Remote Automation' option in Safari's 'Develop' menu.
 
 1.  Safari on iOS (iPad) fails when using websockets with self-signed
 	certificates over HTTPS, with:
@@ -95,13 +84,6 @@ for the latest information.
     angular-pagedown directives to use an attribute of `ng-model` instead of
     `content`, which is inconsistent with current documentation.
 
-    Also, `angular-pagedown.min.js` in 0.4.4 is identical to that distributed
-    with 0.4.3.
-
-    For these reasons `bower.json` configured to use 0.4.3 so that there is a
-    simple consistent release that will build reliably without extra
-    instructions.
-
     In both versions, the default help button of the editor does not work.  It
     looks like a change in AngularJS has broken angular-pagedown.  The
     workaround is set the `help` attribute to call a local function in the
@@ -117,6 +99,3 @@ for the latest information.
     [Safari (Mac OS X Lion) returns wrong epochtime value to position.timestamp call](https://stackoverflow.com/questions/10870138/safari-mac-os-x-lion-returns-wrong-epochtime-value-to-position-timestamp-call)
 
 [trip-server]: https://www.fdsd.co.uk/trip-server/ "TRIP - Trip Recording and Itinerary Planner"
-
-1.  iOS Safari names downloads as `unknown.gpx` - See
-    [FileSaver.js issue #12](https://github.com/eligrey/FileSaver.js/issues/12)

@@ -17,20 +17,15 @@
  */
 'use strict';
 
-var fs = require('fs');
+var helper = require('../helper.js');
 
 describe('itinerary sharing', function() {
   var EC = protractor.ExpectedConditions;
   // Just needs to be the ID of an existing itinerary that we will modify
   var testItineraryId = 929;
 
-  var takeScreenshots = false;
-
-  function writeScreenshot(png, filename) {
-    var stream = fs.createWriteStream(filename);
-    stream.write(new Buffer.from(png, 'base64'));
-    stream.end();
-  }
+  var testName = '05_itinerary_sharing',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/itinerary-sharing?id=' + testItineraryId);
@@ -71,6 +66,9 @@ describe('itinerary sharing', function() {
       it('should show an error when the nickname does not exist', function() {
         element(by.id('input-nickname')).sendKeys('This nickname should not exist');
         element(by.id('btn-save')).click();
+        if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+          browser.sleep(400);
+        }
         expect(element(by.id('error-invalid-nickname')).isDisplayed()).toBeTruthy();
       });
 
@@ -90,41 +88,38 @@ describe('itinerary sharing', function() {
     });
 
     describe('select all operations', function() {
-      var selectAllShares;
+      var selectAllShares, screenshotCounter = 0;
 
       beforeEach(function() {
+        browser.sleep(400);
         selectAllShares = element(by.id('input-select-all'));
-        browser.wait(EC.visibilityOf(selectAllShares), 1000);
+        browser.wait(EC.visibilityOf(selectAllShares), 4000);
+        helper.takeScreenshot(testName + '_select_all_shares_' + ('0000' + ++screenshotCounter).substr(-4, 4), takeScreenshots);
         element(by.id('input-select-all')).click();
+        if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+          browser.sleep(400);
+        }
       });
 
       it('should de-activate all shares', function() {
-        if (takeScreenshots) {
-          browser.takeScreenshot().then(function(png) {
-            writeScreenshot(png, 'e2e-05-itinerary-shares-before-deactivate-click.png');
-          });
-        }
+        helper.takeScreenshot(testName + '_before_deactivate_click', takeScreenshots);
         element(by.id('btn-deactivate')).click();
+        if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+          browser.sleep(400);
+        }
+        helper.takeScreenshot(testName + '_after_deactivate_click', takeScreenshots);
         expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('');
       });
 
       it('should activate all shares', function() {
-        if (takeScreenshots) {
-          browser.takeScreenshot().then(function(png) {
-            writeScreenshot(png, 'e2e-05-itinerary-shares-before-activate-click.png');
-          });
-        }
         element(by.id('btn-activate')).click();
-        if (takeScreenshots) {
-          browser.takeScreenshot().then(function(png) {
-            writeScreenshot(png, 'e2e-05-itinerary-shares-after-activate-click.png');
-          });
-        }
-        // This test often fails when the entire test suite is run, but never fails
-        // when we take a screenshot.  Hoping this delay fixes it.
-        browser.sleep(600).then(function(done) {
-          expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
-        });
+        browser.sleep(400);
+        helper.takeScreenshot(testName + '_before_activate_click', takeScreenshots);
+        element(by.id('btn-activate')).click();
+        browser.sleep(600);
+        helper.takeScreenshot(testName + '_after_activate_click', takeScreenshots);
+        // expect(list.first().all(by.tagName('td')).get(1).getText()).toMatch('\u2713');
+        expect(element(by.xpath('//*[@id="table-shares"]/tbody/tr[2]/td[2]')).getText()).toMatch('\u2713');
       });
 
       it('should not allow edit of multiple items', function() {
@@ -142,11 +137,7 @@ describe('itinerary sharing', function() {
       });
 
       it('should allow delete of multiple items', function() {
-        if (takeScreenshots) {
-          browser.takeScreenshot().then(function(png) {
-            writeScreenshot(png, 'e2e-05-delete-multiple-itinerary-shares.png');
-          });
-        }
+        helper.takeScreenshot(testName + '_delete_multiple_itinerary_shares', takeScreenshots);
         element(by.id('btn-delete')).click();
         element.all((by.css('.confirm-button'))).get(0).click();
         browser.sleep(300).then(function() {

@@ -15,7 +15,7 @@
   <div id="itinerary-search-result" ng-show="itineraries.payload.length > 0">
     <uib-accordion close-others="false">
       <div ng-repeat="itinerary in itineraries.payload">
-        <div class="well">
+        <div id="itinerary-section-{{itinerary.id}}" class="well">
           <div id="itinerary-{{itinerary.id}}" class="text-primary h4" ng-click="showItinerary(itinerary)">{{itinerary.title}}</div>
             <div uib-collapse="!selection[itinerary.id].expanded">
               <div ng-show="itinerary.start || itinerary.nickname">
@@ -30,7 +30,7 @@
               </div>
 	      <div class="form-group help-block"><a ng-href="/trip/app/itinerary?id={{itinerary.id}}&routing=itinerary-search-results">View itinerary</a></div>
               <form novalidate>
-                <div id="select-all" ng-show="itinerary.routes.length + itinerary.waypoints.length + itinerary.tracks.length > 1">
+                <div id="select-all-{{itinerary.id}}" ng-show="itinerary.routes.length + itinerary.waypoints.length + itinerary.tracks.length > 1">
                   <input id="input-select-all-{{itinerary.id}}" ng-change="selectAllGeoItems(itinerary, selection[itinerary.id].allGeoItemsSelected)" type="checkbox" ng-model="selection[itinerary.id].allGeoItemsSelected" />
                   <label for="input-select-all-{{itinerary.id}}" class="select-all-option" >Select all</label>
                 </div>
@@ -43,10 +43,10 @@
                           <label for="input-select-all-routes-{{itinerary.id}}" class="select-all-option" ng-click="showRoutes(itinerary, itinerary.routes, !selection[itinerary.id].allRoutesSelected)">Select all routes</label>
                         </div>
                         <div ng-repeat="route in itinerary.routes">
-                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                          <div id="route-{{route.id}}" ng-class="['box', {'odd': $odd, 'even': $even}]">
                             <div class="column column-name">
                               <input id="input-route-{{route.id}}" type="checkbox" ng-model="route.selected" ng-change="showRoute(itinerary, route)" />
-                              <label for="input-route-{{route.id}}"><span ng-show="!route.name">ID: {{route.id}}</span>{{route.name}}</label>
+                              <label for="input-route-{{route.id}}"><span ng-show="!route.name">ID: {{route.id}}</span><span>{{route.name}}</span></label>
                             </div>
                             <div class="column column-color">{{route.color}}</div>
                             <div class="column column-distance"><span ng-show="route.distance">{{route.distance | number:2}}&nbsp;km</span></div>
@@ -69,10 +69,10 @@
                           <label for="input-select-all-waypoints-{{itinerary.id}}" class="select-all-option" ng-click="showWaypoints(itinerary, itinerary.waypoints, !selection[itinerary.id].allWaypointsSelected)" >Select all waypoints</label>
                         </div>
                         <div ng-repeat="waypoint in itinerary.waypoints">
-                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                          <div id="waypoint-{{waypoint.id}}" ng-class="['box', {'odd': $odd, 'even': $even}]">
                             <div class="column column-name">
                               <input id="input-waypoints-{{waypoint.id}}" type="checkbox" ng-model="waypoint.selected" ng-change="showWaypoint(itinerary, waypoint)" />
-                              <label for="input-waypoints-{{waypoint.id}}"><span ng-show="!waypoint.name">ID: {{waypoint.id}}</span>{{waypoint.name}}</label>
+                              <label for="input-waypoints-{{waypoint.id}}"><span ng-show="!waypoint.name">ID: {{waypoint.id}}</span><span>{{waypoint.name}}</span></label>
                             </div>
                             <div class="column column-symbol"><span ng-show="!waypoint.symbol_text">{{waypoint.symbol}}</span><span ng-show="waypoint.symbol_txt != ''">{{waypoint.symbol_text}}</span></div>
                             <div class="column column-comment">{{waypoint.comment}}</div>
@@ -90,11 +90,11 @@
                     <div class="wide-table">
                       <div class="track-box table-striped">
                         <div ng-repeat="track in itinerary.tracks">
-                          <div ng-class="['box', {'odd': $odd, 'even': $even}]">
+                          <div id="track-{{track.id}}" ng-class="['box', {'odd': $odd, 'even': $even}]">
                             <div class="column column-name">
                               <input id="input-track-{{track.id}}" type="checkbox" ng-model="track.selected" ng-change="showTrack(itinerary, track)" />
                               <label for="input-track-{{track.id}}"><span ng-show="!track.name">ID:
-                                  {{track.id}}</span>{{track.name}}</label>
+                                  {{track.id}}</span><span>{{track.name}}</span></label>
                             </div>
                             <div class="column column-color">{{track.color}}</div>
                             <div class="column column-distance"><span ng-show="track.distance">{{track.distance | number:2}} km</span></div>

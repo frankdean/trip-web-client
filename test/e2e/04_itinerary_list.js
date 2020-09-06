@@ -18,10 +18,12 @@
 'use strict';
 
 describe('Itineries page', function() {
-  var list;
+  var list,
+      EC = protractor.ExpectedConditions;
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/itineraries');
+    browser.wait(EC.visibilityOf(element(by.repeater('itinerary in itineraries.payload'))), 4000, 'Timeout waiting for list to be populated');
     list = element.all(by.repeater('itinerary in itineraries.payload'));
   });
 
@@ -39,5 +41,3 @@ describe('Itineries page', function() {
   });
 
 });
-
-

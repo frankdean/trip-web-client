@@ -17,15 +17,19 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Itinerary Route Name', function() {
 
   var testItineraryId=929,
-      testRouteId = 8304;
+      testRouteId = 8304,
+      EC = protractor.ExpectedConditions;
 
   describe('Non-existant route ID', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=-1');
+      browser.wait(EC.visibilityOf(element(by.id('input-name'))), 500, 'Timeout waiting for itinerary-route-name page to be displayed');
     });
 
     it('should display a system error', function() {
@@ -38,6 +42,7 @@ describe('Itinerary Route Name', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
+      browser.wait(EC.visibilityOf(element(by.id('input-name'))), 500, 'Timeout waiting for itinerary-route-name page to be displayed');
     });
 
     it('should fetch the route name', function() {
@@ -47,6 +52,7 @@ describe('Itinerary Route Name', function() {
     it('should allow an empty route name', function() {
       element(by.id('input-name')).clear();
       element(by.id('btn-save')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -54,6 +60,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).clear();
       element(by.id('input-name')).sendKeys('Modified route name');
       element(by.id('btn-save')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get(browser.baseUrl + '/itinerary-route-name?itineraryId=' + testItineraryId + '&routeId=' + testRouteId);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Modified route name');
@@ -62,6 +69,7 @@ describe('Itinerary Route Name', function() {
     it('should cancel the form when there are no changes', function() {
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -70,6 +78,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.confirm-button'))).get(0).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 
@@ -78,6 +87,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('test change');
       element(by.id('btn-cancel')).click();
       element.all((by.css('.cancel-button'))).get(0).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/itinerary-route-name\?itineraryId=\d+&routeId=\d+/);
     });
 
@@ -110,6 +120,7 @@ describe('Itinerary Route Name', function() {
       element(by.id('input-name')).sendKeys('Copy');
       element(by.id('input-copy')).click();
       element(by.id('btn-save')).click();
+      browser.wait(EC.visibilityOf(element(by.id('heading-tab'))), 500, 'Timeout waiting for itinerary page to be displayed');
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
     });
 

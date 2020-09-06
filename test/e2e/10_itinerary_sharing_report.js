@@ -22,6 +22,7 @@ describe('Itineraries sharing report', function() {
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/itinerary-sharing-report');
+    browser.wait(protractor.ExpectedConditions.visibilityOf(element(by.repeater('itinerary in itineraries'))), 500, 'Timeout waiting for itinerary sharing report to be displayed');
     list = element.all(by.repeater('itinerary in itineraries'));
   });
 

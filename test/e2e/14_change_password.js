@@ -17,6 +17,8 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Change Password', function() {
 
   beforeEach(function() {
@@ -30,6 +32,7 @@ describe('Change Password', function() {
   it('should redirect to the account page when cancelled', function() {
     element(by.id('btn-cancel')).click();
     element.all((by.css('.confirm-button'))).get(0).click();
+    helper.wait(400);
     expect(browser.getCurrentUrl()).toMatch(/\/account$/);
   });
 
@@ -54,6 +57,7 @@ describe('Change Password', function() {
     element(by.id('new-password')).sendKeys(browser.privateConfig.testUserPassword);
     element(by.id('new-password2')).sendKeys(browser.privateConfig.testUserPassword);
     element(by.id('btn-submit')).click();
+    helper.wait(400);
     expect(browser.getCurrentUrl()).toMatch(/\/account$/);
     expect(element(by.id('info-message')).isDisplayed()).toBeTruthy();
   });
@@ -63,6 +67,7 @@ describe('Change Password', function() {
     element(by.id('new-password')).sendKeys('this_is_a_strong_password');
     element(by.id('new-password2')).sendKeys('this_is_a_strong_password');
     element(by.id('btn-submit')).click();
+    helper.wait(400);
     expect(browser.getCurrentUrl()).toMatch(/\/change-password$/);
     expect(element(by.id('bad-request')).isDisplayed()).toBeTruthy();
   });

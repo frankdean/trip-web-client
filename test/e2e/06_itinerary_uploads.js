@@ -17,6 +17,8 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Itinerary uploads', function() {
 
   var EC = protractor.ExpectedConditions;
@@ -25,6 +27,7 @@ describe('Itinerary uploads', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=929');
+      browser.wait(EC.visibilityOf(element(by.id('features-tab'))), 4000, 'Timeout waiting for features tab to be visibile');
       element(by.id('features-tab')).click();
     });
 
@@ -38,16 +41,20 @@ describe('Itinerary uploads', function() {
       expect(element.all(by.repeater('track in trackNames')).first().all(by.tagName('label')).get(0).getText()).toMatch(/.+/);
       // Various buttons should or should not be displayed
       element(by.id('view-pill')).click();
+      helper.wait(100);
       expect(element(by.id('btn-map')).isDisplayed()).toBeTruthy();
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       expect(element(by.id('btn-edit-selected')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-delete')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
       element(by.id('transfer-pill')).click();
+      helper.wait(100);
       expect(element(by.id('btn-upload')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-download')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-download-kml')).isDisplayed()).toBeTruthy();
       element(by.id('heading-tab')).click();
+      helper.wait(100);
       expect(element(by.id('btn-sharing')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-close-heading')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-edit-itinerary')).isDisplayed()).toBeTruthy();
@@ -55,7 +62,9 @@ describe('Itinerary uploads', function() {
 
     it('should show an error if the edit-selected button is clicked without selecting an item', function() {
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       element(by.id('btn-edit-selected')).click();
+      helper.wait(100);
       expect(element(by.id('error-edit-only-one')).isDisplayed()).toBeTruthy();
     });
 
@@ -63,7 +72,9 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).get(1).click();
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       element(by.id('btn-edit-selected')).click();
+      helper.wait(100);
       expect(element(by.id('error-edit-only-one')).isDisplayed()).toBeTruthy();
     });
 
@@ -71,20 +82,26 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element.all(by.repeater('route in routeNames')).all(by.model('route.selected')).first().click();
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       element(by.id('btn-edit-selected')).click();
+      helper.wait(400);
       expect(element(by.id('error-edit-only-one')).isDisplayed()).toBeTruthy();
     });
 
     it('should show the itinerary waypoint edit page when a waypoint is selected for edit', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       element(by.id('btn-edit-selected')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+&waypointId=\d+/);
     });
 
     it('should show the itinerary waypoint edit page when the add waypoint button is clicked', function() {
       element(by.id('edit-pill')).click();
+      helper.wait(100);
       element(by.id('btn-new-waypoint')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-wpt-edit\?itineraryId=\d+$/);
     });
 
@@ -94,21 +111,25 @@ describe('Itinerary uploads', function() {
         browser.wait(
           EC.visibilityOf(
             element(by.model('selection.allTracksSelected'))),
-          5000,
+          4000,
           'all tracks selected checkbox should be visible within 5 seconds');
       });
 
       it('should show everything on the map', function() {
         element(by.model('selection.allGeoItemsSelected')).click();
         element(by.id('view-pill')).click();
+        helper.wait();
         element(by.id('btn-map')).click();
+        helper.wait();
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
       it('should show all waypoints on the map', function() {
         element(by.model('selection.allWaypointsSelected')).click();
         element(by.id('view-pill')).click();
+        helper.wait();
         element(by.id('btn-map')).click();
+        helper.wait(400);
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
@@ -116,13 +137,16 @@ describe('Itinerary uploads', function() {
         element(by.model('selection.allRoutesSelected')).click();
         element(by.id('view-pill')).click();
         element(by.id('btn-map')).click();
+        helper.wait(400);
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
       it('should show all tracks on the map', function() {
         element(by.model('selection.allTracksSelected')).click();
         element(by.id('view-pill')).click();
+        helper.wait(100);
         element(by.id('btn-map')).click();
+        helper.wait(400);
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
       });
 
@@ -134,7 +158,9 @@ describe('Itinerary uploads', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=983');
+      browser.wait(EC.visibilityOf(element(by.id('features-tab'))), 500, 'Timeout waiting for features tab to be displayed');
       element(by.id('features-tab')).click();
+      helper.wait(400);
     });
 
     it('should show the Select-all checkboxes and list waypoints, routes and tracks', function() {
@@ -168,7 +194,9 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).first().click();
       element.all(by.repeater('waypoint in waypoints')).all(by.model('waypoint.selected')).get(1).click();
       element(by.id('view-pill')).click();
+      helper.wait(100);
       element(by.id('btn-map')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 
@@ -176,7 +204,9 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('route in routeNames')).all(by.model('route.selected')).first().click();
       element.all(by.repeater('route in routeNames')).all(by.model('route.selected')).get(1).click();
       element(by.id('view-pill')).click();
+      helper.wait(100);
       element(by.id('btn-map')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 
@@ -184,7 +214,9 @@ describe('Itinerary uploads', function() {
       element.all(by.repeater('track in trackNames')).all(by.model('track.selected')).first().click();
       element.all(by.repeater('track in trackNames')).all(by.model('track.selected')).get(1).click();
       element(by.id('view-pill')).click();
+      helper.wait(100);
       element(by.id('btn-map')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-map\?id=\d+$/);
     });
 

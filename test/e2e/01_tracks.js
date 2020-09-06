@@ -17,7 +17,8 @@
  */
 'use strict';
 
-var fs = require('fs');
+var fs = require('fs'),
+    helper = require('../helper.js');
 
 describe('TRIP app', function() {
   var EC = protractor.ExpectedConditions;
@@ -43,6 +44,7 @@ describe('TRIP app', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/tracks');
+      helper.wait(800);
     });
 
     var elemDateFrom = element(by.model('tracks.search.dateFrom'));
@@ -57,6 +59,7 @@ describe('TRIP app', function() {
     describe('paging tests', function() {
 
       beforeEach(function() {
+        browser.wait(EC.visibilityOf(elemDateFrom), 4000, 'Timeout waiting for date from field to be visibile');
         if (browser.privateConfig.browserName !== 'chrome') {
           elemDateFrom.clear();
           elemDateFrom.sendKeys('2015-12-10T17:48:00');
@@ -69,14 +72,16 @@ describe('TRIP app', function() {
           elemDateTo.sendKeys('13120020150955');
         }
         element(by.id('btn-tracks')).click();
-        // waitForAngular() doesn't seem sufficient for Safari driver
-        browser.waitForAngular();
-        // so wait for elements to be visible
         var conditionPage3LinkVisible = EC.visibilityOf(element(by.linkText('3')));
         var conditionLastPageLinkVisible = EC.visibilityOf(element(by.linkText('>>')));
-        browser.wait(EC.and(conditionPage3LinkVisible, conditionLastPageLinkVisible),
-                     5000,
-                     'Paging elements should be visible within 5 seconds');
+        var conditionLocationsRepeaterVisible = EC.visibilityOf(element(by.repeater('location in locations')));
+        var conditionNicknameRepeaterVisible = EC.visibilityOf(element(by.repeater('nickname in nicknames')));
+        browser.wait(EC.and(conditionPage3LinkVisible, conditionLastPageLinkVisible, conditionLocationsRepeaterVisible, conditionNicknameRepeaterVisible),
+                     4000,
+                     'Timeout waiting for data to populate page');
+        if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+          browser.sleep(800);
+        }
       });
 
       it('should page through the list of locations', function() {
@@ -140,14 +145,6 @@ describe('TRIP app', function() {
         expect(hdop.getAttribute('value')).toEqual('');
         // so the error message isn't shown
         expect(errElem.isDisplayed()).toBe(false);
-      } else if (browser.privateConfig.browserName === 'safari') {
-        // sendKeys() is not sending invalid numeric keys to Safari
-        // Can't find a reported issue, but when it is reported and
-        // fixed this test will start failing and this else-if
-        // statement can be removed.  When run interactively, Safari
-        // allows alpha input and correctly shows the expected error
-        // message.
-        expect(errElem.isDisplayed()).toBe(false);
       } else {
         expect(errElem.isDisplayed()).toBe(true);
       }
@@ -172,7 +169,9 @@ describe('TRIP app', function() {
         submit.click();
         var locationCount = element.all(by.id('location-count'));
         expect(locationCount.isDisplayed()).toBeTruthy();
-        expect(locationCount.getText()).toMatch(/^273 track points/);
+        var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+        expect(span.isDisplayed()).toBeTruthy();
+        expect(span.getText()).toMatch("273");
         var locationList = element.all(by.repeater('location in locations'));
         expect(locationList.count()).toBe(10);
         expect(element(by.binding('locations.date_from')).isDisplayed()).toBeTruthy();
@@ -198,13 +197,15 @@ describe('TRIP app', function() {
       submit.click();
       var locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
-      expect(locationCount.getText()).toMatch(/^29 track points/);
+      var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+      expect(span.getText()).toMatch("29");
       // Display notes only
       element(by.id('input-notes-only')).click();
       submit.click();
       locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
-      expect(locationCount.getText()).toMatch(/^2 track points/);
+      span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+      expect(span.getText()).toMatch("2");
     });
 
     it('should display results for the specified criteria', function() {
@@ -227,7 +228,8 @@ describe('TRIP app', function() {
       submit.click();
       var locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
-      expect(locationCount.getText()).toMatch(/^38 track points/);
+      var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+      expect(span.getText()).toMatch("38");
       expect(element(by.binding('locations.date_from')).isDisplayed()).toBeTruthy();
       expect(element(by.binding('locations.date_to')).isDisplayed()).toBeTruthy();
       element(by.linkText('>')).click();
@@ -251,7 +253,8 @@ describe('TRIP app', function() {
         submit.click();
         var locationCount = element.all(by.id('location-count'));
         expect(locationCount.isDisplayed()).toBeTruthy();
-        expect(locationCount.getText()).toMatch(/^57 track points/);
+        var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+        expect(span.getText()).toMatch("57");
         var locationList = element.all(by.repeater('location in locations'));
         expect(locationList.count()).toBe(10);
       }
@@ -301,13 +304,16 @@ describe('TRIP app', function() {
     });
 
     it('should have some nicknames in the shared tracks select box', function() {
+      if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
+        browser.wait(EC.visibilityOf(element(by.repeater('nickname in nicknames'))), 4000, 'Timeout waiting for nickname list to be populated');
+      }
       var nicknameList = element.all(by.repeater('nickname in nicknames'));
       var nicknameSelect = element(by.model('tracks.search.nicknameSelect'));
+      expect(nicknameList.first().getText()).toEqual('Fred');
+      expect(nicknameList.last().getText()).toEqual('test2');
+      nicknameSelect.$('[value="Fred"]').click();
       var nicknameSelectResult = element(by.model('tracks.search.nicknameSelect'));
-      expect(nicknameList.count()).toBe(2);
-      // Uses tab key to leave control, otherwise action is not performed
-      nicknameSelect.sendKeys('F\t');
-      expect(nicknameSelectResult.getText()).toMatch(/Fred/);
+      expect(nicknameSelect.getText()).toMatch("Fred");
     });
 
     it('should show an error message if "date from" is blank', function() {
@@ -361,7 +367,7 @@ describe('TRIP app', function() {
         elemDateTo.sendKeys('12120020151059');
       }
       element(by.id('btn-tracks')).click();
-      browser.waitForAngular();
+      helper.wait(400);
       var locationList = element.all(by.repeater('location in locations'));
       var link = locationList.first().all(by.tagName('a')).first();
       expect(locationList.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
@@ -373,7 +379,7 @@ describe('TRIP app', function() {
 
     it('should download an empty GPX file for another nickname', function() {
       // Selenium driver for Safari does not support opening the download dialog
-      if (browser.privateConfig.browserName !== 'safari') {
+      if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
         // ugly, but need each browser to use a different directory, otherwise race conditions
         var filename = browser.privateConfig.tmpDir + '/' + browser.privateConfig.browserName + '/trip.gpx';
         if (fs.existsSync(filename)) {
@@ -417,7 +423,7 @@ describe('TRIP app', function() {
 
     it('should download a GPX file when the download button is clicked', function() {
       // Selenium driver for Safari does not support openingn the download dialog
-      if (browser.privateConfig.browserName !== 'safari') {
+      if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
         // ugly, but need each browser to use a different directory, otherwise race conditions
         var filename = browser.privateConfig.tmpDir + '/' + browser.privateConfig.browserName + '/trip.gpx';
         if (fs.existsSync(filename)) {
@@ -477,6 +483,7 @@ describe('TRIP app', function() {
       var testElement = element(by.id('gpslog-href-url'));
       var urlBefore = testElement.getAttribute('href');
       element(by.id('btn-generate')).click();
+      helper.wait();
       expect(testElement.getAttribute('href')).not.toEqual(urlBefore);
       expect(element(by.id('msg-success')).isDisplayed()).toBeTruthy();
     });

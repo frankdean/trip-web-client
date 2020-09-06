@@ -27,7 +27,7 @@
           </div>
           <div id="itinerary-text-date-range" ng-show="data.start || data.finish">
             <hr/>
-            <p id="itinerary-text-date"><b>Date<span ng-show="data.start && data.finish"> from</span><span ng-show="data.start">: </span></b>{{data.start | date:'EEE dd-MMM-yyyy'}} <span ng-show="data.finish">to: </span>{{data.finish | date:'EEE dd-MMM-yyyy'}}</p>
+            <p id="itinerary-text-date"><b>Date<span ng-show="data.start && data.finish"> from</span><span ng-show="data.start">: </span></b>{{data.start | date:'EEE dd-MMM-yyyy'}} <b><span ng-show="data.finish">to: </span></b>{{data.finish | date:'EEE dd-MMM-yyyy'}}</p>
           </div>
           <div>
             <hr ng-show="data.description"/>

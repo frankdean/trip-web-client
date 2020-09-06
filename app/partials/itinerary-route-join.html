@@ -17,7 +17,7 @@
             <button type="button" class="btn btn-info" ng-click="up(route.id)">Up</button>
             <button type="button" class="btn btn-info" ng-click="down(route.id)">Down</button>
           </td>
-          <td>{{route.name}}<span ng-show="!route.name">ID: {{route.id}}</span></td>
+          <td><span>{{route.name}}</span><span ng-show="!route.name">ID: {{route.id}}</span></td>
           <td>{{route.color}}</td>
           <td style="text-align: right;"><span ng-show="route.distance">{{route.distance | number:2}} km</span></td>
           <td style="text-align: right;"><span ng-show="route.distance">{{route.distance / 1.609344 | number:2}} mi</span></td>

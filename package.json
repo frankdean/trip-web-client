@@ -22,7 +22,6 @@
   "devDependencies": {
     "copyfiles": "^2.1.1",
     "cssmin": "^0.4.3",
-    "firefox-profile": "^2.0.0",
     "jasmine-core": "^2.8.0",
     "jshint": "^2.9.1",
     "karma": "^5.1.0",
@@ -82,8 +81,8 @@
     "test": "karma start test/karma.conf.js",
     "test-single-run": "karma start test/karma.conf.js  --single-run",
     "preupdate-webdriver": "yarn install",
-    "update-webdriver-chrome-78": "webdriver-manager update --gecko=false --versions.chrome=78.0.3904.97",
-    "update-webdriver": "webdriver-manager update --gecko=false",
+    "update-webdriver-chrome-XX.x.xxxx.xx": "webdriver-manager update --versions.chrome=XX.x.xxxx.xx",
+    "update-webdriver": "webdriver-manager update",
     "_preprotractor": "yarn run update-webdriver",
     "protractor": "protractor test/protractor.conf.js",
     "dist-update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",

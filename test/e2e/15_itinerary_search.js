@@ -17,6 +17,8 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Itinerary search', function() {
 
   var EC = protractor.ExpectedConditions;
@@ -25,12 +27,15 @@ describe('Itinerary search', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-search');
+      browser.wait(EC.visibilityOf(element(by.id('input-position'))), 4000, 'Timeout waiting for itinerary search page to be displayed');
     });
 
     it('should accept valid values', function() {
       element(by.id('input-position')).sendKeys('48.858222,2.2945');
       element(by.id('input-distance')).sendKeys('0.9001');
+      helper.wait(400);
       element(by.id('btn-search')).click();
+      helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary-search-result\?lat=48\.858222&lng=2\.2945&distance=900\.1$/);
     });
 
@@ -42,6 +47,7 @@ describe('Itinerary search', function() {
 
     it('should reject an invalid position', function() {
       element(by.id('input-position')).sendKeys('48.858222');
+      helper.wait(400);
       expect(element(by.id('position-invalid')).isDisplayed()).toBeTruthy();
       element(by.id('input-distance')).sendKeys('-1');
       element(by.id('btn-search')).click();
@@ -52,10 +58,11 @@ describe('Itinerary search', function() {
 
   describe('results', function() {
     var itineraryElements, routeElements, waypointElements, trackElements,
-        itineraryElement, visibleCondition;
+        itineraryElement, viewItineraryElement, visibleCondition;
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-search-result?lat=48.858222&lng=2.2945&distance=900.1');
+      browser.wait(EC.visibilityOf(element(by.repeater('itinerary in itineraries.payload'))), 4000, 'Timeout waiting for features tab to be displayed');
       itineraryElements = element.all(by.repeater('itinerary in itineraries.payload'));
     });
 
@@ -69,37 +76,42 @@ describe('Itinerary search', function() {
     });
 
     it('should show a link to view the full itinerary', function() {
-      itineraryElement = itineraryElements.all(by.id('itinerary-2434'));
+      itineraryElement = element(by.id('itinerary-2434'));
       itineraryElement.click();
-      visibleCondition = EC.visibilityOf(element(by.linkText('View itinerary')));
-      browser.wait(visibleCondition, 5000, 'View itinerary link should be visible within 5 seconds');
-      expect(element(by.linkText('View itinerary')).isDisplayed()).toBeTruthy();
+      // XPath to the 'View itinerary' link text - cannot use by.linkText() with Safari as it includes hidden elements in its search
+      viewItineraryElement = element(by.xpath('//*[@id="itinerary-search-result"]/uib-accordion/div/div[3]/div/div[2]/div[2]/a'));
+      visibleCondition = EC.visibilityOf(viewItineraryElement);
+      browser.wait(visibleCondition, 4000, 'Timeout waiting for viewItinerary link to be visibile');
+      expect(viewItineraryElement.isDisplayed()).toBeTruthy();
     });
 
     it('should view the full itinerary when link clicked', function() {
       itineraryElement = itineraryElements.all(by.id('itinerary-2434'));
       itineraryElement.click();
-      visibleCondition = EC.visibilityOf(element(by.linkText('View itinerary')));
-      browser.wait(visibleCondition, 5000, 'View itinerary link should be visible within 5 seconds');
-      element(by.linkText('View itinerary')).click();
+      // XPath to the 'View itinerary' link text - cannot use by.linkText() with Safari as it includes hidden elements in its search
+      viewItineraryElement = element(by.xpath('//*[@id="itinerary-search-result"]/uib-accordion/div/div[3]/div/div[2]/div[2]/a'));
+      visibleCondition = EC.visibilityOf(viewItineraryElement);
+      browser.wait(visibleCondition, 4000, 'Timeout waiting for viewItinerary link to be visibile');
+      viewItineraryElement.click();
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=2434&routing=itinerary-search-results$/);
     });
 
     it('should expand routes, waypoints and tracks when itinerary clicked', function() {
       itineraryElement = itineraryElements.all(by.id('itinerary-2434'));
       itineraryElement.click();
-      visibleCondition = EC.visibilityOf(element(by.linkText('View itinerary')));
-      browser.wait(visibleCondition, 5000, 'View itinerary link should be visible within 5 seconds');
-      routeElements = element.all(by.binding('route.name'));
-      expect(routeElements.first().getText()).toEqual('Route 01');
-      expect(routeElements.get(1).getText()).toEqual('Route 02');
-      expect(routeElements.get(2).getText()).toEqual('ID: 8333');
-      waypointElements = element.all(by.binding('waypoint.name'));
-      expect(waypointElements.first().getText()).toEqual('Eiffel Tower');
-      trackElements = element.all(by.binding('track.name'));
-      expect(trackElements.first().getText()).toEqual('Track 01');
-      expect(trackElements.get(1).getText()).toEqual('Track 02');
-      expect(trackElements.get(2).getText()).toEqual('Track 04');
+      helper.wait(400);
+      // XPath to the 'View itinerary' link text - cannot use by.linkText() with Safari as it includes hidden elements in its search
+      viewItineraryElement = element(by.xpath('//*[@id="itinerary-search-result"]/uib-accordion/div/div[3]/div/div[2]/div[2]/a'));
+      visibleCondition = EC.visibilityOf(viewItineraryElement);
+      browser.wait(visibleCondition, 4000, 'Timeout waiting for viewItinerary link to be visibile');
+      expect(element(by.xpath('//*[@id="route-8332"]/div[1]/label/span[2]')).getText()).toEqual('Route 01');
+      expect(element(by.xpath('//*[@id="route-8334"]/div[1]/label/span[2]')).getText()).toEqual('Route 02');
+      expect(element(by.xpath('//*[@id="route-8333"]/div[1]/label/span[1]')).getText()).toEqual('ID: 8333');
+      expect(element(by.xpath('//*[@id="waypoint-10888"]/div[1]/label/span[2]')).getText()).toEqual('Eiffel Tower');
+      expect(element(by.xpath('//*[@id="track-1048"]/div[1]/label/span[2]')).getText()).toEqual('Track 01');
+      expect(element(by.xpath('//*[@id="track-1049"]/div[1]/label/span[2]')).getText()).toEqual('Track 02');
+      expect(element(by.xpath('//*[@id="track-1051"]/div[1]/label/span[2]')).getText()).toEqual('Track 04');
+
     });
 
   });
