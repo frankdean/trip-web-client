@@ -19,7 +19,7 @@
 
 var helper = require('../helper.js');
 
-describe('Itinerary map', function() {
+fdescribe('Itinerary map', function() {
 
   var testName = '11_itinerary_map',
       takeScreenshots = browser.privateConfig.takeScreenshots;

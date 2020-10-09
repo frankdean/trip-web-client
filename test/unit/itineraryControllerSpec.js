@@ -220,6 +220,57 @@ describe('ItineraryCtrl', function() {
 
     });
 
+    describe('paste', function() {
+      var copyAndPasteService,
+          testLocations = {
+            payload: [{note: 'Test note 01', lat: 51, lng: -3, altitude: 42}, {note: 'Test note 02', lat: 51.1, lng: -3.1, altitude: 414}]
+          };
+
+      beforeEach(inject(function(CopyAndPasteService
+                                ) {
+        copyAndPasteService = CopyAndPasteService;
+        $httpBackend.when('POST',
+                          /\/itinerary\/\d+\/track$/,
+                          function(data) {
+                            if ('{"id":"42","track":{"segments":[{"points":[{"note":"Test note 01","lat":51,"lng":-3,"altitude":42},{"note":"Test note 02","lat":51.1,"lng":-3.1,"altitude":414}]}]}}' === data) {
+                              return true;
+                            }
+                            return false;
+                          }).respond(200, '');
+        $httpBackend.when('POST',
+                          /\/itinerary\/\d+\/waypoints\/create$/,
+                          function(data) {
+                            if ('{"id":"42","waypoints":[{"lat":51,"lng":-3,"altitude":42,"comment":"Test note 01","description":"Created from track log note"},{"lat":51.1,"lng":-3.1,"altitude":414,"comment":"Test note 02","description":"Created from track log note"}]}' === data) {
+                              return true;
+                            }
+                            return false;
+                          }).respond(200, '');
+        $httpBackend.when('GET',/location\?from/).respond(testLocations);
+        createController();
+        $httpBackend.flush();
+        CopyAndPasteService.copy('location-history', {
+          nickname: null,
+          from: new Date(),
+          to: new Date(),
+          max_hdop: 70,
+          notesOnlyFlag: false
+        });
+        spyOn(copyAndPasteService, 'paste').and.callThrough();
+        scope.data = {};
+        scope.waypoints = [];
+        scope.routeNames = [];
+        scope.trackNames = [];
+        scope.data.id = testItinerarySearchObject.id;
+        scope.pasteItems();
+        $httpBackend.flush();
+      }));
+
+      it('should paste location history as a track with waypoints', function() {
+        expect(copyAndPasteService.paste).toHaveBeenCalled();
+      });
+
+    });
+
   });
 
 });

@@ -79,6 +79,7 @@ angular.module('myApp.itinerary.factory.js', [] )
     return $resource(url, {id: '@id', wptId: '@wptId'}, {
       count: {url: ConfigService.restUrlPrefix + '/itinerary/:id/waypoints/count'},
       move: {method: 'POST', url: ConfigService.restUrlPrefix + '/itinerary/:id/waypoint/:wptId/move'},
+      saveWaypoints: {method: 'POST', url: ConfigService.restUrlPrefix + '/itinerary/:id/waypoints/create'},
       getSpecifiedWaypoints: {method: 'POST',
                               isArray: true,
                               url: ConfigService.restUrlPrefix + '/itinerary/:id/waypoints/specified'}

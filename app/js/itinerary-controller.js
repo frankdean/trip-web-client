@@ -377,28 +377,20 @@ angular.module('myApp.itinerary.controller', [])
                  {id: itineraryOption.itineraryId,
                   waypoints: itineraryOption.waypoints})
                  .$promise.then(function(waypoints) {
-                   waypoints.forEach(function(w) {
-                     ItineraryWaypointService.save({},
-                                                   {id: $scope.itineraryId,
-                                                    wptId: undefined,
-                                                    name: w.name,
-                                                    lat: w.lat,
-                                                    lng: w.lng,
-                                                    altitude: w.altitude,
-                                                    time: w.time,
-                                                    symbol: w.symbol,
-                                                    comment: w.comment,
-                                                    description: w.description,
-                                                    samples: w.samples,
-                                                    type: w.type,
-                                                    color: w.color
-                                                   }).$promise.then(function(saveWaypointResponse) {
-                                                     $scope.status.waypointsInitialized = false;
-                                                     $scope.updateWaypoints();
-                                                   }).catch(function(response) {
-                                                     $log.error('Creating new waypoint from paste failed');
-                                                   });
-                   }); // forEach
+                   ItineraryWaypointService.saveWaypoints(
+                     {},
+                     {id: $scope.itineraryId,
+                      waypoints: waypoints
+                     }).$promise.then(function(saveWaypointResponse) {
+                       $scope.status.waypointsInitialized = false;
+                       $scope.updateWaypoints();
+                     }).catch(function(response) {
+                       $log.error('Creating new waypoint from pasting itinerary features failed');
+                       $scope.ajaxRequestError = {
+                         error: true,
+                         status: response.status
+                       };
+                     });
                  }).catch(function(response) {
                    $log.error('Fetch waypoints failed');
                    $scope.ajaxRequestError = {
@@ -462,28 +454,21 @@ angular.module('myApp.itinerary.controller', [])
                  };
                });
 
-             newWaypoints.forEach(function(w) {
-               ItineraryWaypointService.save({},
-                                             {id: $scope.itineraryId,
-                                              wptId: undefined,
-                                              name: w.name,
-                                              lat: w.lat,
-                                              lng: w.lng,
-                                              altitude: w.altitude,
-                                              time: w.time,
-                                              symbol: w.symbol,
-                                              comment: w.comment,
-                                              description: w.description,
-                                              samples: w.samples,
-                                              type: w.type,
-                                              color: w.color
-                                             }).$promise.then(function(saveWaypointResponse) {
-                                               $scope.status.waypointsInitialized = false;
-                                               $scope.updateWaypoints();
-                                             }).catch(function(response) {
-                                               $log.error('Creating new waypoint from pasting track log failed');
-                                             });
-             }); // forEach
+             ItineraryWaypointService.saveWaypoints(
+               {},
+               {id: $scope.itineraryId,
+                waypoints: newWaypoints
+               }).$promise.then(function(saveWaypointResponse) {
+                 $scope.status.waypointsInitialized = false;
+                 $scope.updateWaypoints();
+               }).catch(function(response) {
+                 $log.error('Creating new waypoint from pasting track log failed');
+                 $scope.ajaxRequestError = {
+                   error: true,
+                   status: response.status
+                 };
+               });
+
              newWaypoints = null;
            }).catch(function(response) {
              $log.warn('Failed to fetch location history for paste', response);

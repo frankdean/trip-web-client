@@ -39,7 +39,7 @@ describe('Itinerary management', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-edit');
-      browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for lists of shares');
+      browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for itinerary edit');
     });
 
     it('should create a new itinerary', function() {
@@ -368,6 +368,70 @@ describe('Itinerary management', function() {
 
     it('should not show the Add Waypoint button whilst the form is in edit mode', function() {
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();
+    });
+
+  });
+
+  describe('Copy location history to itinerary', function() {
+
+    function clear(elem) {
+      elem.getAttribute('value').then(function (text) {
+        if (browser.privateConfig.browserName !== 'chrome') {
+          elem.clear();
+        } else {
+          elem.value = '';
+        }
+      });
+    }
+
+    beforeEach(function() {
+      browser.get(browser.baseUrl + '/tracks');
+      browser.wait(EC.visibilityOf(element(by.id('btn-tracks'))), 4000, 'Timeout waiting for list of locations (tracks)');
+      var elemDateFrom = element(by.model('tracks.search.dateFrom'));
+      if (browser.privateConfig.browserName !== 'chrome') {
+        elemDateFrom.clear();
+        elemDateFrom.sendKeys('2015-12-10T17:48:00');
+      } else {
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys('10120020151748');
+      }
+      element(by.id('btn-copy')).click();
+      browser.wait(EC.visibilityOf(element(by.id('info-copy-message'))), 4000, 'Timeout waiting for successful copy message');
+
+      // browser.get(browser.baseUrl + '/itinerary-edit');
+
+      element(by.xpath('//*[@id="navbar"]/ul/li[4]/a')).click();
+      helper.wait(100);
+      element(by.id('btn-new')).click();
+      browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for new itinerary page');
+      elemTitle.sendKeys('Paste test');
+      elemSave.click();
+      browser.wait(EC.visibilityOf(element(by.id('features-tab'))), 4000, 'Timeout waiting for itinerary featues tab to be displayed');
+      element(by.id('features-tab')).click();
+      helper.wait(100);
+      element(by.id('edit-pill')).click();
+      helper.wait(100);
+    });
+
+    it('should show the paste option', function() {
+      expect(element(by.id('btn-paste')).isDisplayed()).toBeTruthy();
+      element(by.id('btn-paste')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
+      // element(by.xpath('/html/body/div[2]/div[2]/div/div[1]/button')).click();
+      browser.sleep(500);
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[2]/td[3]')).getText()).toEqual('Test note');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[3]/td[3]')).getText()).toEqual('A longer note than the previous one.');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[4]/td[3]')).getText()).toEqual('Test note 01');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[5]/td[3]')).getText()).toEqual('Test note 02');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[6]/td[3]')).getText()).toEqual('Test note 03');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[7]/td[3]')).getText()).toEqual('Test note 04');
+      expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[8]/td[3]')).getText()).toEqual('Test note 05');
+      // cleanup
+      element(by.id('heading-tab')).click();
+      helper.wait(100);
+      element(by.id('btn-edit-itinerary')).click();
+      element(by.id('btn-delete')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
     });
 
   });
