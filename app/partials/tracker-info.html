@@ -132,7 +132,26 @@
       configure your tracker client app(s) to use the new key.</strong></div>
   </div>
   <form name="form" class="css-form" novalidaate>
-    <button id="btn-generate" ng-click="generateUuid()"
+    <button id="btn-generate" style="margin-bottom: 20px;" ng-click="generateUuid()"
             value="Generate" class="btn btn-lg btn-success">Generate new tracking ID</button>
+
+    <div>
+      <p>If you
+        use <a href="https://www.fdsd.co.uk/triplogger/"
+        target="_blank">TripLogger</a> as your tracking client, you can
+        download your settings to a file and import the settings into the app
+        from the file.  See the section
+        on <a href="https://www.fdsd.co.uk/triplogger/settings/#exporting-and-importing-settings"
+        target="_blank">Exporting and Importing Settings in the TripLogger
+        documentation</a> more information.</p>
+
+      <p>After <a href="./account">uploading your settings</a>, when you
+      download them here, they are automatically updated to contain the
+      current tracking&nbsp;ID, a potentially easier method than cut-and-paste
+      for updating the tracking&nbsp;ID in TripLogger.</p>
+
+    </div>
+    <button id="btn-download" style="margin-top: 10px; margin-bottom: 20px;" ng-click="downloadTripLoggerSettings()"
+            value="Download" class="btn btn-lg btn-primary">Download Updated TripLogger Settings</button>
   </form>
 </div>

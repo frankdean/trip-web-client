@@ -82,4 +82,40 @@ angular.module('myApp.user.factory', [])
          query: {isArray: false},
          update: {method: 'PUT', url: url}
        });
-     }]);
+     }])
+
+  .factory('TripLoggerSettingsUploadService', [
+    '$resource',
+    'ConfigService',
+    '$httpParamSerializerJQLike',
+    function($resource, ConfigService, $httpParamSerializerJQLike) {
+      return $resource(ConfigService.restUrlPrefix + '/nickname/settings/triplogger', {}, {
+        save: {
+          method: "POST",
+          headers: {"Content-Type": undefined},
+          transformRequest: []
+        }
+      });
+    }])
+
+  .factory('TripLoggerSettingsDownload', [
+    '$resource', 'ConfigService', 'Blob', '$window',
+    function ($resource, ConfigService, Blob, $window) {
+      return $resource(ConfigService.restUrlPrefix + '/nickname/download', {}, {
+        download: {
+          url: ConfigService.restUrlPrefix + '/nickname/download/settings/triplogger',
+          method: 'POST',
+          headers: {
+            'Content-type' : 'application/json',
+            'Accept' : 'application/x-yaml,application/octet-stream'
+          },
+          cache: false,
+          transformResponse: function(data) {
+            return {
+              data: new Blob([data], {type: 'application/x-yaml'})
+            };
+          },
+          responseType : 'arraybuffer'
+        }
+      });
+    }]);

@@ -32,7 +32,7 @@ exports.config = {
           'browser.download.manager.showWhenStarting': false,
           'browser.download.useDownloadDir': true,
           'browser.download.dir': env.tmpDir + '/firefox',
-          'browser.helperApps.neverAsk.saveToDisk': 'application/octet-stream,application/gpx+xml'
+          'browser.helperApps.neverAsk.saveToDisk': 'application/octet-stream,application/gpx+xml,application/x-yaml'
         }
       }
     };

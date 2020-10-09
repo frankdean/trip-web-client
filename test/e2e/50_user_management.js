@@ -63,7 +63,7 @@ describe('User management', function() {
     browser.findElement(by.id('input-password')).sendKeys(browser.privateConfig.testAdminUserPassword);
     helper.wait(100);
     helper.takeScreenshot(testName + '_admin_login_' +
-                          ('0000' + ++adminLoginScreenshotCounter).substr(-4, 4),
+                          ('0000' + (++adminLoginScreenshotCounter)).substr(-4, 4),
                           takeScreenshots);
     browser.findElement(by.id('btn-submit')).click();
     helper.wait(800);

@@ -94,7 +94,7 @@ describe('itinerary sharing', function() {
         browser.sleep(400);
         selectAllShares = element(by.id('input-select-all'));
         browser.wait(EC.visibilityOf(selectAllShares), 4000);
-        helper.takeScreenshot(testName + '_select_all_shares_' + ('0000' + ++screenshotCounter).substr(-4, 4), takeScreenshots);
+        helper.takeScreenshot(testName + '_select_all_shares_' + ('0000' + (++screenshotCounter)).substr(-4, 4), takeScreenshots);
         element(by.id('input-select-all')).click();
         if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
           browser.sleep(400);

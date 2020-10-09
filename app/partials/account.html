@@ -1,13 +1,35 @@
 <div class="container">
   <div class="page-header">
     <h1>My Account</h1>
-    <div  id="system-error" ng-messages="messages" ng-show="messages.message">
+    <div  id="messages" ng-messages="messages" ng-show="messages">
       <div id="info-message" class="alert alert-info" role="alert" ng-message="message">
         {{messages.message}}
+      </div>
+      <div id="system-error" class="alert alert-danger" role="alert" ng-message="error">System Error - An
+        unexpected error occurred, status code returned is
+        {{messages.status}}</div>
+      <div id="bad-request" class="alert alert-danger" role="alert" ng-message="badRequest">
+        Upload failed - the most likely reason is that the file is not a valid TripLogger YAML formatted settings file.
+      </div>
+      <div id="bad-filesize" class="alert alert-danger" role="alert" ng-message="fileTooBigError">
+        Upload failed - the file size exceeded the maxiumum configured for the system.
       </div>
     </div>
     <ul>
       <li><a ng-href="/trip/app/change-password">Change password</a></li>
     </ul>
+    <div>
+      <form id="form" class="well">
+        <p>Upload settings from TripLogger:</p>
+        <div>
+          <p>Select the settings file to be uploaded using the browse button,
+            then click the upload button.</p>
+          <input id="btn-file-upload" style="margin-bottom: 15px;" file-upload type="file" name="file" class="btn btn-lg btn-primary" />
+        </div>
+        <div>
+          <button id="btn-upload" ng-click="upload()" class="btn btn-lg btn-success">Upload</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

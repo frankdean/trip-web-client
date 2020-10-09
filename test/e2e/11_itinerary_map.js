@@ -374,7 +374,7 @@ describe('Itinerary map', function() {
         }
         element(by.id('input-select-all-tracks')).click();
         helper.wait(800);
-        helper.takeScreenshot(testName + '_view_tracks_' + ('0000' + ++eachItineraryCounter).substr(-4, 4), takeScreenshots);
+        helper.takeScreenshot(testName + '_view_tracks_' + ('0000' + (++eachItineraryCounter)).substr(-4, 4), takeScreenshots);
         element(by.id('view-pill')).click();
         helper.wait(400);
         browser.element(by.id('btn-map')).click();

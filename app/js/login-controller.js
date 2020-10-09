@@ -93,8 +93,8 @@ angular.module('myApp.login.controller', ['ngCookies'])
 
   .controller(
     'AccountCtrl',
-    ['$log', '$scope', 'StateService',
-     function($log, $scope, StateService) {
+    ['$log', '$scope', '$location', 'StateService', 'TripLoggerSettingsUploadService',
+     function($log, $scope, $location, StateService, UploadService) {
        var message = StateService.getMessage();
        if (message != null) {
          $scope.messages = {
@@ -102,6 +102,26 @@ angular.module('myApp.login.controller', ['ngCookies'])
          };
          StateService.setMessage(null);
        }
+       $scope.upload = function() {
+         $scope.messages = {};
+         UploadService.save({},
+                            $scope.formData
+                           ).$promise.then(function(value) {
+                             $log.debug('Upload succeeded');
+                             $scope.messages.message = 'Upload succeeded';
+                           }).catch(function(response) {
+                             $log.error('Upload failed', response.status);
+                             if (response.status === 401) {
+                               $location.path('/login');
+                             } else if (response.status === 400) {
+                               $scope.messages.badRequest = {error: true};
+                             } else if (response.status === 413) {
+                               $scope.messages.fileTooBigError = {error: true};
+                             } else {
+                               $scope.messages = {error: true, status: response.status};
+                             }
+                           });
+       };
      }])
 
   .controller(

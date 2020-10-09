@@ -19,7 +19,7 @@
 
 angular.module('myApp.gpxupload.gpxupload-directive', [])
 
-  .directive('gpxUpload', ['$log', function($log) {
+  .directive('fileUpload', ['$log', function($log) {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {

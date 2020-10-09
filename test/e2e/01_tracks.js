@@ -488,6 +488,36 @@ describe('TRIP app', function() {
       expect(element(by.id('msg-success')).isDisplayed()).toBeTruthy();
     });
 
+    it('should download a default TripLogger Settings file', function() {
+      // Selenium driver for Safari does not support opening the download dialog
+      if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
+        // ugly, but need each browser to use a different directory, otherwise race conditions
+        var filename = browser.privateConfig.tmpDir + '/' + browser.privateConfig.browserName + '/triplogger-settings.yaml';
+        if (fs.existsSync(filename)) {
+          fs.unlinkSync(filename);
+        }
+        element(by.id('btn-download')).click();
+        browser.driver.wait(function() {
+          var retval = fs.existsSync(filename);
+          return retval;
+        }).then(function() {
+          expect(fs.existsSync(filename, { encoding: 'utf8'}));
+          // give the download time to complete - may need increasing depending on cpu etc
+          browser.sleep(640).then(function() {
+            expect(fs.existsSync(filename, { encoding: 'utf8'}));
+            var content = fs.readFileSync(filename, 'utf8');
+            // Matcher testing the main tags exist from the beginning of the file
+            // up to the first trkpt and from the last trkpt to the end of the file.
+            // It should not care whether white space is present or not.
+            // If it fails, chances are that there is something wrong with the file
+            // or at least it has no trkpts in it.
+            expect(content).toMatch(/currentSettingUUID: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/);
+            expect(content).toMatch(/userId: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/);
+          });
+        });
+      }
+    });
+
   });
 
 });
