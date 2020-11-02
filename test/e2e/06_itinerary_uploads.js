@@ -53,6 +53,7 @@ describe('Itinerary uploads', function() {
       expect(element(by.id('btn-upload')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-download')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-download-kml')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-download-yaml')).isDisplayed()).toBeTruthy();
       element(by.id('heading-tab')).click();
       helper.wait(100);
       expect(element(by.id('btn-sharing')).isDisplayed()).toBeTruthy();
@@ -173,7 +174,7 @@ describe('Itinerary uploads', function() {
       expect(element.all(by.repeater('track in trackNames')).first().all(by.tagName('label')).get(0).getText()).toMatch(/.+/);
       // Various buttons should or should not be displayed
       expect(element(by.id('view-pill')).isDisplayed()).toBeTruthy();
-      expect(element(by.id('edit-pill')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('edit-pill')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-close')).isDisplayed()).toBeTruthy();
       element(by.id('view-pill')).click();
       expect(element(by.id('btn-map')).isDisplayed()).toBeTruthy();
@@ -181,6 +182,7 @@ describe('Itinerary uploads', function() {
       expect(element(by.id('btn-upload')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-download')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-download-kml')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-download-yaml')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-edit-selected')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-delete')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();

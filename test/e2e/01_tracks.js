@@ -400,6 +400,7 @@ describe('TRIP app', function() {
         // We expect this to select 'test2' from the list of nicknames
         nicknameSelect.sendKeys('t\t');
         element(by.id('btn-download')).click();
+        browser.sleep(100);
         element(by.css('.confirm-button')).click();
         browser.driver.wait(function() {
           var retval = fs.existsSync(filename);

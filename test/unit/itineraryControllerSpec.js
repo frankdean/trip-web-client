@@ -220,6 +220,35 @@ describe('ItineraryCtrl', function() {
 
     });
 
+    describe('YAML itinerary download', function() {
+      var downloadService;
+
+      beforeEach(inject(function(
+        ItineraryDownloadService) {
+        $httpBackend.when('GET',
+                          /\/itinerary\/\d+\/download\/yaml$/,
+                          function(data) {
+                            return true;
+                          }).respond(200, '');
+        downloadService = ItineraryDownloadService;
+        spyOn(downloadService, 'downloadYaml').and.callThrough();
+        createController();
+        $httpBackend.flush();
+        scope.data = {};
+        scope.waypoints = [];
+        scope.routeNames = [];
+        scope.trackNames = [];
+        scope.data.id = testItinerarySearchObject.id;
+        scope.downloadItineraryAsYaml();
+        $httpBackend.flush();
+      }));
+
+      it('should initiate a GPX file download', function() {
+        expect(downloadService.downloadYaml).toHaveBeenCalled();
+      });
+
+    });
+
     describe('paste', function() {
       var copyAndPasteService,
           testLocations = {

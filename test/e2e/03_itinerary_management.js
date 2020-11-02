@@ -17,13 +17,15 @@
  */
 'use strict';
 
-var helper = require('../helper.js');
+var fs = require('fs'),
+    helper = require('../helper.js');
 
 describe('Itinerary management', function() {
   var EC = protractor.ExpectedConditions;
   var elemTitle, elemStartDate, elemFinishDate, elemDescription,
       elemSave, elemDelete, elemReset;
-  var testItineraryId = 2333;
+  var testItineraryId = 2333,
+      testSharedItineraryId = 983;
 
   beforeEach(function() {
     elemTitle = element(by.id('input-title'));
@@ -64,7 +66,7 @@ describe('Itinerary management', function() {
       helper.wait(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test title');
-      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?12.Dec.2001 to: (\w+ )?13.Dec.2001/);
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from:\s+(\w+ )?12.Dec.2001\s+((\w+ )?12.Dec.2001 \d{2}:\d{2}\s*)?to:\s+(\w+ )?13.Dec.2001/);
       // cleanup
       element(by.id('btn-edit-itinerary')).click();
       element(by.id('btn-delete')).click();
@@ -158,6 +160,10 @@ describe('Itinerary management', function() {
       browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for lists of shares');
     });
 
+    it('should show the start date input field', function() {
+      expect(elemStartDate.isDisplayed()).toBeTruthy();
+    });
+
     it('should be able to modify each field', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
@@ -179,7 +185,7 @@ describe('Itinerary management', function() {
       helper.wait(100);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       expect(element(by.id('itinerary-text-title')).getText()).toEqual('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
-      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from: (\w+ )?22.Nov.2015 to: (\w+ )?23.Nov.2015/);
+      expect(element(by.id('itinerary-text-date')).getText()).toMatch(/Date from:\s+(\w+ )?22.Nov.2015\s+((\w+ )?22.Nov.2015 \d{2}:\d{2}\s*)?to:\s+(\w+ )?23.Nov.2015/);
     });
 
     it('should show the date range when both dates are specified', function() {
@@ -197,8 +203,8 @@ describe('Itinerary management', function() {
       elemSave.click();
       helper.wait(100);
       if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
-        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[1]')).getText()).toMatch(/(\w+ )?12.Dec.2001/);
-        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[2]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/span[1]')).getText()).toMatch(/(\w+ )?12.Dec.2001/);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/span[3]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
         // 'from' should not be hidden
         expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('');
         // 'to' should not be hidden
@@ -230,7 +236,7 @@ describe('Itinerary management', function() {
       elemSave.click();
       if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
         browser.sleep(100);
-        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[1]')).getText()).toMatch(/12.Dec.2001/);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/span[1]')).getText()).toMatch(/(\w+ )?12.Dec.2001/);
         // 'from' should be hidden
         expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
         // 'to' should  be hidden
@@ -261,7 +267,7 @@ describe('Itinerary management', function() {
       if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
         // 'from' should be hidden
         expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
-        expect(element(by.xpath('//*[@id="itinerary-text-date"]/text()[2]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
+        expect(element(by.xpath('//*[@id="itinerary-text-date"]/span[3]')).getText()).toMatch(/(\w+ )?13.Dec.2001/);
         // 'to' should not be hidden
         expect(element(by.xpath('//*[@id="itinerary-text-date"]/b[2]/span')).getAttribute('class')).toEqual('');
       } else {
@@ -350,7 +356,7 @@ describe('Itinerary management', function() {
       helper.wait(100);
     });
 
-    it('should show the Add Waypoint button whilst the form is not in edit mode', function() {
+    it('should show the Add Waypoint button whilst the form is in edit mode', function() {
       element(by.id('features-tab')).click();
       helper.wait(400);
       element(by.id('edit-pill')).click();
@@ -360,14 +366,59 @@ describe('Itinerary management', function() {
 
   });
 
-  describe('view with missing itinerary id attribute', function() {
+  describe('shared view', function() {
+
+    beforeEach(function() {
+      browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
+    });
+
+    it('should download the itinerary as a YAML file', function() {
+      // Selenium driver for Safari does not support opening the download dialog
+      if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
+        // ugly, but need each browser to use a different directory, otherwise race conditions
+        var filename = browser.privateConfig.tmpDir + '/' + browser.privateConfig.browserName + '/trip-itinerary-' + testSharedItineraryId + '.yaml';
+        if (fs.existsSync(filename)) {
+          fs.unlinkSync(filename);
+        }
+        element(by.id('features-tab')).click();
+        element(by.id('transfer-pill')).click();
+        element(by.id('btn-download-yaml')).click();
+        element(by.xpath('/html/body/div[7]/div[2]/div/div[1]/button')).click();
+        browser.driver.wait(function() {
+          var retval = fs.existsSync(filename);
+          return retval;
+        }).then(function() {
+          expect(fs.existsSync(filename, { encoding: 'utf8'}));
+          // give the download time to complete - may need increasing depending on cpu etc
+          browser.sleep(640).then(function() {
+            expect(fs.existsSync(filename, { encoding: 'utf8'}));
+            var content = fs.readFileSync(filename, 'utf8');
+            // Matcher testing the main attributes exist from the beginning of the file
+            // It should not care whether white space is present or not.
+            expect(content).toMatch(/id: 983/);
+            expect(content).toMatch(/owned_by_nickname: orange/);
+            expect(content).toMatch(/name: Test track name/);
+          });
+        });
+      }
+    });
+
+    it('should not show the Add Waypoint button whilst the form is not in edit mode', function() {
+      element(by.id('features-tab')).click();
+      helper.wait(400);
+      element(by.id('edit-pill')).click();
+      helper.wait(400);
+      expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-copy')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-duplicate')).isDisplayed()).toBeTruthy();
+    });
+
+  });
+
+  describe('download', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary');
-    });
-
-    it('should not show the Add Waypoint button whilst the form is in edit mode', function() {
-      expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();
     });
 
   });

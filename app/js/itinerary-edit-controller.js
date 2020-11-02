@@ -55,6 +55,24 @@ angular.module('myApp.itinerary.edit.controller', [])
              $scope.data.finish = itinerary.finish ? new Date(itinerary.finish) : null;
              $scope.data.title = itinerary.title;
              $scope.data.description = itinerary.description;
+             if ($scope.data.start !== null) {
+               var start = new Date(itinerary.start),
+                   startMidnight = new Date(itinerary.start);
+               startMidnight.setHours(0);
+               startMidnight.setMinutes(0);
+               startMidnight.setSeconds(0);
+               startMidnight.setMilliseconds(0);
+               $scope.data.startDiff = startMidnight - start;
+             }
+             if ($scope.data.finish !== null) {
+               var finish = new Date(itinerary.finish),
+                   finishMidnight = new Date(itinerary.finish);
+               finishMidnight.setHours(0);
+               finishMidnight.setMinutes(0);
+               finishMidnight.setSeconds(0);
+               finishMidnight.setMilliseconds(0);
+               $scope.data.finishDiff = finishMidnight - finish;
+             }
              $scope.master = angular.copy($scope.data);
              $scope.form.$setPristine();
              $scope.form.$setUntouched();

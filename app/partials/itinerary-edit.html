@@ -20,12 +20,24 @@
       </div>
       <div>
         <div>
-          <label for="input-start-date">Date from:</label>
-          <input id="input-start-date" type="date" placeholder="yyyy-MM-dd" size="25" name="startdate" ng-model="data.start" />
+          <span ng-show="!data.startDiff">
+            <label for="input-start-date">Date from:</label>
+            <input id="input-start-date" type="date" placeholder="yyyy-MM-dd" size="25" name="startdate" ng-model="data.start" />
+          </span>
+          <span ng-show="data.startDiff">
+            <label for="input-start-date2">Date from:</label>
+            <input id="input-start-date2" type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" size="25" name="startdate" ng-model="data.start" />
+          </span>
         </div>
         <div>
-          <label for="input-finish-date">Date to:</label>
-          <input id="input-finish-date" type="date" placeholder="yyyy-MM-dd" size="25" name="finishdate" ng-model="data.finish" />
+          <span ng-show="!data.finishDiff">
+            <label for="input-finish-date">Date to:</label>
+            <input id="input-finish-date" type="date" placeholder="yyyy-MM-dd" size="25" name="finishdate" ng-model="data.finish" />
+          </span>
+          <span ng-show="data.finishDiff">
+            <label for="input-finish-date2">Date to:</label>
+            <input id="input-finish-date2" type="datetime-local" placeholder="yyyy-MM-ddTHH:mm:ss" size="25" name="finishdate" ng-model="data.finish" />
+          </span>
         </div>
         <div ng-show="form.$submitted || form.start-date.$touched">
           <div id="invalid-start-date" class="alert alert-warning" role="alert" ng-show="form.startdate.$error.date">Not a valid start date!</div>

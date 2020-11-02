@@ -143,6 +143,7 @@ angular.module('myApp', [
   'myApp.gpxupload',
   'myApp.itineries.controller',
   'myApp.itinerary.controller',
+  'myApp.itinerary.import.controller',
   'myApp.itinerary.edit.controller',
   'myApp.itinerary.factory.js',
   'myApp.itinerary.map.controller',
@@ -236,6 +237,10 @@ angular.module('myApp', [
          when('/itinerary', {
            templateUrl: 'partials/itinerary.html',
            controller: 'ItineraryCtrl'
+         }).
+         when('/itinerary-import', {
+           templateUrl: 'partials/itinerary-import.html',
+           controller: 'ItineraryImportController'
          }).
          when('/itinerary-edit', {
            templateUrl: 'partials/itinerary-edit.html',

@@ -1,0 +1,31 @@
+<div class="container">
+  <div id="system-error" class="map-page-div" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div id="system-error" class="map-page-div" ng-messages="messages"
+       ng-show="messages">
+    <div class="alert alert-danger" role="alert" ng-message="fileTooBigError">
+      The upload has been rejected as too big.
+    </div>
+    <div class="alert alert-info" role="alert" ng-message="uploading">
+      Uploading...
+    </div>
+  </div>
+  <div>
+    <form id="form" class="well">
+      <div>
+        <p>Select the YAML file containing the itinerary to be uploaded using the browse button, then
+          click the upload button.</p>
+        <input id="btn-file-upload" style="margin-bottom: 15px;" file-upload type="file" name="file" class="btn btn-lg btn-primary" />
+      </div>
+      <div>
+        <button id="btn-upload" ng-click="upload()" class="btn btn-lg btn-success">Upload</button>
+        <button id="btn-cancel" ng-click="cancel()" type="button" class="btn btn-lg btn-danger">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

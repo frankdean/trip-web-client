@@ -92,6 +92,9 @@ angular.module('myApp.itineries.controller', [])
        $scope.newItinerary = function() {
          $location.path('/itinerary-edit');
        };
+       $scope.importItinerary = function() {
+         $location.path('/itinerary-import');
+       };
        $scope.showSharesReport = function() {
          $location.path('/itinerary-sharing-report');
        };

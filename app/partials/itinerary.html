@@ -27,7 +27,24 @@
           </div>
           <div id="itinerary-text-date-range" ng-show="data.start || data.finish">
             <hr/>
-            <p id="itinerary-text-date"><b>Date<span ng-show="data.start && data.finish"> from</span><span ng-show="data.start">: </span></b>{{data.start | date:'EEE dd-MMM-yyyy'}} <b><span ng-show="data.finish">to: </span></b>{{data.finish | date:'EEE dd-MMM-yyyy'}}</p>
+            <p id="itinerary-text-date">
+              <b>Date<span ng-show="data.start && data.finish"> from</span><span ng-show="data.start">: </span></b>
+              <span ng-show="!data.startDiff">
+                {{data.start | date:'EEE dd-MMM-yyyy'}}
+              </span>
+              <span ng-show="data.startDiff">
+                {{data.start | date:'EEE dd-MMM-yyyy HH:mm'}}
+              </span>
+              <b>
+                <span ng-show="data.finish"> to: </span>
+              </b>
+              <span ng-show="!data.finishDiff">
+                {{data.finish | date:'EEE dd-MMM-yyyy'}}
+              </span>
+              <span ng-show="data.finishDiff">
+                {{data.finish | date:'EEE dd-MMM-yyyy HH:mm'}}
+              </span>
+            </p>
           </div>
           <div>
             <hr ng-show="data.description"/>
@@ -50,18 +67,18 @@
                 <li id="btn-map" role="menuitem"><a href="#" ng-click="showMap(downloads)">Show map</a></li>
               </ul>
             </li>
-            <li id="edit-pill" uib-dropdown uib-dropdown-toggle ng-show="data.shared_to_nickname === null">
+            <li id="edit-pill" uib-dropdown uib-dropdown-toggle>
               <a href="#">Edit <span class="caret"></span></a>
               <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="edit-pill">
-                <li id="btn-new-waypoint" role="menuitem"><a href="#" ng-click="createWaypoint(downloads)" ng-show="data.shared_to_nickname === null">Add waypoint</a></li>
-                <li class="divider"></li>
-                <li id="btn-edit-selected" role="menuitem"><a href="#" ng-click="editSelected(downloads)">Attributes</a></li>
-                <li id="btn-edit-path" role="menuitem"><a href="#" ng-click="editPath(downloads, false)">Path</a></li>
-                <li class="divider"></li>
-                <li id="btn-join-path" role="menuitem"><a href="#" ng-click="joinPaths(downloads)" ng-show="data.shared_to_nickname === null">Join paths</a></li>
-                <li class="divider"></li>
-                <li role="menuitem"><a href="#" ng-click="copyItemsForPaste(downloads)">Copy</a></li>
-                <li id="btn-paste" role="menuitem">
+                <li id="btn-new-waypoint" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="createWaypoint(downloads)" ng-show="data.shared_to_nickname === null">Add waypoint</a></li>
+                <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-edit-selected" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="editSelected(downloads)">Attributes</a></li>
+                <li id="btn-edit-path" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="editPath(downloads, false)">Path</a></li>
+                <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-join-path" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="joinPaths(downloads)" ng-show="data.shared_to_nickname === null">Join paths</a></li>
+                <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-copy" role="menuitem"><a href="#" ng-click="copyItemsForPaste(downloads)">Copy selected items</a></li>
+                <li id="btn-paste" role="menuitem" ng-show="data.shared_to_nickname === null">
                   <a href="#"
                      mwl-confirm
                      title="Paste"
@@ -71,15 +88,25 @@
                      ng-show="canPaste && data.shared_to_nickname === null"
                      >Paste</a>
                 </li>
-                <li class="divider"></li>
-                <li id="btn-delete" role="menuitem">
+                <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-delete" role="menuitem" ng-show="data.shared_to_nickname === null">
                   <a href="#"
                      mwl-confirm
                      title="Confirm"
                      message="Delete the selected waypoints, routes and tracks?"
                      on-confirm="deleteUploads(downloads)"
                      ng-show="data.shared_to_nickname === null"
-                     >Delete</a>
+                     >Delete selected items</a>
+                </li>
+                <li class="divider"></li>
+                <li id="btn-duplicate" role="menuitem">
+                  <a href="#"
+                     mwl-confirm
+                     title="Duplicate"
+                     message="Create a new copy of this itinerary"
+                     on-confirm="duplicateItineary()"
+                     confirm-button-type="success"
+                     >Create duplicate itinerary</a>
                 </li>
               </ul>
             </li>
@@ -105,6 +132,16 @@
                      on-confirm="downloadKml(downloads)"
                      confirm-button-type="success"
                      >Download KML</a>
+                </li>
+                <li class="divider"/>
+                <li id="btn-download-yaml" role="menuitem">
+                  <a href="#"
+                     mwl-confirm
+                     title="YAML Download"
+                     message="Download full itinerary in YAML format?"
+                     on-confirm="downloadItineraryAsYaml()"
+                     confirm-button-type="success"
+                     >Download Full Itinerary</a>
                 </li>
               </ul>
             </li>

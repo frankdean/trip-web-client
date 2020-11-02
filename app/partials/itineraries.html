@@ -42,8 +42,9 @@
   </div>
   <div id="div-buttons">
     <form name="form" class="css-form" novalidate>
-      <div id="div-form-buttons">
+      <div id="itineraries-div-form-buttons">
         <button id="btn-new" ng-click="newItinerary()" class="btn btn-lg btn-warning">New</button>
+        <button id="btn-import" ng-click="importItinerary()" class="btn btn-lg btn-success">Import</button>
       </div>
     </form>
     <div ng-show="itineraries.payload.length > 0">

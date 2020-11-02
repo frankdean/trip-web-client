@@ -29,6 +29,7 @@ angular.module('myApp.itinerary.controller', [])
      '$timeout',
      '$window',
      'ItineraryService',
+     'ItineraryDownloadService',
      'ItineraryWaypointService',
      'ItineraryRouteService',
      'ItineraryTrackService',
@@ -48,6 +49,7 @@ angular.module('myApp.itinerary.controller', [])
                $timeout,
                $window,
                ItineraryService,
+               ItineraryDownloadService,
                ItineraryWaypointService,
                ItineraryRouteService,
                ItineraryTrackService,
@@ -99,6 +101,25 @@ angular.module('myApp.itinerary.controller', [])
                $scope.data.title = itinerary.title;
                $rootScope.pageTitle = ' - ' + itinerary.title;
                $scope.data.description = itinerary.description;
+               if (itinerary.start) {
+                 // Handle itineraries in different time zones
+                 var start = new Date(itinerary.start),
+                     startMidnight = new Date(itinerary.start);
+                 startMidnight.setHours(0);
+                 startMidnight.setMinutes(0);
+                 startMidnight.setSeconds(0);
+                 startMidnight.setMilliseconds(0);
+                 $scope.data.startDiff = startMidnight - start;
+               }
+               if (itinerary.finish) {
+                 var finish = new Date(itinerary.finish),
+                     finishMidnight = new Date(itinerary.finish);
+                 finishMidnight.setHours(0);
+                 finishMidnight.setMinutes(0);
+                 finishMidnight.setSeconds(0);
+                 finishMidnight.setMilliseconds(0);
+                 $scope.data.finishDiff = finishMidnight - finish;
+               }
                $scope.master = angular.copy($scope.data);
              }).catch(function(response) {
                $scope.ajaxRequestError = {
@@ -109,7 +130,7 @@ angular.module('myApp.itinerary.controller', [])
                  $location.path('/login');
                  $location.search('');
                } else {
-                 $log.warn('Error fetching itinerary:', response.status, response.statusText);
+                 $log.warn('Error fetching itinerary:', response);
                  $scope.ajaxRequestError = {
                    error: true,
                    status: response.status
@@ -499,6 +520,24 @@ angular.module('myApp.itinerary.controller', [])
            $log.error('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
          }
        };
+       $scope.duplicateItineary = function() {
+         ItineraryService.duplicate({id: $scope.itineraryId})
+           .$promise.then(function(result) {
+             $location.path('/itinerary');
+             $location.search({id: result.id});
+           }).catch(function(response) {
+             if (response.status === 401) {
+               $location.path('/login');
+               $location.search('');
+             } else {
+               $log.warn('Error duplicating itinerary:', response);
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+             }
+           });
+       };
        $scope.refreshData = function() {
          $scope.updateWaypoints();
          $scope.updateRouteNames();
@@ -731,6 +770,31 @@ angular.module('myApp.itinerary.controller', [])
          $scope.selectAllWaypoints();
          $scope.selectAllRoutes();
          $scope.selectAllTracks();
+       };
+       $scope.downloadItineraryAsYaml = function() {
+         $scope.ajaxRequestError = {error: false};
+         $scope.messages = {};
+         $scope.formError = {editOnlyOne: false};
+         ItineraryDownloadService.downloadYaml({
+           id: $scope.itineraryId
+         }).$promise.then(function(response) {
+           if (response.data && response.data.size > 0) {
+             SaveAs(response.data, 'trip-itinerary-' + $scope.itineraryId + '.yaml');
+           } else {
+             $log.warn('Downloaded response contained no data');
+           }
+         }).catch(function(response) {
+             if (response.status === 401) {
+               $location.path('/login');
+               $location.search('');
+             } else {
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+               $log.warn('YAML itinerary download failed', response.status);
+             }
+         });
        };
        $scope.download = function(form) {
          $scope.ajaxRequestError = {error: false};

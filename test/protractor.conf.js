@@ -43,8 +43,8 @@ exports.config = {
 
     return [
       // safariConfig,
-      // firefoxConfig,
-      chromeConfig
+      firefoxConfig,
+      // chromeConfig
     ];
   },
 

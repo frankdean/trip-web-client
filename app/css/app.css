@@ -236,5 +236,8 @@ input.days, input.minutes, input.hours {
   color: #23527c;
   text-decoration: underline;
 }
+div#itineraries-div-form-buttons {
+  margin-bottom: 5px;
+}
 /* Fix for href attributes inside accordion etc. http://angular-ui.github.io/bootstrap/versioned-docs/2.4.0/ */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

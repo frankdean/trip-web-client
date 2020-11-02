@@ -53,7 +53,8 @@ angular.module('myApp.itinerary.factory.js', [] )
   function($resource, ConfigService){
     var url = ConfigService.restUrlPrefix + '/itinerary/:id';
     return $resource(url, {id: '@id'}, {
-      query: {url: ConfigService.restUrlPrefix + '/itineraries'}
+      query: {url: ConfigService.restUrlPrefix + '/itineraries'},
+      duplicate: {method: 'POST', url: ConfigService.restUrlPrefix + '/itinerary/:id/duplicate'}
     });
   }])
 
@@ -194,4 +195,39 @@ angular.module('myApp.itinerary.factory.js', [] )
        return $resource(url, {}, {
          query: {isArray: false}
        });
-     }]);
+     }])
+
+  .factory('ItineraryUploadService', [
+    '$resource',
+    'ConfigService',
+    '$httpParamSerializerJQLike',
+    function($resource, ConfigService, $httpParamSerializerJQLike) {
+      return $resource(ConfigService.restUrlPrefix + '/itinerary/upload/yaml', {}, {
+        save: {
+          method: "POST",
+          headers: {"Content-Type": undefined},
+          transformRequest: []
+        }
+      });
+    }])
+
+  .factory('ItineraryDownloadService', [
+    '$resource', 'ConfigService', 'Blob', '$window', '$log',
+    function ($resource, ConfigService, Blob, $window, $log) {
+      return $resource(ConfigService.restUrlPrefix + '/itinerary/:id/download', {}, {
+        downloadYaml: {
+          url: ConfigService.restUrlPrefix + '/itinerary/:id/download/yaml',
+          headers: {
+            'Content-type' : 'application/json',
+            'Accept' : 'application/x-yaml,application/octet-stream'
+          },
+          cache: false,
+          transformResponse: function(data) {
+            return {
+              data: new Blob([data], {type: 'application/x-yaml'})
+            };
+          },
+          responseType : 'arraybuffer'
+        }
+      });
+    }]);

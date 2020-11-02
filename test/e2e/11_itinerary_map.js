@@ -19,7 +19,7 @@
 
 var helper = require('../helper.js');
 
-fdescribe('Itinerary map', function() {
+describe('Itinerary map', function() {
 
   var testName = '11_itinerary_map',
       takeScreenshots = browser.privateConfig.takeScreenshots;
@@ -427,7 +427,7 @@ fdescribe('Itinerary map', function() {
     });
 
     it('should not display the edit-path button', function() {
-      expect(element(by.id('edit-pill')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('edit-pill')).isDisplayed()).toBeTruthy();
       expect(element(by.id('view-pill')).isDisplayed()).toBeTruthy();
       element(by.id('view-pill')).click();
       helper.wait(400);

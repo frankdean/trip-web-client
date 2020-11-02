@@ -27,7 +27,7 @@ angular.module('myApp.gpxupload.gpxupload-directive', [])
           scope.fileObject = element[0].files[0];
           scope.formData = new FormData();
           scope.formData.append('file', scope.fileObject);
-          $log.debug('File', scope.fileObject.name);
+          // $log.debug('File', scope.fileObject.name);
           scope.fileLog = {
             'lastModified': scope.fileObject.lastModified,
             'lastModifiedDate': scope.fileObject.lastModifiedDate,
