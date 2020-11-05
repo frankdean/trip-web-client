@@ -25,8 +25,9 @@ angular.module('myApp.itinerary.sharing.controller', [])
      '$routeParams',
      '$log',
      '$location',
+     '$timeout',
      'ItinerarySharingService',
-     function($rootScope, $scope, $routeParams, $log, $location, ItinerarySharingService) {
+     function($rootScope, $scope, $routeParams, $log, $location, $timeout, ItinerarySharingService) {
        $rootScope.pageTitle = null;
        $scope.itineraryId = $routeParams.id !== undefined ? decodeURIComponent($routeParams.id) : undefined;
        $scope.routing = $routeParams.routing !== undefined ? decodeURIComponent($routeParams.routing) : undefined;
@@ -162,7 +163,9 @@ angular.module('myApp.itinerary.sharing.controller', [])
             shares: $scope.shares.payload
            }).$promise.then(
              function() {
-               $scope.listItineraryShares();
+               $timeout(function() {
+                 $scope.listItineraryShares();
+               }, 500);
              }).catch(
                function(response) {
                  $log.warn('save itinerary shares failed for action:', type);
