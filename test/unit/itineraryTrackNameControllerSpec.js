@@ -73,37 +73,6 @@ describe('ItineraryTrackNameCtrl', function() {
 
   }));
 
-  it('should redirect after save to the login page if the user is not authorised', function() {
-    saveRequestHandler = $httpBackend.when('POST').respond(401, '');
-    createController(itineraryTrackParams);
-    $httpBackend.flush();
-    expect(itineraryTrackNameService.get).toHaveBeenCalled();
-    scope.save(mockValidForm);
-    expect(itineraryTrackNameService.save).toHaveBeenCalled();
-    $httpBackend.flush();
-    expect(scope.ajaxRequestError).not.toBeDefined();
-    expect($location.path).toHaveBeenCalledWith('/login');
-    expect($location.search).not.toHaveBeenCalledWith();
-    expect(itineraryTrackNameService.save).toHaveBeenCalled();
-    expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
-    expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
-  });
-
-  it('should set an error flag when the backend call fails', function() {
-    saveRequestHandler = $httpBackend.when('POST').respond(400, '');
-    createController(itineraryTrackParams);
-    $httpBackend.flush();
-    expect(itineraryTrackNameService.get).toHaveBeenCalled();
-    scope.save(mockValidForm);
-    expect(itineraryTrackNameService.save).toHaveBeenCalled();
-    $httpBackend.flush();
-    expect(scope.ajaxRequestError.error).toBeDefined();
-    expect($location.search).not.toHaveBeenCalled();
-    expect(itineraryTrackNameService.save).toHaveBeenCalled();
-    expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
-    expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
-  });
-
   it('should fetch the specified track name', function() {
     createController(itineraryTrackParams);
     expect(itineraryTrackNameService.get).toHaveBeenCalled();
@@ -188,6 +157,51 @@ describe('ItineraryTrackNameCtrl', function() {
     expect(itineraryTrackNameService.save).not.toHaveBeenCalled();
     expect(mockValidForm.$setPristine).toHaveBeenCalled();
     expect(mockValidForm.$setUntouched).toHaveBeenCalled();
+  });
+
+
+  describe('error during save', function() {
+
+    beforeEach(inject(function(_$httpBackend_) {
+      saveRequestHandler = _$httpBackend_.when('POST').respond(400, '');
+    }));
+
+    it('should set an error flag when the backend call fails', function() {
+      createController(itineraryTrackParams);
+      // $httpBackend.flush();
+      expect(itineraryTrackNameService.get).toHaveBeenCalled();
+      scope.save(mockValidForm);
+      expect(itineraryTrackNameService.save).toHaveBeenCalled();
+      $httpBackend.flush();
+      expect(scope.ajaxRequestError.error).toBeDefined();
+      expect($location.search).not.toHaveBeenCalled();
+      expect(itineraryTrackNameService.save).toHaveBeenCalled();
+      expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
+      expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('save without authentication', function() {
+
+    beforeEach(inject(function(_$httpBackend_) {
+      saveRequestHandler = _$httpBackend_.when('POST').respond(401, '');
+    }));
+
+    it('should redirect after save to the login page if the user is not authorised', function() {
+      createController(itineraryTrackParams);
+      // $httpBackend.flush();
+      expect(itineraryTrackNameService.get).toHaveBeenCalled();
+      scope.save(mockValidForm);
+      expect(itineraryTrackNameService.save).toHaveBeenCalled();
+      $httpBackend.flush();
+      expect(scope.ajaxRequestError).not.toBeDefined();
+      expect($location.path).toHaveBeenCalledWith('/login');
+      expect($location.search).not.toHaveBeenCalledWith();
+      expect(itineraryTrackNameService.save).toHaveBeenCalled();
+      expect(mockValidForm.$setPristine).not.toHaveBeenCalled();
+      expect(mockValidForm.$setUntouched).not.toHaveBeenCalled();
+    });
+
   });
 
 });

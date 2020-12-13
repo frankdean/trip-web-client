@@ -184,6 +184,7 @@ describe('TRIP controllers', function() {
       expect(scope.ajaxRequestError.error).toBeTruthy();
     });
 
+    /* Jasmine 3.6.x throws error if 'pending' used
     pending('Causes an undesirable file download of tracks on each test run');
     it('should call the GPX Download service when gpxDownload action is requested', function() {
       spyOn(initGpxDownload, 'downloadTracks').and.callThrough();
@@ -203,6 +204,7 @@ describe('TRIP controllers', function() {
       $httpBackend.flush();
       expect(initGpxDownload.downloadTracks).toHaveBeenCalledWith(expected);
     });
+    */
 
   });
 

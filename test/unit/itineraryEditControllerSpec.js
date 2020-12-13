@@ -39,17 +39,17 @@ describe('ItineraryEditCtrl', function() {
     var scope, form, $location, $httpBackend, requestHandler, createController, itineraryService;
     var testStrDate = '2016-06-05T00:00:00Z';
     var testItinerary = {id: 42,
-                         start: new Date(testStrDate),
-                         finish: new Date(testStrDate),
-                         title: 'Test itinerary',
-                         description: 'Descripton of the itinerary'
-                        };
+                           start: new Date(testStrDate),
+                           finish: new Date(testStrDate),
+                           title: 'Test itinerary',
+                           description: 'Descripton of the itinerary'
+                          };
     var expected = {id: undefined,
-                    start: testStrDate,
-                    finish: testStrDate,
-                    title: testItinerary.title,
-                    description: testItinerary.description
-                   };
+                      start: testStrDate,
+                      finish: testStrDate,
+                      title: testItinerary.title,
+                      description: testItinerary.description
+                     };
 
     beforeEach(inject(function(_$httpBackend_,
                                $rootScope,
@@ -168,55 +168,10 @@ describe('ItineraryEditCtrl', function() {
       expect(scope.data).toEqual(scope.master);
     });
 
-    it('should update an itinerary when the form is submitted', function() {
-      spyOn(itineraryService, 'save').and.callThrough();
-      spyOn(mockValidForm, '$setPristine').and.callThrough();
-      spyOn(mockValidForm, '$setUntouched').and.callThrough();
-      createController();
-      $httpBackend.flush();
-      scope.saveItinerary(testItinerary);
-      $httpBackend.flush();
-      expect(itineraryService.save).toHaveBeenCalledWith({}, expected);
-      expect(mockValidForm.$setPristine).toHaveBeenCalled();
-      expect(mockValidForm.$setUntouched).toHaveBeenCalled();
-      expect(scope.data.id).toEqual(expected.id);
-      expect(scope.data.start).toBeDefined();
-      expect(scope.data.title).toEqual(expected.title);
-      expect(scope.data.description).toEqual(expected.description);
-      expect(scope.master.id).toEqual(expected.id);
-      expect(scope.master.start).toBeDefined();
-      expect(scope.master.title).toEqual(expected.title);
-      expect(scope.master.description).toEqual(expected.description);
-      expect(scope.data).toEqual(scope.master);
-    });
-
-    it('should not clear the form when there is an error saving', function() {
-      saveRequestHandler.respond(400, '');
-      spyOn(itineraryService, 'save').and.callThrough();
-      createController();
-      $httpBackend.flush();
-      expect(itineraryService.save).not.toHaveBeenCalled();
-      expect(scope.master.id).toEqual(expected.id);
-      expect(scope.master.title).toEqual(expected.title);
-      expect(scope.master.start).toBeDefined();
-      expect(scope.master.description).toEqual(expected.description);
-      scope.saveItinerary(scope.data);
-      $httpBackend.flush();
-      expect(itineraryService.save).toHaveBeenCalledWith({}, expected);
-      expect(scope.master.id).toEqual(expected.id);
-      expect(scope.master.title).toEqual(expected.title);
-      expect(scope.master.start).toBeDefined();
-      expect(scope.master.description).toEqual(expected.description);
-      expect(scope.data.id).toEqual(expected.id);
-      expect(scope.data.title).toEqual(expected.title);
-      expect(scope.data.start).toBeDefined();
-      expect(scope.data.description).toEqual(expected.description);
-    });
-
     it('should not attempt to save an invalid form', function() {
       spyOn(itineraryService, 'save').and.callThrough();
       createController();
-      scope.data = expected;
+      scope.data = Object.assign({}, expected);
       scope.form = mockInvalidForm;
       scope.saveItinerary(scope.data);
       $httpBackend.flush();
@@ -264,6 +219,7 @@ describe('ItineraryEditCtrl', function() {
       expect(scope.ajaxRequestError.error).toBeTruthy();
     });
 
+    /* Jasmine 3.6.x throws error if 'pending' used
     pending('Causes an undesirable file download of itinerary on each test run');
     it('should download itinerary waypoints and routes', function() {
       createController();
@@ -273,6 +229,60 @@ describe('ItineraryEditCtrl', function() {
       scope.routeNames = [{id: 1, name: 'test1', selected: true}];
       scope.download(mockValidForm);
       $httpBackend.flush();
+    });
+    */
+
+    describe('form submission', function() {
+
+      it('should update an itinerary when the form is submitted', function() {
+        spyOn(itineraryService, 'save').and.callThrough();
+        spyOn(mockValidForm, '$setPristine').and.callThrough();
+        spyOn(mockValidForm, '$setUntouched').and.callThrough();
+        createController();
+        $httpBackend.flush();
+        scope.saveItinerary(testItinerary);
+        $httpBackend.flush();
+        expect(itineraryService.save).toHaveBeenCalledWith({}, expected);
+        expect(mockValidForm.$setPristine).toHaveBeenCalled();
+        expect(mockValidForm.$setUntouched).toHaveBeenCalled();
+        expect(scope.data.id).toEqual(expected.id);
+        expect(scope.data.start).toBeDefined();
+        expect(scope.data.title).toEqual(expected.title);
+        expect(scope.data.description).toEqual(expected.description);
+        expect(scope.master.id).toEqual(expected.id);
+        expect(scope.master.start).toBeDefined();
+        expect(scope.master.title).toEqual(expected.title);
+        expect(scope.master.description).toEqual(expected.description);
+        expect(scope.data).toEqual(scope.master);
+      });
+
+    });
+
+    describe('error during save', function() {
+
+      it('should not clear the form when there is an error saving', function() {
+        saveRequestHandler.respond(400, '');
+        spyOn(itineraryService, 'save').and.callThrough();
+        createController();
+        $httpBackend.flush();
+        expect(itineraryService.save).not.toHaveBeenCalled();
+        expect(scope.master.id).toEqual(expected.id);
+        expect(scope.master.title).toEqual(expected.title);
+        expect(scope.master.start).toBeDefined();
+        expect(scope.master.description).toEqual(expected.description);
+        scope.saveItinerary(scope.data);
+        $httpBackend.flush();
+        expect(itineraryService.save).toHaveBeenCalledWith({}, expected);
+        expect(scope.master.id).toEqual(expected.id);
+        expect(scope.master.title).toEqual(expected.title);
+        expect(scope.master.start).toBeDefined();
+        expect(scope.master.description).toEqual(expected.description);
+        expect(scope.data.id).toEqual(expected.id);
+        expect(scope.data.title).toEqual(expected.title);
+        expect(scope.data.start).toBeDefined();
+        expect(scope.data.description).toEqual(expected.description);
+      });
+
     });
 
   });

@@ -4,8 +4,11 @@ module.exports = function(config){
     basePath : '../',
 
     browserDisconnectTimeout: 2000,
-
     browserNoActivityTimeout: 1200000,
+    captureTimeout: 20000,
+    listenAddress: '0.0.0.0',
+    hostname: 'localhost',
+    port: '9876',
 
     files : [
       'app/node_modules/angular/angular.js',
@@ -44,8 +47,10 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
-    _browsers : ['Chrome', 'Firefox', 'Safari'],
-    browsers : ['Chrome'],
+    _browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome'],
+    _browsers: ['Firefox'],
+    _browsers: ['Safari'],
 
     logLevel: config.LOG_INFO,
 

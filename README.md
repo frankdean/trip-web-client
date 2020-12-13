@@ -62,6 +62,11 @@ See
 [Protractor Browser Support page](http://www.protractortest.org/#/browser-support)
 for the latest information.
 
+1.  Cannot upgrade to socket.io version 3.x as Karma unit tests fail
+    to connect to the browser.  See [GitHub issue 3569][github-issue-3569]
+
+[github-issue-3569]: https://github.com/karma-runner/karma/issues/3569 "Having socket.io-client v3 installed does not complete karma test runs due to dependency issue"
+
 1.  Safari tests are unreliable - WaitForAngular doesn't work, so the
     workaround is to keep adding delays at various points where the tests
     fail.
@@ -70,12 +75,12 @@ for the latest information.
 
 1.  Safari on iOS (iPad) fails when using websockets with self-signed
 	certificates over HTTPS, with:
-	
+
 	`WebSocket network error: The operation couldn’t be completed. (OSStatus error -9807.)`
 
 	See
 	<http://blog.httpwatch.com/2013/12/12/five-tips-for-using-self-signed-ssl-certificates-with-ios/>.
-	
+
 	Use <https://letsencrypt.org> to create a free certificate.
 	Alternatively, uncomment and enable the code in
 	`./app/js/socket-factory.js` to use polling with Safari Mobile browsers.
@@ -89,8 +94,6 @@ for the latest information.
     workaround is set the `help` attribute to call a local function in the
     controller which performs the default action of opening up a link to
     [DaringFireball's Markdown syntax page](http://daringfireball.net/projects/markdown/syntax).
-
-1.  Protractor 5.1.1 requires node >= 6.9.x
 
 1.  When fetching a Geo Location, Safari desktop provides a time stamp based
     on an epoch of 01-Jan-2001 instead of 01-Jan-1970.  Workaround implemented

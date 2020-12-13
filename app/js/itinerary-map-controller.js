@@ -614,6 +614,9 @@ angular.module('myApp.itinerary.map.controller', [])
              mySocket.on('connect', function() {
                $scope.state.connected = true;
              });
+             mySocket.on('reconnect', function() {
+               $scope.state.connected = true;
+             });
              mySocket.on('disconnect', function() {
                $scope.state.connected = false;
              });

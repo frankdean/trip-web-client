@@ -59,20 +59,10 @@ describe('UserCtrl', function() {
       return $controller('UserCtrl', {$scope: scope});
     };
     scope.form = mockValidForm;
-    testUser = {
-      id: testUserId,
-      nickname: expectedUser.nickname,
-      email: expectedUser.username,
-      firstname: expectedUser.firstname,
-      lastname: expectedUser.lastname
-    };
-    testUser2 = {
-      id: testUserId2,
-      nickname: expectedUser.nickname,
-      email: expectedUser.username,
-      firstname: expectedUser.firstname,
-      lastname: expectedUser.lastname
-    };
+    testUser = Object.assign({}, expectedUser);
+    testUser.id = testUserId;
+    testUser2 = Object.assign({}, expectedUser);
+    testUser2.id = testUserId2;
     userList = {count: 1, payload: [testUser, testUser2]};
   }));
 
@@ -139,6 +129,7 @@ describe('UserCtrl', function() {
       });
 
       it('should create a new user when the form is submitted', function() {
+        expect(expectedUser.id).toBeUndefined();
         spyOn(userService, 'save').and.callThrough();
         createController();
         scope.data.nickname = expectedUser.nickname;
@@ -158,6 +149,7 @@ describe('UserCtrl', function() {
       });
 
       it('should show an error when there is a backend failure', function() {
+        expect(expectedUser.id).toBeUndefined();
         createController();
         scope.data.nickname = expectedUser.nickname;
         scope.data.username = expectedUser.username;
@@ -246,7 +238,7 @@ describe('UserCtrl', function() {
     });
 
     it('should update an existing user when the form is submitted', function() {
-      var testUpdateUser = expectedUser;
+      var testUpdateUser = Object.assign({}, expectedUser);
       testUpdateUser.id = testUserId;
       spyOn(userService, 'save').and.callThrough();
       createController();
@@ -288,7 +280,7 @@ describe('UserCtrl', function() {
       });
 
       it('should delete an existing user when the form is submitted', function() {
-        var testUpdateUser = expectedUser;
+        var testUpdateUser = Object.assign({}, expectedUser);
         testUpdateUser.id = testUserId;
         // It is the selectedItem.id that is used
         scope.form.id = undefined;

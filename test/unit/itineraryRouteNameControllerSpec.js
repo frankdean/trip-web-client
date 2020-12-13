@@ -104,7 +104,7 @@ describe('ItineraryRouteNameCtrl', function() {
   it('should redirect after save to the login page if the user is not authorised', function() {
     saveRequestHandler = $httpBackend.when('POST').respond(401, '');
     createController(itineraryRouteParams);
-    $httpBackend.flush();
+    // $httpBackend.flush();
     expect(itineraryRouteNameService.get).toHaveBeenCalled();
     scope.save(mockValidForm);
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('ItineraryRouteNameCtrl', function() {
   it('should set an error flag when the backend call fails to save the name change', function() {
     saveRequestHandler = $httpBackend.when('POST').respond(400, '');
     createController(itineraryRouteParams);
-    $httpBackend.flush();
+    // $httpBackend.flush();
     expect(itineraryRouteNameService.get).toHaveBeenCalled();
     scope.save(mockValidForm);
     expect(itineraryRouteNameService.save).toHaveBeenCalled();
