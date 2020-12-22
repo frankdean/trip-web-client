@@ -81,6 +81,7 @@ describe('itinerary sharing', function() {
       });
 
       it('should show the itinerary list when the close/back button is clicked', function() {
+        helper.wait(400);
         element(by.id('btn-close')).click();
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       });
@@ -141,6 +142,7 @@ describe('itinerary sharing', function() {
         element(by.id('btn-delete')).click();
         element.all((by.css('.confirm-button'))).get(0).click();
         browser.sleep(300).then(function() {
+          helper.wait(400);
           expect(element(by.id('table-shares')).isDisplayed()).toBeFalsy();
         });
       });

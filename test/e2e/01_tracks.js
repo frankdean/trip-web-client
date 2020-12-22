@@ -400,7 +400,7 @@ describe('TRIP app', function() {
         // We expect this to select 'test2' from the list of nicknames
         nicknameSelect.sendKeys('t\t');
         element(by.id('btn-download')).click();
-        browser.wait(EC.visibilityOf(element(by.css('.confirm-button'))), 4000, 'Timeout waiting for confimr button to be visibile');
+        browser.wait(EC.visibilityOf(element(by.css('.confirm-button'))), 4000, 'Timeout waiting for confirm button to be visibile');
         element(by.css('.confirm-button')).click();
         browser.driver.wait(function() {
           var retval = fs.existsSync(filename);

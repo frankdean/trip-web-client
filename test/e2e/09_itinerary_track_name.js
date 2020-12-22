@@ -77,6 +77,7 @@ describe('Itinerary Track Name', function() {
       helper.wait(400);
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
+      helper.wait(400);
       expect(element(by.id('input-name')).getAttribute('value')).toEqual('Test track name');
       expect(element(by.id('input-color')).getAttribute('value')).toEqual('Yellow');
     });

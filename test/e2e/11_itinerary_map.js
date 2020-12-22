@@ -33,6 +33,7 @@ describe('Itinerary map', function() {
       elemZoomOutControl,
       selectAllWaypoints,
       markerIcons,
+      popups,
       saveControlText = 'Save',
       finishControlText = 'Finish',
       cancelControlText = 'Cancel',
@@ -134,6 +135,17 @@ describe('Itinerary map', function() {
 
         it('should display the waypoints on the map', function() {
           expect(markerIcons.count()).toBeGreaterThan(2);
+        });
+
+        it('should display the waypoint label on the map', function() {
+          markerIcons = element.all(by.css('.leaflet-marker-icon'));
+          browser.sleep(400);
+          markerIcons.first().click();
+          helper.wait(400);
+          helper.takeScreenshot(testName + '_display_map_markers_test1', takeScreenshots);
+          popups = element.all(by.css('.leaflet-popup-content'));
+          expect(popups.count()).toEqual(1);
+          expect(popups.first().getText()).toMatch(/London/);
         });
 
         it('should allow a marker to be deleted', function() {
@@ -553,6 +565,7 @@ describe('Itinerary map', function() {
         element(by.id('input-route-' + v)).click();
       });
       element(by.id('edit-pill')).click();
+      helper.wait(400);
       element(by.id('btn-delete')).click();
       element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
     });
