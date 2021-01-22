@@ -46,6 +46,10 @@
     <button id="btn-back" ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
   </div>
   <div id="div-live-map" ng-show="state.liveMap" style="padding-left: 5px">
+    <p ng-show="!state.connected || data.now < data.dateFrom" class="alert alert-warning" role="alert">
+      <span ng-show="!state.connected">Live update has disconnected. </span>
+      <span ng-show="state.connected && data.now < data.dateFrom">Live update is connected, but updates will be ignored until the requested start time of {{data.dateFrom | date:'HH:mm:ss EEE dd-MMM-yyyy'}}. </span>
+    </p>
     <form name="form" class="css-form" novalidate>
       <div>
         <label for="auto-update">Auto-centre on live update:</label>

@@ -37,6 +37,7 @@ describe('Change Password', function() {
   });
 
   it('should display an error message if the current password is not entered', function() {
+    helper.wait(400);
     element(by.id('new-password')).sendKeys('this_is_a_strong_password');
     element(by.id('btn-submit')).click();
     expect(element(by.id('error-current-password-required')).isDisplayed()).toBeTruthy();

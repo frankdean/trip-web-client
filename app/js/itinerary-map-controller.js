@@ -99,8 +99,8 @@ angular.module('myApp.itinerary.map.controller', [])
          data: {
            highAccuracy: false,
            liveTracks: [],
-           dateFrom: start
-
+           dateFrom: start,
+           now: Date.now()
          },
          state: {
            autocenter: false,
@@ -123,7 +123,6 @@ angular.module('myApp.itinerary.map.controller', [])
            paths: []
          }
        });
-
 
        $scope.$on('leafletDirectiveMap.locationfound', function(event, data) {
          $scope.state.locationFound = {error: false, success: true};
@@ -607,6 +606,7 @@ angular.module('myApp.itinerary.map.controller', [])
        };
 
        $scope.initLiveMapSettings = function() {
+         $scope.data.now = Date.now();
          $scope.state.locationFound = {error: false, success: false};
          if ($scope.state.liveMap) {
            if (!$scope.state.connected) {
@@ -676,6 +676,7 @@ angular.module('myApp.itinerary.map.controller', [])
                listen: false,
                color: trackColors[trackColor],
                apply: function(socket, args) {
+                 $scope.data.now = Date.now();
                  if (args && args[0] && args[0].update) {
                    $scope.state.updateBounds = false;
                    $scope.updateLiveTrack(this.nickname);
@@ -842,6 +843,7 @@ angular.module('myApp.itinerary.map.controller', [])
        };
 
        $scope.updateLiveMapSettings = function() {
+         $scope.data.now = Date.now();
          if ($scope.form  && $scope.form.$valid) {
            myBounds = null;
            $scope.state.updateBounds = true;

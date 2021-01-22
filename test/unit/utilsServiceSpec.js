@@ -459,39 +459,60 @@ describe('UtilsService', function() {
     });
 
     it('should convert a valid OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('SX 58676 74106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('SX 58676 74106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid OSGB 1936 grid reference with a prefix of BNG', function() {
-      expect(utilsService.parseGeoLocation('BNG SX 58676 74106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('BNG SX 58676 74106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid OSGB 1936 grid reference with a prefix of OSGB36', function() {
-      expect(utilsService.parseGeoLocation('OSGB36 SX 58676 74106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('OSGB36 SX 58676 74106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid 12 digit OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('258676 074106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('258676 074106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid 12 digit comma-space separted OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('258676, 074106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('258676, 074106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid 12 digit comma separated OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('258676,074106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('258676,074106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid 2 letter and 10 digit OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('SX5867674106')).toEqual({ lat: { deg: 50.54958847703311 }, lng: { deg: -3.996161425942458 } });
+      var result = utilsService.parseGeoLocation('SX5867674106');
+      expect(result.lat.deg).toBeCloseTo(50.54958847703311, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.996161425942458, 6);
     });
 
     it('should convert a valid 2 letter and 6 digit OSGB 1936 grid reference', function() {
-      expect(utilsService.parseGeoLocation('SX 587 741')).toEqual({ lat: { deg: 50.54954035757594 }, lng: { deg: -3.9958206046686096 } });
+      var r1 = utilsService.parseGeoLocation('SX 587 741');
+      expect(r1.lat.deg).toBeCloseTo(50.54954035757594, 6);
+      expect(r1.lng.deg).toBeCloseTo(-3.9958206046686096, 6);
+      var r2 = utilsService.parseGeoLocation('SX 587 741');
+      expect(r2.lat.deg).toBeCloseTo(50.54954035757594, 6);
+      expect(r2.lng.deg).toBeCloseTo(-3.9958206046686096, 6);
     });
 
     it('should convert a valid 6 digit OSGB 1936 grid reference without spaces', function() {
-      expect(utilsService.parseGeoLocation('SX587741')).toEqual({ lat: { deg: 50.54954035757594 }, lng: { deg: -3.9958206046686096 } });
+      var result = utilsService.parseGeoLocation('SX587741');
+      expect(result.lat.deg).toBeCloseTo(50.54954035757594, 6);
+      expect(result.lng.deg).toBeCloseTo(-3.9958206046686096, 6);
     });
 
     it('should convert a valid northerly OSGB 1936 grid reference', function() {
@@ -531,15 +552,21 @@ describe('UtilsService', function() {
     });
 
     it('should convert a valid 12 digit ITM reference', function() {
-      expect(utilsService.parseGeoLocation('ITM 715830, 734697')).toEqual({ lat: { deg: 53.34979391179922 }, lng: { deg: -6.260247772756659 } });
+      var result = utilsService.parseGeoLocation('ITM 715830, 734697');
+      expect(result.lat.deg).toBeCloseTo(53.34979391179922, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260247772756659, 6);
     });
 
     it('should convert a valid 12 digit ITM reference without spaces', function() {
-      expect(utilsService.parseGeoLocation('ITM715830,734697')).toEqual({ lat: { deg: 53.34979391179922 }, lng: { deg: -6.260247772756659 } });
+      var result = utilsService.parseGeoLocation('ITM715830,734697');
+      expect(result.lat.deg).toBeCloseTo(53.34979391179922, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.260247772756659, 6);
     });
 
     it('should convert a fully specified ITM reference', function() {
-      expect(utilsService.parseGeoLocation('ITM E 709885.081m, N 736167.699m')).toEqual({lat: {deg: 53.36427343603036}, lng: {deg: -6.348987346570671}});
+      var result = utilsService.parseGeoLocation('ITM E 709885.081m, N 736167.699m');
+      expect(result.lat.deg).toBeCloseTo(53.36427343603036, 6);
+      expect(result.lng.deg).toBeCloseTo(-6.348987346570671, 6);
     });
 
     it('should parse one of our own track point URLs', function() {

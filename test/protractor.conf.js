@@ -1,4 +1,5 @@
-var env = require('./environment.js');
+var env = require('./environment.js'),
+    helper = require('./helper.js');
 
 exports.config = {
   allScriptsTimeout: 11000,
@@ -65,8 +66,14 @@ exports.config = {
     browser.getCapabilities().then(function (caps) {
       browser.privateConfig.tmpDir = env.tmpDir;
       browser.privateConfig.browserName = caps.get('browserName');
+      // Sometimes, the above call returns the browser name with a capitalised first letter
       if (browser.privateConfig.browserName == 'Safari') {
+        browser.privateConfig.browserName = 'safari';
+      }
+      if (browser.privateConfig.browserName == 'safari') {
 
+        // Safari sometimes fails before logging in
+        helper.wait(400);
         // See https://github.com/angular/protractor/issues/2643
         browser.waitForAngularEnabled(false);
 
@@ -79,6 +86,7 @@ exports.config = {
         // Window needs to big enough for all items used in tests to be visible
         browser.driver.manage().window().setPosition(0, 0);
         browser.driver.manage().window().setSize(1024, 1300);
+        helper.wait(800);
 
       }
       browser.privateConfig.baseUrl = env.baseUrl;

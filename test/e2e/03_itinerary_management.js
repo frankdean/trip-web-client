@@ -347,6 +347,7 @@ describe('Itinerary management', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      helper.wait(400);
     });
 
     it('should show the sharing page when the sharing button is clicked', function() {
