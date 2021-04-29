@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.6.0",
+  "version": "1.6.1-rc.1",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -48,7 +48,7 @@
     "angular-loader": "^1.8.0",
     "angular-messages": "^1.8.0",
     "angular-mocks": "^1.8.0",
-    "angular-pagedown": "kennyki/angular-pagedown#0.4.4",
+    "angular-pagedown": "git+https://github.com/frankdean/angular-pagedown#0.4.4-fork.1",
     "angular-paging": "^2.2.2",
     "angular-resource": "^1.8.0",
     "angular-route": "^1.8.0",
@@ -62,8 +62,8 @@
     "html5-boilerplate": "~7.3.0",
     "leaflet": "~1.6.0",
     "leaflet-draw": "^1.0.4",
-    "open-location-code": "google/open-location-code#^1.0.4",
-    "pagedown": "baminteractive/PageDown#^1.1.0",
+    "open-location-code": "git+https://github.com/google/open-location-code#1.0.4",
+    "pagedown": "git+https://github.com/baminteractive/PageDown.git#1.1.0",
     "proj4": "^2.4.4",
     "socket.io-client": "~2.4.0",
     "ui-leaflet": "https://www.fdsd.co.uk/trip-server/download/ui-leaflet-1.0.4-rc.1.tar.gz",
