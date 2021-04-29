@@ -75,15 +75,15 @@
   },
   "scripts": {
     "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').relative('app', 'node_modules'), 'app/node_modules', 'junction') } catch (e) { }\"",
-    "prestart": "yarn install",
+    "prestart": "$npm_execpath install",
     "start": "cd ../trip-server && node index.js",
-    "pretest": "yarn install",
+    "pretest": "$npm_execpath install",
     "test": "karma start test/karma.conf.js",
     "test-single-run": "karma start test/karma.conf.js  --single-run",
-    "preupdate-webdriver": "yarn install",
+    "preupdate-webdriver": "$npm_execpath install",
     "update-webdriver-chrome-XX.x.xxxx.xx": "webdriver-manager update --versions.chrome=XX.x.xxxx.xx",
     "update-webdriver": "webdriver-manager update",
-    "_preprotractor": "yarn run update-webdriver",
+    "_preprotractor": "$npm_execpath run update-webdriver",
     "protractor": "protractor test/protractor.conf.js",
     "dist-update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
@@ -97,13 +97,13 @@
     "clean": "rimraf dist",
     "lint": "jshint app/js/*.js app/js/**/*.js test/**/*.js",
     "prebuild": "mkdirp dist/app/partials --mode=0775 && mkdirp dist/app/css --mode=0775",
-    "build": "yarn run build:scripts && yarn run build:css",
+    "build": "$npm_execpath run build:scripts && $npm_execpath run build:css",
     "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map \"url=trip.min.js.map\"  --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
     "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js*' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' 'app/js/**/*.js' dist",
     "post-dist": "node -e \"require('shelljs/global'); mv('dist/app/index-async.html', 'dist/app/index.html'); rm('-f', 'dist/app/index-dev.html')\"",
     "tar-release": "cd dist && tar -zcf ${npm_package_name}-release-v${npm_package_version}.tar.gz app",
     "zip-release": "cd dist && zip -qr ${npm_package_name}-release-v${npm_package_version}.zip app",
-    "build-release": "yarn run disable-debug && yarn run disable-debug-logging && yarn run clean && yarn run build && yarn run dist && yarn run update-index-prod && yarn run dist-update-index-async && yarn run update-index-async-prod && yarn run post-dist && yarn run tar-release && yarn run zip-release && yarn run enable-debug && yarn run enable-debug-logging"
+    "build-release": "$npm_execpath run disable-debug && $npm_execpath run disable-debug-logging && $npm_execpath run clean && $npm_execpath run build && $npm_execpath run dist && $npm_execpath run update-index-prod && $npm_execpath run dist-update-index-async && $npm_execpath run update-index-async-prod && $npm_execpath run post-dist && $npm_execpath run tar-release && $npm_execpath run zip-release && $npm_execpath run enable-debug && $npm_execpath run enable-debug-logging"
   }
 }
