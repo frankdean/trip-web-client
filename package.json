@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -98,9 +98,9 @@
     "lint": "jshint app/js/*.js app/js/**/*.js test/**/*.js",
     "prebuild": "mkdirp dist/app/partials --mode=0775 && mkdirp dist/app/css --mode=0775",
     "build": "yarn run build:scripts && yarn run build:css",
-    "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map --output trip.min.js",
+    "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map \"url=trip.min.js.map\"  --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
-    "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' dist",
+    "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js*' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' 'app/js/**/*.js' dist",
     "post-dist": "node -e \"require('shelljs/global'); mv('dist/app/index-async.html', 'dist/app/index.html'); rm('-f', 'dist/app/index-dev.html')\"",
     "tar-release": "cd dist && tar -zcf ${npm_package_name}-release-v${npm_package_version}.tar.gz app",
     "zip-release": "cd dist && zip -qr ${npm_package_name}-release-v${npm_package_version}.zip app",
