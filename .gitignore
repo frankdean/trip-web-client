@@ -10,3 +10,4 @@ app/third_party/
 /dist/*
 /app/node_modules
 /yarn-error.log
+app/vagrant

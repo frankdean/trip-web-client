@@ -21,11 +21,15 @@ var helper = require('../helper.js');
 
 describe('Change Password', function() {
 
+  var testName = '14_change_password',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
+
   beforeEach(function() {
     browser.get(browser.baseUrl + '/change-password');
   });
 
   it('should display the password change form', function() {
+    helper.takeScreenshot(testName + '_show_password_change_form_', takeScreenshots);
     expect(browser.getCurrentUrl()).toMatch(/\/change-password$/);
   });
 

@@ -48,7 +48,8 @@ module.exports = function(config){
     frameworks: ['jasmine'],
 
     _browsers: ['Chrome', 'Firefox', 'Safari'],
-    browsers: ['Chrome'],
+    _browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     _browsers: ['Firefox'],
     _browsers: ['Safari'],
 

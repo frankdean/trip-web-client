@@ -15,7 +15,8 @@ exports.config = {
     var chromeConfig = {
       'browserName': 'chrome',
       'chromeOptions': {
-        prefs: {
+        'args': [ '--headless', '--disable-gpu', '--window-size=1024,1300' ],
+        'prefs': {
           'download': {
             'prompt_for_download': false,
             'directory_upgrade': true,
@@ -28,6 +29,7 @@ exports.config = {
     var firefoxConfig = {
       'browserName': 'firefox',
       'moz:firefoxOptions': {
+        // 'args': [ '--headless' ],
         'prefs': {
           'browser.download.folderList': 2,
           'browser.download.manager.showWhenStarting': false,

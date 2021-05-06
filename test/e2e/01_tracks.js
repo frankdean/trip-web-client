@@ -21,6 +21,9 @@ var fs = require('fs'),
     helper = require('../helper.js');
 
 describe('TRIP app', function() {
+  var testName = '01_tracks',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
+
   var EC = protractor.ExpectedConditions;
 
   function clear(elem) {
@@ -58,6 +61,8 @@ describe('TRIP app', function() {
 
     describe('paging tests', function() {
 
+      var screenshotCounter = 0;
+
       beforeEach(function() {
         browser.wait(EC.visibilityOf(elemDateFrom), 4000, 'Timeout waiting for date from field to be visibile');
         if (browser.privateConfig.browserName !== 'chrome') {
@@ -66,11 +71,15 @@ describe('TRIP app', function() {
           elemDateTo.clear();
           elemDateTo.sendKeys('2015-12-13T09:55:00');
         } else {
+          // Entering dates in Chrome relies on the current locale.  Tested with en_GB
           clear(elemDateFrom);
           elemDateFrom.sendKeys('10120020151748');
           clear(elemDateTo);
           elemDateTo.sendKeys('13120020150955');
         }
+        helper.takeScreenshot(testName + '_paging_tests_' +
+                              ('0000' + (++screenshotCounter)).substr(-4, 4),
+                              takeScreenshots);
         element(by.id('btn-tracks')).click();
         var conditionPage3LinkVisible = EC.visibilityOf(element(by.linkText('3')));
         var conditionLastPageLinkVisible = EC.visibilityOf(element(by.linkText('>>')));
@@ -88,6 +97,7 @@ describe('TRIP app', function() {
         var pageLink3 = element(by.linkText('3'));
         pageLink3.click();
         var locationList = element.all(by.repeater('location in locations'));
+        helper.takeScreenshot(testName + '_paging', takeScreenshots);
         expect(locationList.first().all(by.tagName('td')).first().getText()).toEqual('253');
         expect(locationList.last().all(by.tagName('td')).first().getText()).toEqual('244');
       });
