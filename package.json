@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.6.1-rc.1",
+  "version": "1.6.1-rc.2",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -17,8 +17,8 @@
     "GPS"
   ],
   "resolutions": {
-    "ua-parser-js": "^0.7.24",
-    "xmlhttprequest-ssl": "^1.6.2"
+    "engine.io-client": "~3.5.2",
+    "ua-parser-js": "^0.7.24"
   },
   "devDependencies": {
     "copyfiles": "^2.1.1",
@@ -32,6 +32,7 @@
     "karma-junit-reporter": "^2.0.1",
     "karma-safari-launcher": "^1.0.0",
     "mkdirp": "^1.0.3",
+    "npm-force-resolutions": "0.0.10",
     "protractor": "^7.0.0",
     "q": "^1.4.1",
     "rimraf": "^3.0.2",
@@ -75,6 +76,7 @@
     "yarn": ">= 1.0.0"
   },
   "scripts": {
+    "preinstall": "node -e \"const fs = require('fs'); if (fs.existsSync('package-lock.json') && '$npm_execpath'.indexOf('yarn.js') === -1) { require('child_process').execSync('npx npm-force-resolutions')} \"",
     "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').relative('app', 'node_modules'), 'app/node_modules', 'junction') } catch (e) { }\"",
     "prestart": "$npm_execpath install",
     "start": "cd ../trip-server && node index.js",
@@ -86,14 +88,14 @@
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "$npm_execpath run update-webdriver",
     "protractor": "protractor test/protractor.conf.js",
-    "dist-update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
-    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
-    "disable-debug": "node -e \"require('shelljs/global'); sed('-i', /$compileProvider.debugInfoEnabled\\(true\\)/, '$compileProvider.debugInfoEnabled(false)', 'app/js/app.js');\"",
-    "enable-debug": "node -e \"require('shelljs/global'); sed('-i', /$compileProvider.debugInfoEnabled\\(false\\)/, '$compileProvider.debugInfoEnabled(true)', 'app/js/app.js');\"",
-    "disable-debug-logging": "node -e \"require('shelljs/global'); sed('-i', /$logProvider.debugEnabled\\(true\\)/, '$logProvider.debugEnabled(false)', 'app/js/app.js');\"",
-    "enable-debug-logging": "node -e \"require('shelljs/global'); sed('-i', /$logProvider.debugEnabled\\(false\\)/, '$logProvider.debugEnabled(true)', 'app/js/app.js');\"",
-    "update-index-prod": "node -e \"require('shelljs/global'); sed('-i', /^\\s+<script src=\\\"js\\/.*\\.js\\\"><\\/script>\\s*$/, '', 'dist/app/index.html'); sed('-i', /^\\s+<!-- <script src=\\\"trip.min.js\\\"><\\/script> -->\\s*$/, '  <script src=\\\"trip.min.js\\\"></script>', 'dist/app/index.html');\"",
-    "update-index-async-prod": "node -e \"require('shelljs/global'); sed('-i', /^\\s+\\'js\\/.*\\.js\\',?\\s*$/, '', 'dist/app/index-async.html'); sed('-i', /\\/\\/ \\'trip.min.js\\'/, '\\'trip.min.js\\'', 'dist/app/index-async.html');\"",
+    "dist-update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
+    "update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
+    "disable-debug": "node -e \"const shell = require('shelljs'); shell.sed('-i', /$compileProvider.debugInfoEnabled\\(true\\)/, '$compileProvider.debugInfoEnabled(false)', 'app/js/app.js');\"",
+    "enable-debug": "node -e \"const shell = require('shelljs'); shell.sed('-i', /$compileProvider.debugInfoEnabled\\(false\\)/, '$compileProvider.debugInfoEnabled(true)', 'app/js/app.js');\"",
+    "disable-debug-logging": "node -e \"const shell = require('shelljs'); shell.sed('-i', /$logProvider.debugEnabled\\(true\\)/, '$logProvider.debugEnabled(false)', 'app/js/app.js');\"",
+    "enable-debug-logging": "node -e \"const shell = require('shelljs'); shell.sed('-i', /$logProvider.debugEnabled\\(false\\)/, '$logProvider.debugEnabled(true)', 'app/js/app.js');\"",
+    "update-index-prod": "node -e \"const shell = require('shelljs'); shell.sed('-i', /^\\s+<script src=\\\"js\\/.*\\.js\\\"><\\/script>\\s*$/, '', 'dist/app/index.html'); shell.sed('-i', /^\\s+<!-- <script src=\\\"trip.min.js\\\"><\\/script> -->\\s*$/, '  <script src=\\\"trip.min.js\\\"></script>', 'dist/app/index.html');\"",
+    "update-index-async-prod": "node -e \"const shell = require('shelljs'); shell.sed('-i', /^\\s+\\'js\\/.*\\.js\\',?\\s*$/, '', 'dist/app/index-async.html'); shell.sed('-i', /\\/\\/ \\'trip.min.js\\'/, '\\'trip.min.js\\'', 'dist/app/index-async.html');\"",
     "env": "env",
     "clean": "rimraf dist",
     "lint": "jshint app/js/*.js app/js/**/*.js test/**/*.js",
@@ -102,9 +104,9 @@
     "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map \"url=trip.min.js.map\"  --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
     "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js*' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' 'app/js/**/*.js' dist",
-    "post-dist": "node -e \"require('shelljs/global'); mv('dist/app/index-async.html', 'dist/app/index.html'); rm('-f', 'dist/app/index-dev.html')\"",
-    "tar-release": "cd dist && tar -zcf ${npm_package_name}-release-v${npm_package_version}.tar.gz app",
-    "zip-release": "cd dist && zip -qr ${npm_package_name}-release-v${npm_package_version}.zip app",
+    "post-dist": "node -e \"const shell = require('shelljs'); shell.mv('dist/app/index-async.html', 'dist/app/index.html'); shell.rm('-f', 'dist/app/index-dev.html')\"",
+    "tar-release": "node -e \"const shell = require('shelljs'); shell.cd('dist'); shell.exec('tar -zcf ${npm_package_name}-release-v${npm_package_version}.tgz app')\"",
+    "zip-release": "node -e \"const shell = require('shelljs'); shell.cd('dist'); shell.exec('zip -qr ${npm_package_name}-release-v${npm_package_version}.zip app')\"",
     "build-release": "$npm_execpath run disable-debug && $npm_execpath run disable-debug-logging && $npm_execpath run clean && $npm_execpath run build && $npm_execpath run dist && $npm_execpath run update-index-prod && $npm_execpath run dist-update-index-async && $npm_execpath run update-index-async-prod && $npm_execpath run post-dist && $npm_execpath run tar-release && $npm_execpath run zip-release && $npm_execpath run enable-debug && $npm_execpath run enable-debug-logging"
   }
 }
