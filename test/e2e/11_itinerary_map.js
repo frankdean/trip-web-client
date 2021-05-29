@@ -141,7 +141,7 @@ describe('Itinerary map', function() {
           markerIcons = element.all(by.css('.leaflet-marker-icon'));
           browser.sleep(400);
           markerIcons.first().click();
-          helper.wait(400);
+          browser.sleep(400);
           helper.takeScreenshot(testName + '_display_map_markers_test1', takeScreenshots);
           popups = element.all(by.css('.leaflet-popup-content'));
           expect(popups.count()).toEqual(1);
