@@ -71,11 +71,11 @@ describe('TRIP app', function() {
           elemDateTo.clear();
           elemDateTo.sendKeys('2015-12-13T09:55:00');
         } else {
-          // Entering dates in Chrome relies on the current locale.  Tested with en_GB
+          // These dates may fail in some locales
           clear(elemDateFrom);
-          elemDateFrom.sendKeys('10120020151748');
+          elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '17', '48'));
           clear(elemDateTo);
-          elemDateTo.sendKeys('13120020150955');
+          elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '13', '9', '55', '0'));
         }
         helper.takeScreenshot(testName + '_paging_tests_' +
                               ('0000' + (++screenshotCounter)).substr(-4, 4),
@@ -197,10 +197,10 @@ describe('TRIP app', function() {
         elemDateTo.sendKeys('2016-08-22T20:53:00');
       } else {
         clear(elemDateFrom);
-        // These dates may fail in a non-European locale
-        elemDateFrom.sendKeys('22042016', protractor.Key.TAB, '0000');
+        // These dates may fail in some locales
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2016', '04', '22', '0', '0'));
         clear(elemDateTo);
-        elemDateTo.sendKeys('22042016', protractor.Key.TAB, '205300');
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2016', '04', '22', '20', '53', '0'));
       }
       var submit = element(by.id('btn-tracks'));
       // Display notes and non-notes
@@ -222,6 +222,7 @@ describe('TRIP app', function() {
       // This test introduced after a page failed to display any locations.
       // Hasn't occurred since.  The cause hasn't been determined.
       // Test left here for posterity.
+      helper.takeScreenshot(testName + '_results_for_date_range_01', takeScreenshots);
       if (browser.privateConfig.browserName !== 'chrome') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-12-10T00:00:00');
@@ -229,13 +230,17 @@ describe('TRIP app', function() {
         elemDateTo.sendKeys('2015-12-10T23:59:59');
       } else {
         clear(elemDateFrom);
-        // These dates may fail in a non-European locale
-        elemDateFrom.sendKeys('10122015\t0000');
+        // These dates may fail in some locales
+        helper.takeScreenshot(testName + '_results_for_date_range_02', takeScreenshots);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '0', '0'));
         clear(elemDateTo);
-        elemDateTo.sendKeys('10122015\t235959');
+        helper.takeScreenshot(testName + '_results_for_date_range_03', takeScreenshots);
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '23', '59', '59'));
+        helper.takeScreenshot(testName + '_results_for_date_range_04', takeScreenshots);
       }
       var submit = element(by.id('btn-tracks'));
       submit.click();
+      helper.takeScreenshot(testName + '_results_for_date_range_11', takeScreenshots);
       var locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
       var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));

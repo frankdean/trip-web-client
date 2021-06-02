@@ -49,9 +49,17 @@ module.exports = function(config){
 
     _browsers: ['Chrome', 'Firefox', 'Safari'],
     _browsers: ['Chrome'],
-    browsers: ['ChromeHeadless'],
+    _browsers: ['ChromeHeadless'],
+    browsers: ['ChromeNoSandbox'],
     _browsers: ['Firefox'],
     _browsers: ['Safari'],
+
+    customLaunchers: {
+      ChromeNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
 
     logLevel: config.LOG_INFO,
 

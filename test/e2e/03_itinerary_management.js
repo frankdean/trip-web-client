@@ -21,10 +21,12 @@ var fs = require('fs'),
     helper = require('../helper.js');
 
 describe('Itinerary management', function() {
-  var EC = protractor.ExpectedConditions;
-  var elemTitle, elemStartDate, elemFinishDate, elemDescription,
-      elemSave, elemDelete, elemReset;
-  var testItineraryId = 2333,
+  var testName = '03_itinerary_management',
+      takeScreenshots = browser.privateConfig.takeScreenshots,
+      EC = protractor.ExpectedConditions,
+      elemTitle, elemStartDate, elemFinishDate, elemDescription,
+      elemSave, elemDelete, elemReset,
+      testItineraryId = 2333,
       testSharedItineraryId = 983;
 
   beforeEach(function() {
@@ -39,8 +41,13 @@ describe('Itinerary management', function() {
 
   describe('new itinerary page', function() {
 
+    var newItineraryScreenshotCounter = 0;
+
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-edit');
+      helper.takeScreenshot(testName + '_new_itinerary_' +
+                            ('0000' + (++newItineraryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
       browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for itinerary edit');
     });
 
@@ -54,8 +61,8 @@ describe('Itinerary management', function() {
         elemStartDate.sendKeys('2001-12-12');
         elemFinishDate.sendKeys('2001-12-13');
       } else {
-        elemStartDate.sendKeys('12122001');
-        elemFinishDate.sendKeys('13122001');
+        elemStartDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '12'));
+        elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
       }
       elemDescription.sendKeys('# Test Itinerary',
                                protractor.Key.ENTER,
@@ -155,9 +162,14 @@ describe('Itinerary management', function() {
 
   describe('edit itinerary page', function() {
 
+    var editItineraryScreenshotCounter = 0;
+
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-edit?id=' + testItineraryId);
       browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for lists of shares');
+      helper.takeScreenshot(testName + '_edit_itinerary_' +
+                            ('0000' + (++editItineraryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
     });
 
     it('should show the start date input field', function() {
@@ -172,8 +184,8 @@ describe('Itinerary management', function() {
         elemStartDate.sendKeys('2015-11-22');
         elemFinishDate.sendKeys('2015-11-23');
       } else {
-        elemStartDate.sendKeys('22112015');
-        elemFinishDate.sendKeys('23112015');
+        elemStartDate.sendKeys(helper.keySequenceForChromeDate('2015', '11', '22'));
+        elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2015', '11', '23'));
       }
       elemDescription.clear();
       elemDescription.sendKeys('# Test modified Itinerary',
@@ -197,8 +209,8 @@ describe('Itinerary management', function() {
         elemStartDate.sendKeys('2001-12-12');
         elemFinishDate.sendKeys('2001-12-13');
       } else {
-        elemStartDate.sendKeys('12122001');
-        elemFinishDate.sendKeys('13122001');
+        elemStartDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '12'));
+        elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
       }
       elemSave.click();
       helper.wait(100);
@@ -256,7 +268,9 @@ describe('Itinerary management', function() {
                                 protractor.Key.TAB,
                                 protractor.Key.BACK_SPACE
                                );
-        elemFinishDate.sendKeys('13122001');
+        helper.takeScreenshot(testName + '_only_show_start_date_01', takeScreenshots);
+        elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
+        helper.takeScreenshot(testName + '_only_show_start_date_02', takeScreenshots);
       } else {
         elemStartDate.clear();
         elemFinishDate.clear();
@@ -264,6 +278,7 @@ describe('Itinerary management', function() {
       }
       elemSave.click();
       helper.wait(200);
+      helper.takeScreenshot(testName + '_only_show_start_date_03', takeScreenshots);
       if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
         // 'from' should be hidden
         expect(element(by.xpath('//*[@id="itinerary-text-date"]/b/span[1]')).getAttribute('class')).toEqual('ng-hide');
@@ -405,10 +420,12 @@ describe('Itinerary management', function() {
     });
 
     it('should not show the Add Waypoint button whilst the form is not in edit mode', function() {
+      helper.takeScreenshot(testName + '_shared_view_hide_add_waypoint_menu_item_01', takeScreenshots);
       element(by.id('features-tab')).click();
       helper.wait(400);
       element(by.id('edit-pill')).click();
       helper.wait(400);
+      helper.takeScreenshot(testName + '_shared_view_hide_add_waypoint_menu_item_02', takeScreenshots);
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-copy')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-duplicate')).isDisplayed()).toBeTruthy();
@@ -439,6 +456,8 @@ describe('Itinerary management', function() {
     beforeEach(function() {
       browser.get(browser.baseUrl + '/tracks');
       browser.wait(EC.visibilityOf(element(by.id('btn-tracks'))), 4000, 'Timeout waiting for list of locations (tracks)');
+      helper.takeScreenshot(testName + '_copy_location_history', takeScreenshots);
+
       var elemDateFrom = element(by.model('tracks.search.dateFrom'));
       if (browser.privateConfig.browserName !== 'chrome') {
         elemDateFrom.clear();
@@ -449,6 +468,7 @@ describe('Itinerary management', function() {
       }
       element(by.id('btn-copy')).click();
       browser.wait(EC.visibilityOf(element(by.id('info-copy-message'))), 4000, 'Timeout waiting for successful copy message');
+      helper.takeScreenshot(testName + '_copy_location_history_button_click', takeScreenshots);
 
       // browser.get(browser.baseUrl + '/itinerary-edit');
 

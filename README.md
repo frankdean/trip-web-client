@@ -56,6 +56,48 @@ chromedriver.
 
 	$ ./node_modules/protractor/bin/webdriver-manager --versions.chrome 2.19 update
 
+## Docker
+
+It is possible to develop the application using a Docker container, by
+working in the directory containing the current web source code, and
+peforming a bind mount of the source folder with the `/webapp` folder
+in the container.
+
+**Note:** the container will already have the distributed copy of the
+source code in the `/webapp` folder.  The bind mount will bind over
+that folder, hiding its contents with the current source directory on
+the host machine.
+
+To build a new container:
+
+	$ docker build -t trip-web .
+
+To run the container, and mount the current directory at `/webapp`:
+
+	$ cd trip-web-client
+	$ docker run --name trip-web --network trip-server \
+	-e TRIP_SIGNING_KEY=secret -e TRIP_RESOURCE_SIGNING_KEY=secret \
+	-e POSTGRES_PASSWORD=secret -e CHROME_BIN=/usr/bin/chromium \
+	--mount type=bind,source="$(pwd)",target=/webapp \
+	--shm-size=128m --publish 8080:8080 -d trip-web
+
+To start and connect to a Bash shell in the running container:
+
+	$ docker exec -it -e LC_ALL=en_GB.UTF-8 trip-web bash -il
+
+Then, in the container, run the tests:
+
+	$ cd /webapp
+	$ yarn
+	$ yarn lint
+	$ yarn run test-single-run
+	$ yarn run protractor
+
+Alternatively, run the test directly from the host:
+
+	$ docker exec -it -w /webapp trip-web yarn test-single-run
+
+
 ## Known Issues
 
 See
