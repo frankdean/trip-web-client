@@ -160,22 +160,29 @@ describe('Itinerary Waypoints', function() {
       } else {
         eleSymbol.sendKeys('Flag, Blue');
       }
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         eleTime.clear();
         eleTime.sendKeys('2015-12-12T10:48:00');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        eleTime.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '12', '10', '48'));
       } else {
         // eleTime.clear();
-        eleTime.sendKeys('12120020151048');
+        eleTime.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '12', '10', '48'));
       }
       eleComment.sendKeys('Test comment');
       eleDescription.sendKeys('Test description');
       eleSamples.sendKeys('99');
       eleType.sendKeys('Restaurant');
       eleColor.sendKeys('#ff0000');
+      helper.takeScreenshot(testName + '_save_01', takeScreenshots);
       btnSave.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_save_02', takeScreenshots);
       browser.wait(EC.visibilityOf(element(by.id('heading-tab'))), 500, 'Timeout waiting for itinerary page to be displayed');
       expect(browser.getCurrentUrl()).toMatch(/\/itinerary\?id=\d+/);
       browser.get(browser.baseUrl + '/itinerary-wpt-edit?itineraryId=929&waypointId=' + testWaypointId);
+      helper.wait();
+      helper.takeScreenshot(testName + '_save_03', takeScreenshots);
       expect(eleName.getAttribute('value')).toEqual('Test waypoint modification');
       expect(elePosition.getAttribute('value')).toEqual('50,-3');
       expect(eleAltitude.getAttribute('value')).toEqual('450');

@@ -66,7 +66,8 @@ describe('User management', function() {
                           ('0000' + (++adminLoginScreenshotCounter)).substr(-4, 4),
                           takeScreenshots);
     browser.findElement(by.id('btn-submit')).click();
-    helper.wait(800);
+    helper.wait(700);
+    browser.sleep(100);
     expect(browser.getCurrentUrl()).toMatch(/\/tracks$/);
   };
 
@@ -239,7 +240,8 @@ describe('User management', function() {
         elemFirstname.sendKeys('John');
         elemLastname.sendKeys('Smith');
         elemButtonSubmit.click();
-        helper.wait(800);
+        helper.wait(700);
+        browser.sleep(100);
         helper.takeScreenshot(testName + '_create_new_user', takeScreenshots);
         // so wait for search button to be visible
         browser.wait(
@@ -536,6 +538,7 @@ describe('User management', function() {
 
       beforeEach(function() {
         browser.get(browser.baseUrl + '/edit-user?id=' + testUser1.id);
+        browser.sleep(100);
         browser.wait(
           EC.visibilityOf(
             element(by.id('btn-submit'))),

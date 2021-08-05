@@ -90,8 +90,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
                    position: 'topleft',
                    collapsed: true
                  }
-               },
-               maxZoom: 17
+               }
              }
            });
            $scope.status.showMap = true;

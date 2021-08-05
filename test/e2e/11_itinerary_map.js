@@ -55,10 +55,11 @@ describe('Itinerary map', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary?id=' + testItineraryId);
+      browser.sleep(100);
       browser.wait(EC.visibilityOf(element(by.id('features-tab'))), 500, 'Timeout waiting for features-tab to be displayed');
       element(by.id('features-tab')).click();
+      browser.sleep(100);
       browser.wait(EC.visibilityOf(selectAllWaypoints), 4000);
-      helper.wait(800);
       routesList = element.all(by.repeater('route in routeNames'));
       waypointsList = element.all(by.repeater('waypoint in waypoints'));
       tracksList = element.all(by.repeater('track in trackNames'));
@@ -112,6 +113,7 @@ describe('Itinerary map', function() {
         beforeEach(function() {
           // browser.waitForAngular();
           element(by.id('features-tab')).click();
+          browser.sleep(100);
           browser.wait(
             EC.and(
               EC.visibilityOf(selectAllWaypoints),
@@ -123,14 +125,17 @@ describe('Itinerary map', function() {
             // expect(selectAllWaypoints.isSelected()).toBeTruthy();
             expect(element(by.model('selection.allWaypointsSelected')).isDisplayed()).toBeTruthy();
             element(by.id('view-pill')).click();
-            helper.wait(400);
+            helper.wait(300);
+            browser.sleep(100);
             browser.element(by.id('btn-map')).click();
+            browser.sleep(100);
             markerIcons = element.all(by.css('.leaflet-marker-icon'));
             browser.wait(EC.elementToBeClickable(elemEditControl), 4000);
           });
           // Zoom out, otherwise sometimes the marker is partly off the map
           element(by.css('.leaflet-control-zoom-out')).click();
-          helper.wait(400);
+          helper.wait(300);
+          browser.sleep(400);
         });
 
         it('should display the waypoints on the map', function() {
@@ -270,9 +275,12 @@ describe('Itinerary map', function() {
 
           beforeEach(function() {
             element(by.id('input-select-all-routes')).click();
+            browser.sleep(100);
             element(by.id('view-pill')).click();
-            helper.wait(400);
+            helper.wait(300);
+            browser.sleep(100);
             browser.element(by.id('btn-map')).click();
+            browser.sleep(100);
             routeMarkerIcons = element.all(by.css('.leaflet-editing-icon'));
             browser.wait(EC.elementToBeClickable(elemEditControl), 4000);
           });
@@ -309,47 +317,75 @@ describe('Itinerary map', function() {
             // By selecting a waypoint, we stop the app attempting to establish the
             // current location which appears to interfere with creating the polyline.
             element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[2]/td[1]/label')).click();
+            browser.sleep(100);
             element(by.id('view-pill')).click();
-            helper.wait(400);
+            helper.wait(300);
+            browser.sleep(100);
             browser.element(by.id('btn-map')).click();
+            browser.sleep(100);
             browser.wait(EC.elementToBeClickable(elemCreatePolylineControl), 4000);
           });
 
           it('should allow a route to be deleted', function() {
             elemCreatePolylineControl.click();
-            helper.takeScreenshot(testName + '_delete_route_test1', takeScreenshots);
+            browser.sleep(100);
+            helper.takeScreenshot(testName + '_delete_route_test_01', takeScreenshots);
             browser.actions()
               .mouseMove(elemMap, {x:500, y:180})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_02', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:490, y:180})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_03', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:480, y:200})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_04', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:495, y:200})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_05', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:500, y:300})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_06', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:450, y:250})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_07', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:150, y:150})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_08', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:400, y:220})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_09', takeScreenshots);
+            browser.actions()
               .mouseMove(elemMap, {x:470, y:250})
-              .click()
+              .click();
+            // helper.takeScreenshot(testName + '_delete_route_test_10', takeScreenshots);
+            browser.actions()
               .perform();
-            helper.takeScreenshot(testName + '_delete_route_test2', takeScreenshots);
+            helper.takeScreenshot(testName + '_delete_route_test_20', takeScreenshots);
+            browser.sleep(100);
+            helper.takeScreenshot(testName + '_delete_route_test_30', takeScreenshots);
             element(by.linkText(finishControlText)).click();
+            browser.sleep(100);
             elemDeleteControl.click();
+            browser.sleep(100);
             browser.actions()
               .mouseMove(elemMap, {x:150, y:150})
               .click()
               .perform();
+            browser.sleep(100);
             element(by.linkText(saveControlText)).click();
           });
 
           it('should allow a route deletion to be cancelled', function() {
             elemCreatePolylineControl.click();
+            browser.sleep(100);
             browser.actions()
               .mouseMove(elemMap, {x:500, y:180})
               .click()
@@ -360,6 +396,7 @@ describe('Itinerary map', function() {
               .perform();
             element(by.linkText(finishControlText)).click();
             elemDeleteControl.click();
+            browser.sleep(100);
             browser.actions()
               .mouseMove(elemMap, {x:240, y:250})
               .click()

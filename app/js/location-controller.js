@@ -112,8 +112,7 @@ angular.module('myApp.location.controller', [])
                    position: 'topleft',
                    collapsed: true
                  }
-               },
-               maxZoom: 17
+               }
              },
              drawOptions: {
                position: "topright",

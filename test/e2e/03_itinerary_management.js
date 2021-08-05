@@ -57,9 +57,12 @@ describe('Itinerary management', function() {
       expect(elemReset.isDisplayed()).toBeTruthy();
       expect(elemDescription.isDisplayed()).toBeTruthy();
       elemTitle.sendKeys('Test title');
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemStartDate.sendKeys('2001-12-12');
         elemFinishDate.sendKeys('2001-12-13');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemStartDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '12'));
+        elemFinishDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '13'));
       } else {
         elemStartDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '12'));
         elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
@@ -179,10 +182,13 @@ describe('Itinerary management', function() {
     it('should be able to modify each field', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemStartDate.clear();
         elemStartDate.sendKeys('2015-11-22');
         elemFinishDate.sendKeys('2015-11-23');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemStartDate.sendKeys(helper.keySequenceForSafariDate('2015', '11', '22'));
+        elemFinishDate.sendKeys(helper.keySequenceForSafariDate('2015', '11', '23'));
       } else {
         elemStartDate.sendKeys(helper.keySequenceForChromeDate('2015', '11', '22'));
         elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2015', '11', '23'));
@@ -203,11 +209,14 @@ describe('Itinerary management', function() {
     it('should show the date range when both dates are specified', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemStartDate.clear();
         elemFinishDate.clear();
         elemStartDate.sendKeys('2001-12-12');
         elemFinishDate.sendKeys('2001-12-13');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemStartDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '12'));
+        elemFinishDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '13'));
       } else {
         elemStartDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '12'));
         elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
@@ -229,11 +238,14 @@ describe('Itinerary management', function() {
     it('should show only the start date range when the end date is not specified', function() {
       elemTitle.clear();
       elemTitle.sendKeys('Test itinerary ' + testItineraryId + ' - DO NOT DELETE');
-      if (browser.privateConfig.browserName !== 'chrome') {
+
+      if (browser.privateConfig.browserName === 'firefox') {
         elemStartDate.clear();
         elemStartDate.sendKeys('2001-12-12');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemStartDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '12'));
       } else {
-        elemStartDate.sendKeys('12122001');
+        elemStartDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '12'));
       }
       if (browser.privateConfig.browserName === 'chrome') {
         elemFinishDate.sendKeys(protractor.Key.BACK_SPACE,
@@ -270,6 +282,11 @@ describe('Itinerary management', function() {
                                );
         helper.takeScreenshot(testName + '_only_show_start_date_01', takeScreenshots);
         elemFinishDate.sendKeys(helper.keySequenceForChromeDate('2001', '12', '13'));
+        helper.takeScreenshot(testName + '_only_show_start_date_02', takeScreenshots);
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemStartDate.clear();
+        helper.takeScreenshot(testName + '_only_show_start_date_01', takeScreenshots);
+        elemFinishDate.sendKeys(helper.keySequenceForSafariDate('2001', '12', '13'));
         helper.takeScreenshot(testName + '_only_show_start_date_02', takeScreenshots);
       } else {
         elemStartDate.clear();
@@ -339,15 +356,32 @@ describe('Itinerary management', function() {
           elemStartDate.sendKeys('22112015');
           elemFinishDate.sendKeys('22112015');
         }
-        elemDescription.sendKeys(protractor.Key.CONTROL,"a",
-                                 protractor.Key.NULL,
-                                 '# Test modified Itinerary',
-                                 protractor.Key.ENTER,
-                                 protractor.Key.ENTER,
-                                 '## Lorem ipsum modified too',
-                                 protractor.Key.ENTER);
+        helper.takeScreenshot(testName + '_reset_button_01', takeScreenshots);
+        if (browser.privateConfig.browserName === 'firefox') {
+          // In Firefox, when the key sequence is entered as a single set, it causes the 'insert link' dialog to be opened
+          // which should be fired by Ctrl-L
+          elemDescription.sendKeys(protractor.Key.CONTROL,"a");
+          // helper.takeScreenshot(testName + '_reset_button_01a', takeScreenshots);
+          elemDescription.sendKeys('# Test modified Itinerary');
+          // helper.takeScreenshot(testName + '_reset_button_01b', takeScreenshots);
+          elemDescription.sendKeys(protractor.Key.ENTER,
+                                   protractor.Key.ENTER,
+                                   '## Lorem ipsum modified too',
+                                   protractor.Key.ENTER);
+        } else {
+          elemDescription.sendKeys(protractor.Key.CONTROL,"a",
+                                   protractor.Key.NULL,
+                                   '# Test modified Itinerary',
+                                   protractor.Key.ENTER,
+                                   protractor.Key.ENTER,
+                                   '## Lorem ipsum modified too',
+                                   protractor.Key.ENTER);
+        }
+        helper.takeScreenshot(testName + '_reset_button_02', takeScreenshots);
         elemReset.click();
+        helper.takeScreenshot(testName + '_reset_button_03', takeScreenshots);
         element.all((by.css('.confirm-button'))).get(2).click();
+        helper.takeScreenshot(testName + '_reset_button_04', takeScreenshots);
         expect(browser.getCurrentUrl()).toMatch(/\/itinerary-edit\?id=\d+/);
         expect(elemTitle.getAttribute('value')).toEqual(titleBefore);
         expect(elemStartDate.getAttribute('value')).toEqual(startDateBefore);
@@ -453,36 +487,58 @@ describe('Itinerary management', function() {
       });
     }
 
+    var copyLocationHistoryScreenshotCounter = 0;
+
     beforeEach(function() {
       browser.get(browser.baseUrl + '/tracks');
       browser.wait(EC.visibilityOf(element(by.id('btn-tracks'))), 4000, 'Timeout waiting for list of locations (tracks)');
-      helper.takeScreenshot(testName + '_copy_location_history', takeScreenshots);
+      helper.takeScreenshot(testName + '_copy_location_history_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
 
       var elemDateFrom = element(by.model('tracks.search.dateFrom'));
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-12-10T17:48:00');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '10', '17', '48', '0'));
       } else {
         clear(elemDateFrom);
-        elemDateFrom.sendKeys('10120020151748');
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '17', '48', '0'));
       }
       element(by.id('btn-copy')).click();
       browser.wait(EC.visibilityOf(element(by.id('info-copy-message'))), 4000, 'Timeout waiting for successful copy message');
-      helper.takeScreenshot(testName + '_copy_location_history_button_click', takeScreenshots);
+      helper.takeScreenshot(testName + '_copy_location_history_button_copy_click_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
 
       // browser.get(browser.baseUrl + '/itinerary-edit');
 
       element(by.xpath('//*[@id="navbar"]/ul/li[4]/a')).click();
       helper.wait(100);
+      helper.takeScreenshot(testName + '_copy_location_history_navbar_click_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
       element(by.id('btn-new')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_copy_location_history_button_new_click_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
       browser.wait(EC.visibilityOf(elemSave), 4000, 'Timeout waiting for new itinerary page');
       elemTitle.sendKeys('Paste test');
       elemSave.click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_copy_location_history_button_save_click_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
       browser.wait(EC.visibilityOf(element(by.id('features-tab'))), 4000, 'Timeout waiting for itinerary featues tab to be displayed');
       element(by.id('features-tab')).click();
       helper.wait(100);
       element(by.id('edit-pill')).click();
       helper.wait(100);
+      helper.takeScreenshot(testName + '_copy_location_history_features_edit_click_' +
+                            ('0000' + (++copyLocationHistoryScreenshotCounter)).substr(-4, 4),
+                            takeScreenshots);
     });
 
     it('should show the paste option', function() {

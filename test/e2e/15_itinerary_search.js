@@ -27,6 +27,7 @@ describe('Itinerary search', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-search');
+      browser.sleep(100);
       browser.wait(EC.visibilityOf(element(by.id('input-position'))), 4000, 'Timeout waiting for itinerary search page to be displayed');
     });
 
@@ -62,6 +63,7 @@ describe('Itinerary search', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-search-result?lat=48.858222&lng=2.2945&distance=900.1');
+      browser.sleep(100);
       browser.wait(EC.visibilityOf(element(by.repeater('itinerary in itineraries.payload'))), 4000, 'Timeout waiting for features tab to be displayed');
       itineraryElements = element.all(by.repeater('itinerary in itineraries.payload'));
     });

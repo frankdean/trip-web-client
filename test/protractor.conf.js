@@ -40,10 +40,13 @@ exports.config = {
       }
     };
 
+    // Will not run on macOS Big Sur.  Probably issue related to that in release notes for geckdriver 0.29.1
+    // https://github.com/mozilla/geckodriver/releases/
+    // Run Firefox tests under Vagrant instead
     var firefoxConfig = {
       'browserName': 'firefox',
       'moz:firefoxOptions': {
-        // 'args': [ '--headless' ],
+        'args': [ '--headless' ],
         'prefs': {
           'browser.download.folderList': 2,
           'browser.download.manager.showWhenStarting': false,
@@ -54,15 +57,19 @@ exports.config = {
       }
     };
 
+    // Cannot run Safari in headless mode
+    // https://github.com/SeleniumHQ/selenium/issues/5985
     var safariConfig = {
       'browserName': 'safari'
     };
 
+    // Safari tests are unreliable with random timeouts
+    // Firefox tests are very slow and unreliable with random timeouts
     return [
       // safariConfig,
       // firefoxConfig,
-      chromeDockerConfig
-      // chromeConfig
+      // chromeDockerConfig
+      chromeConfig
     ];
   },
 
@@ -89,10 +96,10 @@ exports.config = {
       }
       if (browser.privateConfig.browserName == 'safari') {
 
-        // Safari sometimes fails before logging in
+        // Safari sometimes fails before starting
         helper.wait(400);
         // See https://github.com/angular/protractor/issues/2643
-        browser.waitForAngularEnabled(true);
+        browser.waitForAngularEnabled(false);
 
         // See
         // - https://github.com/angular/protractor/issues/4874
@@ -103,7 +110,7 @@ exports.config = {
         // Window needs to be big enough for all the items used in tests to be visible
         browser.driver.manage().window().setPosition(0, 0);
         browser.driver.manage().window().setSize(1024, 1300);
-        helper.wait(800);
+        // helper.wait(800);
 
       }
       browser.privateConfig.baseUrl = env.baseUrl;

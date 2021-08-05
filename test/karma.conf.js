@@ -47,17 +47,23 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
-    _browsers: ['Chrome', 'Firefox', 'Safari'],
+    _browsers: ['ChromeNoSandbox', 'FirefoxHeadless'],
+    _browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     _browsers: ['Chrome'],
-    _browsers: ['ChromeHeadless'],
-    browsers: ['ChromeNoSandbox'],
+    browsers: ['ChromeHeadless'],
+    _browsers: ['ChromeNoSandbox'],
     _browsers: ['Firefox'],
+    _browsers: ['FirefoxHeadless'],
     _browsers: ['Safari'],
 
     customLaunchers: {
       ChromeNoSandbox: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox']
+      },
+      FirefoxHeadless: {
+        base: 'Firefox',
+        flags: ['--headless']
       }
     },
 

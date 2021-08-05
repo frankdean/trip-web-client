@@ -65,11 +65,17 @@ describe('TRIP app', function() {
 
       beforeEach(function() {
         browser.wait(EC.visibilityOf(elemDateFrom), 4000, 'Timeout waiting for date from field to be visibile');
-        if (browser.privateConfig.browserName !== 'chrome') {
+        if (browser.privateConfig.browserName === 'firefox') {
           elemDateFrom.clear();
           elemDateFrom.sendKeys('2015-12-10T17:48:00');
           elemDateTo.clear();
           elemDateTo.sendKeys('2015-12-13T09:55:00');
+        } else  if (browser.privateConfig.browserName === 'safari') {
+          // These dates may fail in some locales
+          clear(elemDateFrom);
+          elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '10', '17', '48'));
+          clear(elemDateTo);
+          elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '13', '9', '55'));
         } else {
           // These dates may fail in some locales
           clear(elemDateFrom);
@@ -81,6 +87,7 @@ describe('TRIP app', function() {
                               ('0000' + (++screenshotCounter)).substr(-4, 4),
                               takeScreenshots);
         element(by.id('btn-tracks')).click();
+        helper.wait();
         var conditionPage3LinkVisible = EC.visibilityOf(element(by.linkText('3')));
         var conditionLastPageLinkVisible = EC.visibilityOf(element(by.linkText('>>')));
         var conditionLocationsRepeaterVisible = EC.visibilityOf(element(by.repeater('location in locations')));
@@ -88,9 +95,7 @@ describe('TRIP app', function() {
         browser.wait(EC.and(conditionPage3LinkVisible, conditionLastPageLinkVisible, conditionLocationsRepeaterVisible, conditionNicknameRepeaterVisible),
                      4000,
                      'Timeout waiting for data to populate page');
-        if (browser.privateConfig.browserName.toLowerCase() == 'safari') {
-          browser.sleep(800);
-        }
+        helper.wait(800);
       });
 
       it('should page through the list of locations', function() {
@@ -115,17 +120,18 @@ describe('TRIP app', function() {
 
 
     it('should show invalid date for dateFrom', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         expect(elemDateFromInvalid.isDisplayed()).toBe(false);
         elemDateFrom.sendKeys('XX');
         elemDateTo.click();
+        helper.takeScreenshot(testName + '_paging_invalid_from_date', takeScreenshots);
         expect(elemDateFromInvalid.isDisplayed()).toBe(true);
       }
     });
 
     it('should not submit the form if there is an error', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         expect(elemDateFromInvalid.isDisplayed()).toBe(false);
         elemDateFrom.sendKeys('XX');
@@ -135,7 +141,7 @@ describe('TRIP app', function() {
     });
 
     it('should show invalid date for dateTo', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateTo.clear();
         expect(elemDateToInvalid.isDisplayed()).toBe(false);
         elemDateTo.sendKeys('XX');
@@ -170,31 +176,56 @@ describe('TRIP app', function() {
     });
 
     it('should show the count of tracks', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-12-10T17:48:50');
         elemDateTo.clear();
         elemDateTo.sendKeys('2015-12-13T10:10:22');
-        var submit = element(by.id('btn-tracks'));
-        submit.click();
-        var locationCount = element.all(by.id('location-count'));
-        expect(locationCount.isDisplayed()).toBeTruthy();
-        var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
-        expect(span.isDisplayed()).toBeTruthy();
-        expect(span.getText()).toMatch("273");
-        var locationList = element.all(by.repeater('location in locations'));
-        expect(locationList.count()).toBe(10);
-        expect(element(by.binding('locations.date_from')).isDisplayed()).toBeTruthy();
-        expect(element(by.binding('locations.date_to')).isDisplayed()).toBeTruthy();
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '10', '17', '48'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '13', '10', '10'));
+      } else {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '17', '48'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '13', '10', '10', '22'));
       }
+      helper.takeScreenshot(testName + '_count_of_tracks_01', takeScreenshots);
+      var submit = element(by.id('btn-tracks'));
+      submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_count_of_tracks_02', takeScreenshots);
+      var locationCount = element.all(by.id('location-count'));
+      expect(locationCount.isDisplayed()).toBeTruthy();
+      var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+      expect(span.isDisplayed()).toBeTruthy();
+      if (browser.privateConfig.browserName !== 'firefox') {
+        // Cannot input seconds in Safari and not reliable in Chrome, which give different results
+        expect(span.getText()).toMatch("274");
+      } else {
+        expect(span.getText()).toMatch("273");
+      }
+      var locationList = element.all(by.repeater('location in locations'));
+      expect(locationList.count()).toBe(10);
+      expect(element(by.binding('locations.date_from')).isDisplayed()).toBeTruthy();
+      expect(element(by.binding('locations.date_to')).isDisplayed()).toBeTruthy();
     });
 
     it('should show only locations having notes when filtered', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2016-04-22T00:00:00');
         elemDateTo.clear();
         elemDateTo.sendKeys('2016-08-22T20:53:00');
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2016', '04', '22', '0', '0'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2016', '04', '22', '20', '53'));
       } else {
         clear(elemDateFrom);
         // These dates may fail in some locales
@@ -202,9 +233,12 @@ describe('TRIP app', function() {
         clear(elemDateTo);
         elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2016', '04', '22', '20', '53', '0'));
       }
+      helper.takeScreenshot(testName + '_filtered_locations_01', takeScreenshots);
       var submit = element(by.id('btn-tracks'));
       // Display notes and non-notes
       submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_filtered_locations_02', takeScreenshots);
       var locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
       var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
@@ -223,11 +257,23 @@ describe('TRIP app', function() {
       // Hasn't occurred since.  The cause hasn't been determined.
       // Test left here for posterity.
       helper.takeScreenshot(testName + '_results_for_date_range_01', takeScreenshots);
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
+        helper.takeScreenshot(testName + '_results_for_date_range_02', takeScreenshots);
         elemDateFrom.sendKeys('2015-12-10T00:00:00');
         elemDateTo.clear();
+        helper.takeScreenshot(testName + '_results_for_date_range_03', takeScreenshots);
         elemDateTo.sendKeys('2015-12-10T23:59:59');
+        helper.takeScreenshot(testName + '_results_for_date_range_04', takeScreenshots);
+      } else if (browser.privateConfig.browserName === 'safari') {
+        clear(elemDateFrom);
+        // These dates may fail in some locales
+        helper.takeScreenshot(testName + '_results_for_date_range_02', takeScreenshots);
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '10', '0', '0'));
+        clear(elemDateTo);
+        helper.takeScreenshot(testName + '_results_for_date_range_03', takeScreenshots);
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '10', '23', '59'));
+        helper.takeScreenshot(testName + '_results_for_date_range_04', takeScreenshots);
       } else {
         clear(elemDateFrom);
         // These dates may fail in some locales
@@ -238,8 +284,11 @@ describe('TRIP app', function() {
         elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '10', '23', '59', '59'));
         helper.takeScreenshot(testName + '_results_for_date_range_04', takeScreenshots);
       }
+      helper.takeScreenshot(testName + '_specific_criteria_01', takeScreenshots);
       var submit = element(by.id('btn-tracks'));
       submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_specific_criteria_02', takeScreenshots);
       helper.takeScreenshot(testName + '_results_for_date_range_11', takeScreenshots);
       var locationCount = element.all(by.id('location-count'));
       expect(locationCount.isDisplayed()).toBeTruthy();
@@ -256,34 +305,60 @@ describe('TRIP app', function() {
     });
 
     it('should list the tracks for a specific date range and nickname', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-12-14T00:00:00');
         elemDateTo.clear();
         elemDateTo.sendKeys('2015-12-14T23:59:59');
-        var nicknameSelect = element(by.model('tracks.search.nicknameSelect'));
-        // We expect this to select 'Fred' from the list of nicknames
-        nicknameSelect.sendKeys('F\t');
-        var submit = element(by.id('btn-tracks'));
-        submit.click();
-        var locationCount = element.all(by.id('location-count'));
-        expect(locationCount.isDisplayed()).toBeTruthy();
-        var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
-        expect(span.getText()).toMatch("57");
-        var locationList = element.all(by.repeater('location in locations'));
-        expect(locationList.count()).toBe(10);
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '14', '0', '40'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '14', '23', '59'));
+      } else {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '14', '0', '40'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '14', '23', '59', '59'));
       }
+      var nicknameSelect = element(by.model('tracks.search.nicknameSelect'));
+      // We expect this to select 'Fred' from the list of nicknames
+      nicknameSelect.sendKeys('F\t');
+      helper.takeScreenshot(testName + '_tracks_for_date_range_and_nickname_01', takeScreenshots);
+      var submit = element(by.id('btn-tracks'));
+      submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_tracks_for_date_range_and_nickname_02', takeScreenshots);
+      var locationCount = element.all(by.id('location-count'));
+      expect(locationCount.isDisplayed()).toBeTruthy();
+      var span = element.all(by.xpath('//*[@id="location-count"]/div/div[1]/h3/span'));
+      expect(span.getText()).toMatch("57");
+      var locationList = element.all(by.repeater('location in locations'));
+      expect(locationList.count()).toBe(10);
     });
 
     it('should list tracks when the form is submitted', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-01-01T00:00:00');
-        var submit = element(by.id('btn-tracks'));
-        submit.click();
-        var locationList = element.all(by.repeater('location in locations'));
-        expect(locationList.count()).toBe(10);
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '1', '1', '0', '0'));
+      } else {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '1', '1', '0', '0'));
       }
+      helper.takeScreenshot(testName + '_list_tracks_since_date_01', takeScreenshots);
+      var submit = element(by.id('btn-tracks'));
+      submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_list_tracks_since_date_02', takeScreenshots);
+      var locationList = element.all(by.repeater('location in locations'));
+      expect(locationList.count()).toBe(10);
     });
 
     it('should not show the count of tracks when the page is first displayed', function() {
@@ -291,22 +366,32 @@ describe('TRIP app', function() {
     });
 
     it('should not show the locations, or navigation keys when no results', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2010-01-01T00:00:00');
         elemDateTo.clear();
         elemDateTo.sendKeys('2010-01-01T23:59:00');
-      } else {
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
         clear(elemDateFrom);
-        elemDateFrom.sendKeys('01010020100000');
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2010', '1', '1', '0', '0'));
         clear(elemDateTo);
-        elemDateTo.sendKeys('01010020102359');
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2010', '1', '1', '23', '59'));
+      } else {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2010', '1', '1', '0', '0'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2010', '1', '1', '23', '59'));
       }
       var nicknameSelect = element(by.model('tracks.search.nicknameSelect'));
       // We expect this to select 'Fred' from the list of nicknames
       nicknameSelect.sendKeys('F\t');
+      helper.takeScreenshot(testName + '_no_results_01', takeScreenshots);
       var submit = element(by.id('btn-tracks'));
       submit.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_no_results_02', takeScreenshots);
       // A zero count should be displayed
       expect(element(by.id('location-count')).isDisplayed()).toBeTruthy();
       expect(element(by.id('div-locations-table')).isDisplayed()).toBeFalsy();
@@ -370,24 +455,35 @@ describe('TRIP app', function() {
     });
 
     it('should navigate to the map point page when a map link is clicked', function() {
-      if (browser.privateConfig.browserName !== 'chrome') {
+      if (browser.privateConfig.browserName === 'firefox') {
         elemDateFrom.clear();
         elemDateFrom.sendKeys('2015-12-12T10:48:00');
         elemDateTo.clear();
         elemDateTo.sendKeys('2015-12-12T10:59:00');
-      } else {
+      } else if (browser.privateConfig.browserName === 'safari') {
+        // These dates may fail in some locales
         clear(elemDateFrom);
-        elemDateFrom.sendKeys('12120020151048');
+        elemDateFrom.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '12', '10', '48'));
         clear(elemDateTo);
-        elemDateTo.sendKeys('12120020151059');
+        elemDateTo.sendKeys(helper.keySequenceForSafariDateTime('2015', '12', '12', '10', '59'));
+      } else {
+        // These dates may fail in some locales
+        clear(elemDateFrom);
+        elemDateFrom.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '12', '10', '48'));
+        clear(elemDateTo);
+        elemDateTo.sendKeys(helper.keySequenceForChromeDateTime('2015', '12', '12', '10', '59'));
       }
+      helper.takeScreenshot(testName + '_show_map_on_link_click_01', takeScreenshots);
       element(by.id('btn-tracks')).click();
       helper.wait(400);
+      helper.takeScreenshot(testName + '_show_map_on_link_click_02', takeScreenshots);
       var locationList = element.all(by.repeater('location in locations'));
       var link = locationList.first().all(by.tagName('a')).first();
       expect(locationList.first().all(by.tagName('a')).first().getAttribute('href')).toMatch(/\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
       expect(locationList.first().all(by.tagName('a')).get(1).getAttribute('href')).toMatch(/\/map-point\?lat=[-.0-9]+&lng=[-.0-9]+/);
       link.click();
+      helper.wait();
+      helper.takeScreenshot(testName + '_show_map_on_link_click_03', takeScreenshots);
       browser.waitForAngular();
       expect(browser.getCurrentUrl()).toMatch(new RegExp('^' + browser.baseUrl + '\\/map-point'));
     });
@@ -485,6 +581,7 @@ describe('TRIP app', function() {
     var uuidUrlRegex = /https?:\/\/[\S]+\/log_point(\.php)?[\S]+uuid=[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
     beforeEach(function() {
       browser.get(browser.baseUrl + '/tracker-info');
+      helper.wait();
     });
 
     it('should display the GPSLogger URL prefix in the link element', function() {

@@ -288,8 +288,7 @@ angular.module('myApp.itinerary.map.controller', [])
                    position: 'topleft',
                    collapsed: true
                  }
-               },
-               maxZoom: 17
+               }
              }
            });
            $scope.state.showMap = true;

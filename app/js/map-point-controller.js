@@ -59,8 +59,7 @@ angular.module('myApp.map.point.controller', [])
                    position: 'topleft',
                    collapsed: true
                  }
-               },
-               maxZoom: 17
+               }
              }
            });
            $scope.status.showMap = true;

@@ -9,11 +9,14 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     ca-certificates \
     git \
-    vim
+    vim \
+    zip
 
 RUN apt-get install -y --no-install-recommends \
     locales \
-    chromium chromium-l10n
+    chromium chromium-l10n \
+    firefox-esr-l10n-en-gb
+
 ENV CHROME_BIN=/usr/bin/chromium
 
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199#23
@@ -21,8 +24,6 @@ RUN mkdir -p /usr/share/man/man1
 RUN apt-get install -y --no-install-recommends \
     openjdk-11-jre-headless \
     && rm -rf /var/lib/apt/lists/*
-
-#    chromium-sandbox \
 
 RUN sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \

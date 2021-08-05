@@ -481,8 +481,16 @@ angular.module('myApp.utils.factory', [])
              layer.name = v.name;
              layer.url = ConfigService.getTileUrl(k);
              layer.type = v.type;
+             if (!v.minZoom) {
+               v.minZoom = 0;
+             }
+             if (!v.maxZoom) {
+               v.maxZoom = 17;
+             }
              layer.layerOptions = {
-               attribution: convertMapAttributesToHtml(v.tileAttributions)
+               attribution: convertMapAttributesToHtml(v.tileAttributions),
+               minZoom: v.minZoom,
+               maxZoom: v.maxZoom
              };
              layers.push(layer);
            });

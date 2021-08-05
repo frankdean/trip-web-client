@@ -72,6 +72,13 @@ To build a new container:
 
 	$ docker build -t trip-web .
 
+Create a docker network and start the database container:
+
+	$ docker network create trip-server
+
+	$ docker run --network trip-server --network-alias postgis \
+	-e POSTGRES_PASSWORD=secret -d fdean/trip-database:latest
+
 To run the container, and mount the current directory at `/webapp`:
 
 	$ cd trip-web-client
@@ -83,19 +90,21 @@ To run the container, and mount the current directory at `/webapp`:
 
 To start and connect to a Bash shell in the running container:
 
-	$ docker exec -it -e LC_ALL=en_GB.UTF-8 trip-web bash -il
+	$ docker exec -it -w /webapp -e LANG=en_GB.UTF-8 -e LC_ALL=en_GB.UTF-8 \
+	trip-web bash -il
 
 Then, in the container, run the tests:
 
 	$ cd /webapp
 	$ yarn
-	$ yarn lint
+	$ yarn run lint
 	$ yarn run test-single-run
 	$ yarn run protractor
 
 Alternatively, run the test directly from the host:
 
-	$ docker exec -it -w /webapp trip-web yarn test-single-run
+	$ docker exec -it -w /webapp -e LANG=en_GB.UTF-8 -e LC_ALL=en_GB.UTF-8 \
+	trip-web yarn run protractor
 
 
 ## Known Issues
@@ -103,11 +112,6 @@ Alternatively, run the test directly from the host:
 See
 [Protractor Browser Support page](http://www.protractortest.org/#/browser-support)
 for the latest information.
-
-1.  Cannot upgrade to socket.io version 3.x as Karma unit tests fail
-    to connect to the browser.  See [GitHub issue 3569][github-issue-3569]
-
-[github-issue-3569]: https://github.com/karma-runner/karma/issues/3569 "Having socket.io-client v3 installed does not complete karma test runs due to dependency issue"
 
 1.  Safari tests are unreliable - WaitForAngular doesn't work, so the
     workaround is to keep adding delays at various points where the tests
@@ -144,3 +148,9 @@ for the latest information.
     [Safari (Mac OS X Lion) returns wrong epochtime value to position.timestamp call](https://stackoverflow.com/questions/10870138/safari-mac-os-x-lion-returns-wrong-epochtime-value-to-position-timestamp-call)
 
 [trip-server]: https://www.fdsd.co.uk/trip-server/ "TRIP - Trip Recording and Itinerary Planner"
+
+1.  Safari Karma unit tests require the user to accept opening a
+    redirect file before launching the tests.  As Safari cannot be run
+    headless anyway, this is less of an issue.
+
+    See <https://github.com/karma-runner/karma-safari-launcher/issues/29>

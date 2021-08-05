@@ -189,8 +189,7 @@ angular.module('myApp.itinerary.search.result.controller', [])
                    position: 'topleft',
                    collapsed: true
                  }
-               },
-               maxZoom: 17
+               }
              }
            });
          })

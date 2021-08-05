@@ -42,6 +42,7 @@ describe('Itinerary Track Name', function() {
 
     beforeEach(function() {
       browser.get(browser.baseUrl + '/itinerary-track-name?itineraryId=' + testItineraryId + '&trackId=' + testTrackId);
+      browser.sleep(100);
       browser.wait(EC.visibilityOf(element(by.id('input-name'))), 500, 'Timeout waiting for itinerary-track-name page to be displayed');
     });
 

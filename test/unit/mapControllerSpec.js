@@ -70,7 +70,6 @@ describe('MapCtrl', function() {
     createController();
     $httpBackend.flush();
     expect(scope.map.defaults).toBeDefined();
-    expect(scope.map.defaults.maxZoom).toBeDefined();
     expect(scope.map.bounds).toBeDefined();
     expect(scope.map.markers).toBeDefined();
     expect(scope.map.paths).toBeDefined();
