@@ -16,7 +16,9 @@
     "planner",
     "GPS"
   ],
-  "resolutions": {},
+  "resolutions": {
+    "jszip": ">=3.7.0"
+  },
   "devDependencies": {
     "adm-zip": "^0.5.5",
     "copyfiles": "^2.1.1",
