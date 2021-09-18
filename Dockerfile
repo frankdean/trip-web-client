@@ -1,6 +1,6 @@
 # -*- mode: dockerfile; -*- vim: set ft=dockerfile:
-FROM fdean/trip-server:1.6.1
-LABEL uk.co.fdsd.tripweb.version="1.6.1"
+FROM fdean/trip-server:1.7.1
+LABEL uk.co.fdsd.tripweb.version="1.7.1"
 
 #RUN cd /app && rm -rf app
 USER root
