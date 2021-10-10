@@ -77,6 +77,16 @@
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
                 <li id="btn-join-path" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="joinPaths(downloads)" ng-show="data.shared_to_nickname === null">Join paths</a></li>
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-color" role="menuitem" ng-show="data.shared_to_nickname === null">
+                  <a href="#"
+                     mwl-confirm
+                     title="Colour"
+                     message="Assign colours to selected routes and tracks"
+                     on-confirm="colorItems()"
+                     confirm-button-type="success"
+                     ng-show="data.shared_to_nickname === null"
+                     >Assign colours to routes and tracks</a>
+                </li>
                 <li id="btn-copy" role="menuitem"><a href="#" ng-click="copyItemsForPaste(downloads)">Copy selected items</a></li>
                 <li id="btn-paste" role="menuitem" ng-show="data.shared_to_nickname === null">
                   <a href="#"
@@ -87,6 +97,16 @@
                      confirm-button-type="success"
                      ng-show="canPaste && data.shared_to_nickname === null"
                      >Paste</a>
+                </li>
+                <li id="btn-convert-track" role="menuitem" ng-show="data.shared_to_nickname === null">
+                  <a href="#"
+                     mwl-confirm
+                     title="Convert Tracks"
+                     message="Convert selected tracks to routes"
+                     on-confirm="convertTracks()"
+                     confirm-button-type="success"
+                     ng-show="data.shared_to_nickname === null"
+                     >Convert tracks to routes</a>
                 </li>
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
                 <li id="btn-delete" role="menuitem" ng-show="data.shared_to_nickname === null">
@@ -165,6 +185,11 @@
           <div id="downloads" ng-show="waypoints.length > 0 || routeNames.length > 0 || trackNames.length > 0">
             <form name="downloads" class="css-form" novalidate>
               <div ng-messages="formError">
+                <div id="error-no-colors-defined" class="alert alert-warning" role="alert"
+                     ng-message="noColorsDefined">
+                  No colours have been setup on the system.</div>
+              </div>
+              <div ng-messages="formError">
                 <div id="error-edit-only-one" class="alert alert-warning" role="alert"
                      ng-message="editOnlyOne">
                   Select only one item.</div>
@@ -198,6 +223,12 @@
                   </div>
                   <div id="error-copy-message" ng-message="copyNothingSelected" class="alert alert-warning" role="alert">
                     You must select at least one waypoint, track or route for copying.
+                  </div>
+                  <div id="error-assign-color-message" ng-message="colorNothingSelected" class="alert alert-warning" role="alert">
+                    You must select at least one track or route to assign colours to.
+                  </div>
+                  <div id="error-convert-tracks-message" ng-message="convertNoTracksSelected" class="alert alert-warning" role="alert">
+                    You must select at least one track to convert.
                   </div>
                 </div>
               </div>

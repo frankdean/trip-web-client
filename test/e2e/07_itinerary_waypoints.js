@@ -332,7 +332,7 @@ describe('Itinerary Waypoints', function() {
       element(by.id('input-select-all-waypoints')).click();
       element(by.id('edit-pill')).click();
       element(by.id('btn-delete')).click();
-      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[1]/button')).click();
     });
 
   });

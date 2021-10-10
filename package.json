@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -17,7 +17,6 @@
     "GPS"
   ],
   "resolutions": {
-    "jszip": ">=3.7.0"
   },
   "devDependencies": {
     "adm-zip": "^0.5.5",
@@ -36,7 +35,7 @@
     "protractor": "^7.0.0",
     "q": "^1.4.1",
     "rimraf": "^3.0.2",
-    "shelljs": "^0.8.1",
+    "shelljs": "^0.8.4",
     "tar": "^6.1.6",
     "uglify-js": "^3.5.0"
   },
@@ -101,8 +100,9 @@
     "env": "env",
     "clean": "rimraf dist",
     "lint": "jshint app/js/*.js app/js/**/*.js test/**/*.js",
+    "update-version": "node -e \"const pkg=require('./package.json'); require('shelljs').sed('-i', /^\\s*\\.value\\(\\'version\\', \\'.*\\'\\)/, '.value(\\'version\\', \\'' + pkg.version + '\\')', './app/js/version/version.js');\"",
     "prebuild": "mkdirp dist/app/partials --mode=0775 && mkdirp dist/app/css --mode=0775",
-    "build": "$npm_execpath run build:scripts && $npm_execpath run build:css",
+    "build": "$npm_execpath run update-version && $npm_execpath run build:scripts && $npm_execpath run build:css",
     "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map \"url=trip.min.js.map\"  --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
     "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js*' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' 'app/js/**/*.js' dist",

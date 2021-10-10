@@ -452,7 +452,7 @@ describe('Itinerary Track Edit', function() {
       helper.wait(400);
       element(by.id('btn-delete')).click();
       helper.wait(400);
-      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[1]/button')).click();
     });
 
   });

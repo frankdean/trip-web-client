@@ -63,8 +63,10 @@ exports.config = {
       'browserName': 'safari'
     };
 
-    // Safari tests are unreliable with random timeouts
+    // Safari tests are unreliable with random timeouts.
     // Firefox tests are very slow and unreliable with random timeouts
+    // and do not work on macOS Big Sur.  See comment above definition
+    // of 'firefoxConfig'.
     return [
       // safariConfig,
       // firefoxConfig,

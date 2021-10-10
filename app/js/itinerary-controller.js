@@ -31,13 +31,16 @@ angular.module('myApp.itinerary.controller', [])
      'ItineraryService',
      'ItineraryDownloadService',
      'ItineraryWaypointService',
+     'ItineraryRouteNameService',
      'ItineraryRouteService',
+     'ItineraryTrackNameService',
      'ItineraryTrackService',
      'InitGpxDownload',
      'InitKmlDownload',
      'SaveAs',
      'ItinerarySelectionService',
      'CopyAndPasteService',
+     'PathColorService',
      'StateService',
      'RecentPoints',
      'UtilsService',
@@ -51,13 +54,16 @@ angular.module('myApp.itinerary.controller', [])
                ItineraryService,
                ItineraryDownloadService,
                ItineraryWaypointService,
+               ItineraryRouteNameService,
                ItineraryRouteService,
+               ItineraryTrackNameService,
                ItineraryTrackService,
                InitGpxDownload,
                InitKmlDownload,
                SaveAs,
                ItinerarySelectionService,
                CopyAndPasteService,
+               PathColorService,
                StateService,
                RecentPoints,
                UtilsService) {
@@ -275,7 +281,96 @@ angular.module('myApp.itinerary.controller', [])
          }
          $location.path('/itinerary-map');
          $location.search(searchParams);
-      };
+       };
+       $scope.colorItems = function() {
+         $scope.ajaxRequestError = {error: false};
+         $scope.messages = {};
+         $scope.formError = {editOnlyOne: false};
+         var selectedCount = 0;
+         $scope.routeNames.forEach(function(v) {
+           if (v.selected) {
+             selectedCount++;
+           }
+         });
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             selectedCount++;
+           }
+         });
+         if (selectedCount > 0) {
+           PathColorService.query()
+             .$promise.then(function(colors) {
+               var c = 0;
+               if (colors.length > 0) {
+                 $scope.routeNames.forEach(function(v) {
+                   if (v.selected) {
+                     v.color = colors[c].key;
+                     ItineraryRouteNameService.save(
+                       {},
+                       {itineraryId: $scope.itineraryId,
+                        routeId: v.id,
+                        name: v.name,
+                        color: v.color
+                       }).$promise.then(function(value) {
+                       }).catch(function(response) {
+                         $log.warn('Save itinerary route name failed');
+                         if (response.status === 401) {
+                           $location.path('/login');
+                         } else {
+                           $scope.ajaxRequestError = {
+                             error: true,
+                             status: response.status
+                           };
+                         }
+                       });
+                     c++;
+                     if (c >= colors.length) {
+                       c = 0;
+                     }
+                   }
+                 });
+                 $scope.trackNames.forEach(function(v) {
+                   if (v.selected) {
+                     v.color = colors[c].key;
+                     ItineraryTrackNameService.save(
+                       {},
+                       {itineraryId: $scope.itineraryId,
+                        trackId: v.id,
+                        name: v.name,
+                        color: v.color
+                       }).$promise.then(function(value) {
+                       }).catch(function(response) {
+                         $log.warn('Save itinerary track name failed');
+                         if (response.status === 401) {
+                           $location.path('/login');
+                         } else {
+                           $scope.ajaxRequestError = {
+                             error: true,
+                             status: response.status
+                           };
+                         }
+                       });
+                     c++;
+                     if (c >= colors.length) {
+                       c = 0;
+                     }
+                   }
+                 });
+               } else {
+                 $log.warn('There are no colours defined');
+                 $scope.formError = {noColorsDefined: true};
+               }
+             }).catch(function(response) {
+               $log.warn('Error fetching track colors', response.status, response.statusText);
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+             });
+         } else {
+           $scope.messages.colorNothingSelected = true;
+         }
+       };
        $scope.copyItemsForPaste = function(form) {
          var options = [], selectedCount = 0,
              waypoints = [], routes = [], tracks = [];
@@ -518,6 +613,68 @@ angular.module('myApp.itinerary.controller', [])
 
          } else {
            $log.error('Unexpected paste request for ', CopyAndPasteService.type, ' type and options of ', CopyAndPasteService.paste());
+         }
+       };
+       $scope.convertTracks = function() {
+         var selectedCount = 0, tracks = [], points;
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             selectedCount++;
+             tracks.push(v.id);
+           }
+         });
+         if (selectedCount > 0) {
+           ItineraryTrackService.getTracks(
+             {id: $scope.itineraryId,
+              tracks: tracks})
+             .$promise.then(function(tracks) {
+               tracks.forEach(function(t) {
+                 points = [];
+                 t.segments.forEach(function(ts) {
+                   ts.points.forEach(function(tp) {
+                     points.push({
+                       lng: tp.lng,
+                       lat: tp.lat,
+                       altitude: tp.altitude
+                     });
+                   });
+                 });
+                 ItineraryRouteService.save(
+                   {},
+                   {
+                     id: $scope.itineraryId,
+                     name: t.name,
+                     color: t.color,
+                     points: points
+                   }).$promise.then(function(result) {
+                     $scope.status.routesInitialized = false;
+                     selectedCount--;
+                     if (selectedCount === 0) {
+                       $scope.updateRouteNames();
+                     }
+                   }).catch(function(response) {
+                     $log.error('Saving converted route failed:', response);
+                     $scope.ajaxRequestError = {
+                       error: true,
+                       status: response.status
+                     };
+                   });
+               }); // tracks forEach
+             }).catch(function(response) {
+               $scope.ajaxRequestError = {
+                 error: true,
+                 status: response.status
+               };
+               if (response.status === 401) {
+                 $location.path('/login');
+               } else if (response.status === 400) {
+                 $log.warn('Invalid request for pasting itinerary tracks: ', response.statusText);
+               } else {
+                 $log.warn('Error fetching itinerary tracks for paste: ', response.status, response.statusText);
+               }
+             });
+         } else {
+           $scope.messages.convertNoTracksSelected = true;
          }
        };
        $scope.duplicateItineary = function() {

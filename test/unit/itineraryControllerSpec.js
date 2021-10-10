@@ -19,6 +19,33 @@
 
 describe('ItineraryCtrl', function() {
 
+  var customMatchers = {
+    toHaveBeenCalledWithColors: function(util, customEqualityTesters) {
+      return {
+        compare: function(actual, expected) {
+          var result = {},
+              actualNames = [];
+
+          if (actual.calls.allArgs().length > 0) {
+            actual.calls.allArgs().forEach(function(params) {
+              if (params.length > 1) {
+                actualNames.push(params[1].color);
+              }
+            });
+          }
+
+          result.pass = util.equals(actualNames, expected, customEqualityTesters);
+          if (result.pass) {
+            result.message = "Was called with the expected color keys";
+          } else {
+            result.message = "Expected color keys of " + util.pp(expected) + " but the actual color keys were " + util.pp(actualNames);
+          }
+          return result;
+        }
+      };
+    }
+  };
+
   beforeEach(module('myApp'));
 
   beforeEach(inject(function(_$httpBackend_) {
@@ -296,6 +323,236 @@ describe('ItineraryCtrl', function() {
 
       it('should paste location history as a track with waypoints', function() {
         expect(copyAndPasteService.paste).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('colourItems', function() {
+      var pathColorService,
+          itineraryRouteNameService,
+          itineraryTrackNameService;
+
+      beforeEach(function() {
+        jasmine.addMatchers(customMatchers);
+      });
+
+      beforeEach(inject(
+        function(PathColorService,
+                 ItineraryRouteNameService,
+                 ItineraryTrackNameService) {
+          pathColorService = PathColorService;
+          itineraryRouteNameService = ItineraryRouteNameService;
+          itineraryTrackNameService = ItineraryTrackNameService;
+          createController();
+          $httpBackend.when('GET',/path\/colors/).respond([ {key: 'red', value: 'Red'}, {key: 'green', value: 'Green'} ]);
+          $httpBackend.flush();
+          spyOn(pathColorService, 'query').and.callThrough();
+          scope.data = {};
+          scope.waypoints = [];
+          scope.routeNames = [ {selected: true}, {selected: true}, {selected: true} ];
+          scope.trackNames = [  {selected: true}, {selected: true}, {selected: true}, {selected: true} ];
+          scope.data.id = testItinerarySearchObject.id;
+          scope.colorItems();
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/route\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/track\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          spyOn(itineraryRouteNameService, 'save').and.callThrough();
+          spyOn(itineraryTrackNameService, 'save').and.callThrough();
+          $httpBackend.flush();
+        }
+      ));
+
+      it('should color each of the selected tracks and route', function() {
+        expect(pathColorService.query).toHaveBeenCalledTimes(1);
+        expect(itineraryRouteNameService.save).toHaveBeenCalledTimes(3);
+        expect(itineraryTrackNameService.save).toHaveBeenCalledTimes(4);
+        expect(itineraryRouteNameService.save).toHaveBeenCalledWithColors(['red', 'green', 'red']);
+        expect(itineraryTrackNameService.save).toHaveBeenCalledWithColors(['green', 'red', 'green', 'red']);
+      });
+
+    });
+
+    describe('NoSystemColors', function() {
+      var pathColorService,
+          itineraryRouteNameService,
+          itineraryTrackNameService;
+
+      beforeEach(function() {
+        jasmine.addMatchers(customMatchers);
+      });
+
+      beforeEach(inject(
+        function(PathColorService,
+                 ItineraryRouteNameService,
+                 ItineraryTrackNameService) {
+          pathColorService = PathColorService;
+          itineraryRouteNameService = ItineraryRouteNameService;
+          itineraryTrackNameService = ItineraryTrackNameService;
+          createController();
+          $httpBackend.when('GET',/path\/colors/).respond([]);
+          $httpBackend.flush();
+          spyOn(pathColorService, 'query').and.callThrough();
+          scope.data = {};
+          scope.waypoints = [];
+          scope.routeNames = [ {selected: true}, {selected: true}, {selected: true} ];
+          scope.trackNames = [  {selected: true}, {selected: true}, {selected: true}, {selected: true} ];
+          scope.data.id = testItinerarySearchObject.id;
+          scope.colorItems();
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/route\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/track\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          spyOn(itineraryRouteNameService, 'save').and.callThrough();
+          spyOn(itineraryTrackNameService, 'save').and.callThrough();
+          $httpBackend.flush();
+        }
+      ));
+
+      it('should not color selected tracks and routes when there are no colors defined', function() {
+        expect(pathColorService.query).toHaveBeenCalledTimes(1);
+        expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
+        expect(itineraryTrackNameService.save).not.toHaveBeenCalled();
+      });
+
+    });
+
+    describe('NoItemsSelectedForColor', function() {
+      var pathColorService,
+          itineraryRouteNameService,
+          itineraryTrackNameService;
+
+      beforeEach(function() {
+        jasmine.addMatchers(customMatchers);
+      });
+
+      beforeEach(inject(
+        function(PathColorService,
+                 ItineraryRouteNameService,
+                 ItineraryTrackNameService) {
+          pathColorService = PathColorService;
+          itineraryRouteNameService = ItineraryRouteNameService;
+          itineraryTrackNameService = ItineraryTrackNameService;
+          createController();
+          $httpBackend.when('GET',/path\/colors/).respond([ {key: 'red', value: 'Red'}, {key: 'green', value: 'Green'} ]);
+          $httpBackend.flush();
+          spyOn(pathColorService, 'query').and.callThrough();
+          scope.data = {};
+          scope.waypoints = [];
+          scope.routeNames = [ {selected: false}, {selected: false}, {selected: false} ];
+          scope.trackNames = [  {selected: false}, {selected: false}, {selected: false}, {selected: false} ];
+          scope.data.id = testItinerarySearchObject.id;
+          scope.colorItems();
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/route\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/track\/name/,
+                            function(data) {
+                              return true;
+                            }).respond(200);
+          spyOn(itineraryRouteNameService, 'save').and.callThrough();
+          spyOn(itineraryTrackNameService, 'save').and.callThrough();
+          // $httpBackend.flush();
+        }
+      ));
+
+      it('should color each of the selected tracks and route', function() {
+        expect(pathColorService.query).not.toHaveBeenCalled();
+        expect(itineraryRouteNameService.save).not.toHaveBeenCalled();
+        expect(itineraryTrackNameService.save).not.toHaveBeenCalled();
+      });
+
+    });
+
+    describe('convertTracks', function() {
+      var itineraryRouteService,
+          itineraryTrackService;
+
+      beforeEach(inject(
+        function(ItineraryRouteService,
+                 ItineraryTrackService) {
+          itineraryRouteService = ItineraryRouteService;
+          itineraryTrackService = ItineraryTrackService;
+          createController();
+          $httpBackend.when('GET',/path\/colors/).respond([ {key: 'red', value: 'Red'}, {key: 'green', value: 'Green'} ]);
+          $httpBackend.flush();
+          scope.data = {};
+          scope.waypoints = [];
+          scope.trackNames = [  {selected: true}, {selected: false}, {selected: true}, {selected: true} ];
+          scope.data.id = testItinerarySearchObject.id;
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/tracks\/selected/,
+                            function(data) {
+                              return true;
+                            }).respond(200, [
+                              {
+                                name: 'Track one',
+                                color: 'Orange',
+                                segments: [
+                                  {
+                                    points: [
+                                      { lng: 1, lat: 2, altitude: 99 },
+                                      { lng: 3, lat: 4, altitude: 999 }
+                                    ]
+                                  },
+                                  {
+                                    points: [
+                                      { lng: 5, lat: 6, altitude: 9999 },
+                                      { lng: 7, lat: 8, altitude: 99999 }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                name: 'Track two',
+                                color: 'Purple',
+                                segments: [
+                                  {
+                                    points: [
+                                      { lng: 11, lat: 12, altitude: 199 },
+                                      { lng: 13, lat: 14, altitude: 1999 }
+                                    ]
+                                  },
+                                  {
+                                    points: [
+                                      { lng: 15, lat: 16, altitude: 19999 },
+                                      { lng: 17, lat: 18, altitude: 199999 }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]);
+          $httpBackend.when('POST',
+                            /itinerary\/\d+\/route$/,
+                            function(data) {
+                              return data === '{"id":"42","name":"Track one","color":"Orange","points":[{"lng":1,"lat":2,"altitude":99},{"lng":3,"lat":4,"altitude":999},{"lng":5,"lat":6,"altitude":9999},{"lng":7,"lat":8,"altitude":99999}]}' ||
+                                data === '{"id":"42","name":"Track two","color":"Purple","points":[{"lng":11,"lat":12,"altitude":199},{"lng":13,"lat":14,"altitude":1999},{"lng":15,"lat":16,"altitude":19999},{"lng":17,"lat":18,"altitude":199999}]}';
+                            }).respond(200);
+          spyOn(itineraryRouteService, 'save').and.callThrough();
+          spyOn(itineraryTrackService, 'getTracks').and.callThrough();
+          scope.convertTracks();
+          $httpBackend.flush();
+        }
+      ));
+
+      it('should create a route for each selected track', function() {
+        expect(itineraryTrackService.getTracks).toHaveBeenCalledTimes(1);
+        expect(itineraryRouteService.save).toHaveBeenCalledTimes(2);
       });
 
     });

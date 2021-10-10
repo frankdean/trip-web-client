@@ -138,6 +138,8 @@ describe('Itinerary management', function() {
       element(by.id('edit-pill')).click();
       helper.wait(100);
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-color')).isDisplayed()).toBeTruthy();
+      expect(element(by.id('btn-convert-track')).isDisplayed()).toBeTruthy();
       // cleanup
       element(by.id('heading-tab')).click();
       helper.wait(100);
@@ -433,7 +435,7 @@ describe('Itinerary management', function() {
         element(by.id('features-tab')).click();
         element(by.id('transfer-pill')).click();
         element(by.id('btn-download-yaml')).click();
-        element(by.xpath('/html/body/div[7]/div[2]/div/div[1]/button')).click();
+        element(by.xpath('/html/body/div[9]/div[2]/div/div[1]/button')).click();
         browser.driver.wait(function() {
           var retval = fs.existsSync(filename);
           return retval;
@@ -461,8 +463,96 @@ describe('Itinerary management', function() {
       helper.wait(400);
       helper.takeScreenshot(testName + '_shared_view_hide_add_waypoint_menu_item_02', takeScreenshots);
       expect(element(by.id('btn-new-waypoint')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-color')).isDisplayed()).toBeFalsy();
+      expect(element(by.id('btn-convert-track')).isDisplayed()).toBeFalsy();
       expect(element(by.id('btn-copy')).isDisplayed()).toBeTruthy();
       expect(element(by.id('btn-duplicate')).isDisplayed()).toBeTruthy();
+    });
+
+  });
+
+  describe('Convert tracks to routes', function() {
+
+    beforeEach(function() {
+      // Create a duplicate of an itinerary which has tracks
+      browser.get(browser.baseUrl + '/itinerary?id=' + testSharedItineraryId);
+      helper.takeScreenshot(testName + '_00_convert_tracks_to_routes', takeScreenshots);
+      element(by.id('features-tab')).click();
+      helper.wait(100);
+      element(by.id('input-select-all-tracks')).click();
+      helper.wait(100);
+      element(by.id('edit-pill')).click();
+      helper.wait(100);
+      element(by.id('btn-duplicate')).click();
+      helper.wait(100);
+      element(by.xpath('/html/body/div[6]/div[2]/div/div[1]/button')).click();
+      helper.wait(500);
+      helper.takeScreenshot(testName + '_01_convert_tracks_to_routes', takeScreenshots);
+    });
+
+    it('should convert the tracks to routes', function() {
+      element(by.id('features-tab')).click();
+      helper.wait(100);
+      element(by.id('input-select-all-routes')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_02_convert_tracks_to_routes', takeScreenshots);
+      element(by.id('edit-pill')).click();
+      helper.wait(100);
+      element(by.id('btn-delete')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_03_convert_tracks_to_routes', takeScreenshots);
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[1]/button')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_04_convert_tracks_to_routes', takeScreenshots);
+      expect(element.all(by.repeater('route in routeNames')).count()).toBe(0);
+      element(by.id('input-select-all-tracks')).click();
+      helper.wait(100);
+      element(by.id('edit-pill')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_05_convert_tracks_to_routes', takeScreenshots);
+      element(by.id('btn-convert-track')).click();
+      helper.wait(100);
+      element(by.xpath('/html/body/div[4]/div[2]/div/div[1]/button')).click();
+      browser.sleep(500);
+      helper.takeScreenshot(testName + '_06_convert_tracks_to_routes', takeScreenshots);
+      expect(element.all(by.repeater('route in routeNames')).count()).toBe(2);
+      // cleanup
+      element(by.id('heading-tab')).click();
+      helper.wait(100);
+      element(by.id('btn-edit-itinerary')).click();
+      element(by.id('btn-delete')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
+    });
+
+    it('should assign colors to the tracks and routes', function() {
+      element(by.id('features-tab')).click();
+      helper.wait(100);
+      element(by.id('input-select-all')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_10_color_paths', takeScreenshots);
+      expect(element.all(by.repeater('route in routeNames')).count()).toBe(2);
+      element(by.id('edit-pill')).click();
+      helper.wait(100);
+      helper.takeScreenshot(testName + '_11_color_paths', takeScreenshots);
+      element(by.id('btn-color')).click();
+      helper.wait(100);
+      element(by.xpath('/html/body/div[2]/div[2]/div/div[1]/button')).click();
+      browser.sleep(500);
+      helper.takeScreenshot(testName + '_12_color_paths', takeScreenshots);
+      var routes = element.all(by.repeater('route in routeNames'));
+      expect(routes.count()).toBe(2);
+      expect(routes.first().all(by.tagName('td')).get(1).getText()).toEqual('Black');
+      expect(routes.get(1).all(by.tagName('td')).get(1).getText()).toEqual('Blue');
+      var tracks = element.all(by.repeater('track in trackNames'));
+      expect(tracks.count()).toBe(2);
+      expect(tracks.first().all(by.tagName('td')).get(1).getText()).toEqual('Cyan');
+      expect(tracks.get(1).all(by.tagName('td')).get(1).getText()).toEqual('DarkBlue');
+      // cleanup
+      element(by.id('heading-tab')).click();
+      helper.wait(100);
+      element(by.id('btn-edit-itinerary')).click();
+      element(by.id('btn-delete')).click();
+      element.all((by.css('.confirm-button'))).get(0).click();
     });
 
   });
@@ -544,8 +634,7 @@ describe('Itinerary management', function() {
     it('should show the paste option', function() {
       expect(element(by.id('btn-paste')).isDisplayed()).toBeTruthy();
       element(by.id('btn-paste')).click();
-      element.all((by.css('.confirm-button'))).get(0).click();
-      // element(by.xpath('/html/body/div[2]/div[2]/div/div[1]/button')).click();
+      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
       browser.sleep(500);
       expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[2]/td[3]')).getText()).toEqual('Test note');
       expect(element(by.xpath('//*[@id="table-waypoints"]/tbody/tr[3]/td[3]')).getText()).toEqual('A longer note than the previous one.');

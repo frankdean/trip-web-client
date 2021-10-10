@@ -17,6 +17,7 @@
         "spyOn": false,
         "afterEach": false,
         "angular": false,
+        "beforeAll": false,
         "beforeEach": false,
         "describe": false,
         "xdescribe": false,

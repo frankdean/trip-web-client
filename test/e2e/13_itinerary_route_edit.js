@@ -327,7 +327,7 @@ describe('Itinerary Route Edit', function() {
       element(by.id('btn-delete')).click();
       helper.wait(400);
       // The confirmation to delete button
-      element(by.xpath('/html/body/div[3]/div[2]/div/div[1]/button')).click();
+      element(by.xpath('/html/body/div[5]/div[2]/div/div[1]/button')).click();
     });
 
   });
