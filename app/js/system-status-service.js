@@ -27,4 +27,14 @@ angular.module('myApp.admin.system.status.service', [])
        var url = ConfigService.restUrlPrefix + '/admin/system/status';
        return $resource(url, {}, {
        });
+     }])
+
+  .factory(
+    'TileMetricReportService',
+    ['$resource',
+     'ConfigService',
+     function($resource, ConfigService) {
+       var url = ConfigService.restUrlPrefix + '/admin/report/tile/metrics';
+       return $resource(url, {}, {
+       });
      }]);

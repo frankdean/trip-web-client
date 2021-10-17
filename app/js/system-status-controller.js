@@ -24,8 +24,9 @@ angular.module('myApp.admin.system.status.controller', [])
     ['$rootScope', '$scope',
      '$log',
      'SystemStatusService',
+     'TileMetricReportService',
      '$location',
-     function($rootScope, $scope, $log, SystemStatusService, $location) {
+     function($rootScope, $scope, $log, SystemStatusService, TileMetricReportService, $location) {
        $rootScope.pageTitle = null;
        $scope.data = {};
        SystemStatusService.get({})
@@ -36,6 +37,30 @@ angular.module('myApp.admin.system.status.controller', [])
              $location.path('/login');
            } else {
              $log.error('Failure getting system status');
+             $scope.ajaxRequestError = {
+               error: true,
+               status: response.status
+             };
+           }
+         });
+       TileMetricReportService.query({months: 13})
+         .$promise.then(function(metrics) {
+           metrics.forEach(function(v, i) {
+             if (i < metrics.length -1) {
+               v.monthlyUsage = v.cumulative_total - metrics[i + 1].cumulative_total;
+             } else {
+               v.monthlyUsage = v.cumulative_total;
+             }
+           });
+           if (metrics.length > 12) {
+             metrics.pop();
+           }
+           $scope.data.metrics = metrics;
+         }).catch(function(response) {
+           if (response.status === 401) {
+             $location.path('/login');
+           } else {
+             $log.error('Failure getting tile metrics report', response);
              $scope.ajaxRequestError = {
                error: true,
                status: response.status

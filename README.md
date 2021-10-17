@@ -9,28 +9,6 @@ This is the README of the TRIP web client application.  See the README of the
 		$ yarn install
 
 
-## Production Build Procedure
-
-1.  Run `yarn run lint`
-1.  Run unit tests with `yarn run test-single-run`
-1.  Optionally or if first time, run `yarn update-webdriver`
-1.  Run end-to-end tests with `yarn run protractor`
-1.  Update the version number in `./app/js/version/version.js`
-1.  Check in the change
-1.  Run `yarn run build-release`
-1.  Modify static file web server to serve TRIP web client files from the
-	`./dist/` folder. e.g.
-
-		$ cd trip-server
-		$ ln -s ~/projects/trip-web-client/dist/app
-
-1.  Perform a simple test with `index.html` and `index-async.html` in the
-    browser
-1.  Run `yarn run protractor`
-1.  chdir to `./dist/` and tar up the contents of the `app/` sub-folder
-1.  untar to deployment target
-
-
 ## Running directly with trip-server
 
 Create a symbolic link within the TRIP server application to the web client
@@ -55,56 +33,6 @@ Use `webdriver-manager --help` for options. E.g. install version 2.19 of the
 chromedriver.
 
 	$ ./node_modules/protractor/bin/webdriver-manager --versions.chrome 2.19 update
-
-## Docker
-
-It is possible to develop the application using a Docker container, by
-working in the directory containing the current web source code, and
-peforming a bind mount of the source folder with the `/webapp` folder
-in the container.
-
-**Note:** the container will already have the distributed copy of the
-source code in the `/webapp` folder.  The bind mount will bind over
-that folder, hiding its contents with the current source directory on
-the host machine.
-
-To build a new container:
-
-	$ docker build -t trip-web .
-
-Create a docker network and start the database container:
-
-	$ docker network create trip-server
-
-	$ docker run --network trip-server --network-alias postgis \
-	-e POSTGRES_PASSWORD=secret -d fdean/trip-database:latest
-
-To run the container, and mount the current directory at `/webapp`:
-
-	$ cd trip-web-client
-	$ docker run --name trip-web --network trip-server \
-	-e TRIP_SIGNING_KEY=secret -e TRIP_RESOURCE_SIGNING_KEY=secret \
-	-e POSTGRES_PASSWORD=secret -e CHROME_BIN=/usr/bin/chromium \
-	--mount type=bind,source="$(pwd)",target=/webapp \
-	--shm-size=128m --publish 8080:8080 -d trip-web
-
-To start and connect to a Bash shell in the running container:
-
-	$ docker exec -it -w /webapp -e LANG=en_GB.UTF-8 -e LC_ALL=en_GB.UTF-8 \
-	trip-web bash -il
-
-Then, in the container, run the tests:
-
-	$ cd /webapp
-	$ yarn
-	$ yarn run lint
-	$ yarn run test-single-run
-	$ yarn run protractor
-
-Alternatively, run the test directly from the host:
-
-	$ docker exec -it -w /webapp -e LANG=en_GB.UTF-8 -e LC_ALL=en_GB.UTF-8 \
-	trip-web yarn run protractor
 
 
 ## Known Issues

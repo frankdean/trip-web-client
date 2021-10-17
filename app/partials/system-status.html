@@ -11,8 +11,25 @@
   </div>
   <div id="tile-usage" class="well" ng-show="!ajaxRequestError">
     <div ng-show="data.tileUsage">
-      <p>Fetched {{data.tileUsage.count}} tiles, as at
+      <p>Fetched a total of {{data.tileUsage.count}} tiles, as at
         {{data.tileUsage.time | date: 'HH:mm EEE dd-MMM-yyyy'}}</p>
+      <div ng-show="data.metrics">
+        <table id="tile-metrics" class="tile-metric-table wide-table table table-striped">
+          <tr>
+            <th align="right">Month</th>
+            <th align="right">Year</th>
+            <th align="right">Cumulative Total</th>
+            <th align="right">Monthly Usage</th>
+          </tr>
+          <tr ng-repeat="metric in data.metrics">
+            <td align="right">{{metric.month}}</td>
+            <td align="right">{{metric.year}}</td>
+            <td align="right">{{metric.cumulative_total}}</td>
+            <td align="right">{{metric.monthlyUsage}}</td>
+            <td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div ng-show="!data.tileUsage">
       <p>No tile usage data has been collected yet.</p>
