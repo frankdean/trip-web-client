@@ -178,7 +178,7 @@ angular.module('myApp.track.controller', [])
          $scope.messages.copied = true;
        };
        // Fetch first page of results using the initial default values
-       $scope.DoPagingAction = function(text, page, pageSize, total) {
+       $scope.doPagingAction = function(text, page, pageSize, total) {
          $scope.messages = {};
          $scope.offset = pageSize * (page -1);
          StateService.saveTracksPage(page);

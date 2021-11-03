@@ -201,6 +201,7 @@ angular.module('myApp.itinerary.search.result.controller', [])
        $scope.listItineraries();
 
        $scope.doPagingAction = function(text, page, pageSize, total) {
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          StateService.saveItinerarySearchResultsPage(page);
          $scope.listItineraries();

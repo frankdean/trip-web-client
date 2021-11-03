@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -23,7 +23,7 @@
     "cssmin": "^0.4.3",
     "jasmine-core": "^3.6.0",
     "jshint": "^2.9.1",
-    "karma": "~6.3.2",
+    "karma": "6.3.4",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-jasmine": "^4.0.1",
@@ -66,6 +66,7 @@
     "open-location-code": "git+https://github.com/google/open-location-code.git#1.0.4",
     "pagedown": "git+https://github.com/frankdean/PageDown.git#1.1.0-fix.1",
     "proj4": "^2.4.4",
+    "simplify-js": "1.2.4",
     "socket.io-client": "^3.1.0",
     "ui-leaflet": "git+https://github.com/frankdean/ui-leaflet.git#v1.0.4-rc.2",
     "ui-leaflet-draw": "0.0.5",
@@ -86,7 +87,7 @@
     "update-webdriver-chrome-XX.x.xxxx.xx": "webdriver-manager update --versions.chrome=XX.x.xxxx.xx",
     "update-webdriver-90": "webdriver-manager update --versions.chrome=90.0.4430.212",
     "update-webdriver": "webdriver-manager update",
-    "preprotractor": "$npm_execpath run update-webdriver",
+    "preprotractor": "$npm_execpath run update-webdriver-90",
     "protractor": "protractor test/protractor.conf.js",
     "dist-update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
     "update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
@@ -104,10 +105,11 @@
     "build": "$npm_execpath run update-version && $npm_execpath run build:scripts && $npm_execpath run build:css",
     "build:scripts": "cd dist/app && ../../node_modules/uglify-js/bin/uglifyjs ../../app/js/*.js ../../app/js/**/*.js --compress --mangle --source-map \"url=trip.min.js.map\"  --output trip.min.js",
     "build:css": "cssmin app/css/app.css > dist/app/css/app.css && cssmin app/css/ie10-viewport-bug-workaround.css > dist/app/css/ie10-viewport-bug-workaround.css",
+    "pre-dist": "node -e \"const fs = require('fs'); if ('$npm_execpath'.indexOf('yarn.js') !== -1) { const cp=require('child_process'); const stdout=cp.execSync('yarn licenses generate-disclaimer', {env: { ...process.env, NODE_ENV: 'production'}, encoding: 'utf8'}); fs.writeFileSync('dist/app/LICENSES', stdout); } \"",
     "dist": "copyfiles 'app/node_modules/leaflet/dist/leaflet.js' 'app/node_modules/leaflet/dist/images/*.png' 'app/node_modules/leaflet-draw/dist/leaflet.draw.js' 'app/node_modules/leaflet-draw/dist/images/*' 'app/node_modules/ui-leaflet-draw/dist/ui-leaflet-draw.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js' 'app/node_modules/zxcvbn/dist/zxcvbn.js.map' 'app/node_modules/socket.io-client/dist/socket.io.js*' 'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js' 'app/node_modules/**/*.min.js' 'app/node_modules/**/*.min.js.map' 'app/node_modules/angular-i18n/angular-locale_en-gb.js' 'app/node_modules/pagedown/*.js' 'app/node_modules/proj4/dist/*.js' 'app/node_modules/pagedown/*.png' 'app/node_modules/ui-leaflet/**/*.min.no-header.js' 'app/node_modules/**/*.css' 'app/node_modules/**/*.css.map' 'app/css/*.min.css' 'app/index*.html' 'app/partials/*.html' 'app/js/**/*.js' dist",
     "post-dist": "node -e \"const shell = require('shelljs'); shell.mv('dist/app/index-async.html', 'dist/app/index.html'); shell.rm('-f', 'dist/app/index-dev.html')\"",
     "tar-release": "node -e \"require('shelljs').cd('dist'); require('tar').c({gzip: true, sync: true, file: '${npm_package_name}-release-v${npm_package_version}.tgz'},['app'])\"",
     "zip-release": "node -e \"require('shelljs').cd('dist');const Zip=require('adm-zip');const zip=new Zip();zip.addLocalFolder('app','app');zip.writeZip('${npm_package_name}-release-v${npm_package_version}.zip');\"",
-    "build-release": "$npm_execpath run disable-debug && $npm_execpath run disable-debug-logging && $npm_execpath run clean && $npm_execpath run build && $npm_execpath run dist && $npm_execpath run update-index-prod && $npm_execpath run dist-update-index-async && $npm_execpath run update-index-async-prod && $npm_execpath run post-dist && $npm_execpath run tar-release && $npm_execpath run zip-release && $npm_execpath run enable-debug && $npm_execpath run enable-debug-logging"
+    "build-release": "$npm_execpath run disable-debug && $npm_execpath run disable-debug-logging && $npm_execpath run clean && $npm_execpath run build && $npm_execpath run pre-dist && $npm_execpath run dist && $npm_execpath run update-index-prod && $npm_execpath run dist-update-index-async && $npm_execpath run update-index-async-prod && $npm_execpath run post-dist && $npm_execpath run tar-release && $npm_execpath run zip-release && $npm_execpath run enable-debug && $npm_execpath run enable-debug-logging"
   }
 }

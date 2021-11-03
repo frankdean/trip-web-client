@@ -17,13 +17,19 @@
  */
 'use strict';
 
+var helper = require('../helper.js');
+
 describe('Itineraries sharing report', function() {
-  var list;
+  var list,
+      screenshotCounter = 0,
+      testName = '10_itinerary_sharing_report',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/itinerary-sharing-report');
     browser.wait(protractor.ExpectedConditions.visibilityOf(element(by.repeater('itinerary in itineraries'))), 500, 'Timeout waiting for itinerary sharing report to be displayed');
     list = element.all(by.repeater('itinerary in itineraries'));
+    helper.takeScreenshot(testName + '_before_each_' + ('0000' + (++screenshotCounter)).substr(-4, 4), takeScreenshots);
   });
 
   it('should display at least one itinerary', function() {
@@ -50,6 +56,7 @@ describe('Itineraries sharing report', function() {
 
   it('should show the itinerary sharing report when the back button on the itinerary sharing page is clicked', function() {
     list.first().all(by.tagName('a')).first().click();
+    helper.takeScreenshot(testName + '_back_button_', takeScreenshots);
     expect(browser.getCurrentUrl()).toMatch(/(%2F|\/)itinerary-sharing(%3F|\?)id=[0-9]+/);
     expect(element(by.id('btn-show-itinerary')).isDisplayed()).toBeTruthy();
     element(by.id('btn-close')).click();

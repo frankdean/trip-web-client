@@ -82,6 +82,7 @@ angular.module('myApp.itinerary.sharing.report.controller', [])
            });
        };
        $scope.doPagingAction = function(text, page, pageSize, total) {
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          StateService.saveItinerarySharingReportPage(page);
          $scope.listItineraries();

@@ -197,6 +197,7 @@ angular.module('myApp.itinerary.route.edit.controller', [])
        $scope.doPagingAction = function(text, page, pageSize, total) {
          $scope.ajaxRequestError = undefined;
          $scope.formError = undefined;
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          $scope.listPoints();
        };

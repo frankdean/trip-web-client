@@ -140,6 +140,7 @@ angular.module('myApp', [
   'myApp.config.factory',
   'myApp.gpxdownload.factory',
   'myApp.kmldownload.factory',
+  'myApp.gotopage.directive',
   'myApp.gpxupload',
   'myApp.itineries.controller',
   'myApp.itinerary.controller',
@@ -153,6 +154,7 @@ angular.module('myApp', [
   'myApp.itinerary.search.result.controller',
   'myApp.itinerary.wpt.controller',
   'myApp.itinerary.wpt.view.controller',
+  'myApp.itinerary.simplify.path.controller',
   'myApp.itinerary.route.name.controller',
   'myApp.itinerary.route.edit.controller',
   'myApp.itinerary.route.join.controller',
@@ -179,6 +181,7 @@ angular.module('myApp', [
   'myApp.utils.factory',
   'myApp.user.prefs.factory',
   'myApp.coord.filter',
+  'myApp.simplify',
   'myApp.version'
 ])
 
@@ -273,6 +276,10 @@ angular.module('myApp', [
          when('/itinerary-wpt', {
            templateUrl: 'partials/itinerary-wpt.html',
            controller: 'ItineraryWaypointViewCtrl'
+         }).
+         when('/itinerary-simplify-path', {
+           templateUrl: 'partials/itinerary-simplify-path.html',
+           controller: 'ItinerarySimplifyPathCtrl'
          }).
          when('/itinerary-route-name', {
            templateUrl: 'partials/itinerary-route-name.html',

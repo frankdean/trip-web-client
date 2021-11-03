@@ -79,7 +79,8 @@ angular.module('myApp.shares.controller', [])
            form.$setUntouched();
          }
        };
-       $scope.DoPagingAction = function(text, page, pageSize, total) {
+       $scope.doPagingAction = function(text, page, pageSize, total) {
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          $scope.listShares();
        };

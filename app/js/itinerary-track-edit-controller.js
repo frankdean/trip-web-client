@@ -127,6 +127,7 @@ angular.module('myApp.itinerary.track.edit.controller', [])
        $scope.listSegments();
        $scope.doPagingAction = function(text, page, pageSize, total) {
          $scope.formError = undefined;
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          $scope.listSegments();
        };

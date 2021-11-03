@@ -27,6 +27,11 @@ To run with the minified application bundle, the link must be to the
 		$ ln -s ../trip-web-client/dist/app/
 
 
+## User Documentation
+
+See the [user documentation](https://www.fdsd.co.uk/trip-web-client-docs/) for
+information on using the application.
+
 ## Using older versions of webdriver etc.
 
 Use `webdriver-manager --help` for options. E.g. install version 2.19 of the

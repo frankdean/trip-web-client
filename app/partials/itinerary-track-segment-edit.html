@@ -62,6 +62,13 @@
               paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
             </paging>
           </div>
+          <goto-page
+            page="page"
+            page-size="pageSize"
+            total="totalCount"
+            minimum-pages="10"
+            paging-action="doPagingAction('go', page, pageSize, total)">
+          </goto-page>
         </div>
         <div ng-messages="formError">
           <div id="error-edit-only-one" class="alert alert-warning" role="alert"

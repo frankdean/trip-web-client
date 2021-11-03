@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Simplify Track</h1>
+  </div>
+  <div id="system-error" ng-messages="ajaxRequestError"
+       ng-show="ajaxRequestError">
+    <div class="alert alert-danger" role="alert" ng-message="error">System Error - An
+      unexpected error occurred<span ng-show="ajaxRequestError.status">, status code returned is
+        {{ajaxRequestError.status}}</span>
+    </div>
+  </div>
+  <div>
+    <form name="simplify-path-form">
+      <div class="well">
+        <p id="track-name"><span class="view-label">Name:</span><span style="padding-left: 1em; padding-right: 1em;">{{track.name === '' ? 'ID: ' + track.id : track.name}}</span></p>
+        <p>
+          <span>
+            <label for="tolerance">Tolerance: </label>
+            <input id="tolerance" ng-model="tolerance" size="10" type="range" min="0" max="{{maxTolerance}}" step="{{step}}" ng-change="simplify()" />
+          </span>
+        </p>
+        <p id="original-points">Original points: {{totalOriginalPoints | number}}</p>
+        <p id="current-points">Current points: {{totalPoints | number}}</p>
+        <p>
+          <span>
+            <label for="highestQuality">High quality: </label>
+            <input id="highestQuality" ng-model="highestQuality" type="checkbox" ng-change="simplify()" />
+          </span>
+          <span style="margin-left: 15px;" ng-show="originalPaths.length > 1">
+            <label for="show-joined">Show joined track segments</label>
+            <input id="show-joined" ng-model="showJoined" type="checkbox" ng-change="simplify()" />
+          </span>
+        </p>
+      </div>
+      <leaflet ng-if="status.showMap" controls="controls" markers="markers" paths="paths" bounds="bounds" layers="layers" defaults="defaults" height="{{height}}"></leaflet>
+      <div style="margin-top: 15px;">
+        <button id="btn-save"
+                class="btn btn-lg btn-success"
+                ng-click="save()"
+                type="button"
+                >
+          Save
+        </button>
+        <button id="btn-cancel"
+                class="btn btn-lg btn-danger"
+                mwl-confirm
+                title="Confirm"
+                message="Cancel?"
+                on-confirm="cancel()"
+                focus-button="confirm"
+                type="button"
+                >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

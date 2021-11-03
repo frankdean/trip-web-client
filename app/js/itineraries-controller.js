@@ -85,6 +85,7 @@ angular.module('myApp.itineries.controller', [])
        };
        $scope.listItineraries();
        $scope.doPagingAction = function(text, page, pageSize, total) {
+         $scope.page = page;
          $scope.offset = pageSize * (page - 1);
          StateService.saveItinerariesPage(page);
          $scope.listItineraries();

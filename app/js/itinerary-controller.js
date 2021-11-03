@@ -677,6 +677,24 @@ angular.module('myApp.itinerary.controller', [])
            $scope.messages.convertNoTracksSelected = true;
          }
        };
+       $scope.simplifyTrack = function() {
+         var selectedCount = 0, tracks = [], points;
+         $scope.trackNames.forEach(function(v) {
+           if (v.selected) {
+             selectedCount++;
+             tracks.push(v.id);
+           }
+         });
+         if (selectedCount === 1) {
+           $location.path('/itinerary-simplify-path');
+           $location.search({
+             itineraryId: encodeURIComponent($scope.data.id),
+             trackId: encodeURIComponent(tracks[0])
+           });
+         } else {
+           $scope.formError = {editOnlyOne: true};
+         }
+       };
        $scope.duplicateItineary = function() {
          ItineraryService.duplicate({id: $scope.itineraryId})
            .$promise.then(function(result) {

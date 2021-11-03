@@ -77,6 +77,8 @@
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
                 <li id="btn-join-path" role="menuitem" ng-show="data.shared_to_nickname === null"><a href="#" ng-click="joinPaths(downloads)" ng-show="data.shared_to_nickname === null">Join paths</a></li>
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
+                <li id="btn-copy" role="menuitem"><a href="#" ng-click="copyItemsForPaste(downloads)">Copy selected items</a></li>
+                <li class="divider" ng-show="data.shared_to_nickname === null"></li>
                 <li id="btn-color" role="menuitem" ng-show="data.shared_to_nickname === null">
                   <a href="#"
                      mwl-confirm
@@ -87,7 +89,6 @@
                      ng-show="data.shared_to_nickname === null"
                      >Assign colours to routes and tracks</a>
                 </li>
-                <li id="btn-copy" role="menuitem"><a href="#" ng-click="copyItemsForPaste(downloads)">Copy selected items</a></li>
                 <li id="btn-paste" role="menuitem" ng-show="data.shared_to_nickname === null">
                   <a href="#"
                      mwl-confirm
@@ -107,6 +108,9 @@
                      confirm-button-type="success"
                      ng-show="data.shared_to_nickname === null"
                      >Convert tracks to routes</a>
+                </li>
+                <li id="btn-simplify" role="menuitem" ng-show="data.shared_to_nickname === null">
+                  <a href="#" ng-click="simplifyTrack()">Simplify track</a>
                 </li>
                 <li class="divider" ng-show="data.shared_to_nickname === null"></li>
                 <li id="btn-delete" role="menuitem" ng-show="data.shared_to_nickname === null">

@@ -23,7 +23,9 @@ describe('Track Sharing page', function() {
   var sharesList, pageCount, elemNickname, elemRecentDays, elemRecentHours,
       elemRecentMinutes, elemMaxDays, elemMaxHours,
       elemMaxMinutes, elemActive, elemButtonSave,
-      EC = protractor.ExpectedConditions;
+      EC = protractor.ExpectedConditions,
+      testName = '02_track_sharing.js',
+      takeScreenshots = browser.privateConfig.takeScreenshots;
 
   beforeEach(function() {
     browser.get(browser.baseUrl + '/sharing');
@@ -389,6 +391,7 @@ describe('Track Sharing page', function() {
 
   it('should not display the location share list when there are no location shares', function() {
     if (browser.privateConfig.browserName.toLowerCase() !== 'safari') {
+      helper.takeScreenshot(testName + '_two_items_to_delete_', takeScreenshots);
       expect(sharesList.count()).toBe(2);
       // sharesList.all(by.model('share.selected')).first().click();
       element(by.model('selectAllCheckbox')).click();

@@ -11,7 +11,7 @@
   </div>
   <div id="tile-usage" class="well" ng-show="!ajaxRequestError">
     <div ng-show="data.tileUsage">
-      <p>Fetched a total of {{data.tileUsage.count}} tiles, as at
+      <p>Fetched a total of {{data.tileUsage.count | number}} tiles, as at
         {{data.tileUsage.time | date: 'HH:mm EEE dd-MMM-yyyy'}}</p>
       <div ng-show="data.metrics">
         <table id="tile-metrics" class="tile-metric-table wide-table table table-striped">
@@ -24,8 +24,8 @@
           <tr ng-repeat="metric in data.metrics">
             <td align="right">{{metric.month}}</td>
             <td align="right">{{metric.year}}</td>
-            <td align="right">{{metric.cumulative_total}}</td>
-            <td align="right">{{metric.monthlyUsage}}</td>
+            <td align="right">{{metric.cumulative_total | number}}</td>
+            <td align="right">{{metric.monthlyUsage | number}}</td>
             <td>
           </tr>
         </table>

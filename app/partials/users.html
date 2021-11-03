@@ -79,6 +79,13 @@
          show-first-last="true"
          paging-action="doPagingAction('Paging Clicked', page, pageSize, total)">
       </paging>
+      <goto-page
+        page="page"
+        page-size="pageSize"
+        total="totalCount"
+        minimum-pages="10"
+        paging-action="doPagingAction('go', page, pageSize, total)">
+      </goto-page>
     </div>
   </div>
   <div ng-messages="formError">

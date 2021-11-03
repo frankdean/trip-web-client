@@ -107,7 +107,6 @@ angular.module('myApp.login.controller', ['ngCookies'])
          UploadService.save({},
                             $scope.formData
                            ).$promise.then(function(value) {
-                             $log.debug('Upload succeeded');
                              $scope.messages.message = 'Upload succeeded';
                            }).catch(function(response) {
                              $log.error('Upload failed', response.status);

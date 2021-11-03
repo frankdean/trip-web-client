@@ -1,6 +1,6 @@
 /**
  * @license TRIP - Trip Recording and Itinerary Planning application.
- * (c) 2016, 2017 Frank Dean <frank@fdsd.co.uk>
+ * (c) 2016-2021 Frank Dean <frank@fdsd.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,13 @@
  */
 'use strict';
 
-angular.module('myApp.gpxupload.gpxupload-service', ['ngResource'])
+angular.module('myApp.simplify', []).service('SimplifyService', function() {
 
-  .factory('gpxUploadService', [
-    '$resource',
-    'ConfigService',
-    '$log',
-    '$httpParamSerializerJQLike',
-    function($resource, ConfigService, $log, $httpParamSerializerJQLike) {
-      return $resource(ConfigService.restUrlPrefix + '/itinerary/file/:id', {}, {
-        save: {
-          method: "POST",
-          headers: {"Content-Type": undefined},
-          transformRequest: []
-          /* transformRequest: angular.identity */
-        }
-      });
-    }]);
+  if (typeof simplify !== 'undefined') {
+    // Normal runtime behaviour
+    return {simplify: simplify};
+  } else {
+    // This is the scenario when running unit tests
+    return {simplify: module.exports};
+  }
+});
