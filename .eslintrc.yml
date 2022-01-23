@@ -1,0 +1,43 @@
+env:
+  browser: true
+  es2021: true
+extends: eslint:recommended
+parserOptions:
+  ecmaVersion: latest
+  sourceType: module
+rules:
+  no-misleading-character-class: off
+  no-mixed-spaces-and-tabs: off
+  no-undef: off
+  no-unused-vars: off
+  no-useless-escape: off
+globals:
+  Map: readonly
+  OpenLocationCode: readonly
+  proj4: readonly
+  FormData: readonly
+  Buffer: readonly
+  browser: readonly
+  by: readonly
+  element: readonly
+  io: readonly
+  jasmine: readonly
+  pending: readonly
+  protractor: readonly
+  require: readonly
+  spyOn: readonly
+  afterEach: readonly
+  angular: readonly
+  beforeAll: readonly
+  beforeEach: readonly
+  describe: readonly
+  xdescribe: readonly
+  expect: readonly
+  inject: readonly
+  it: readonly
+  xit: readonly
+  module: readonly
+  simplify: readonly
+  L: readonly
+  _: readonly
+  zxcvbn: readonly
