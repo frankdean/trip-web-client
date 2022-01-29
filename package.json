@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -23,7 +23,7 @@
     "cssmin": "^0.4.3",
     "eslint": "^8.7.0",
     "jasmine-core": "^3.6.0",
-    "karma": "6.3.4",
+    "karma": "~6.3.12",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-jasmine": "^4.0.1",
@@ -88,7 +88,7 @@
     "update-webdriver-97": "webdriver-manager update --versions.chrome=97.0.4692.99",
     "update-webdriver-90": "webdriver-manager update --versions.chrome=90.0.4430.212",
     "update-webdriver": "webdriver-manager update",
-    "preprotractor": "$npm_execpath run update-webdriver-90",
+    "preprotractor": "$npm_execpath run update-webdriver-97",
     "protractor": "protractor test/protractor.conf.js",
     "dist-update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
     "update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",

@@ -20,7 +20,7 @@
 describe('ItineraryCtrl', function() {
 
   var customMatchers = {
-    toHaveBeenCalledWithColors: function(util, customEqualityTesters) {
+    toHaveBeenCalledWithColors: function(util) {
       return {
         compare: function(actual, expected) {
           var result = {},
@@ -34,7 +34,7 @@ describe('ItineraryCtrl', function() {
             });
           }
 
-          result.pass = util.equals(actualNames, expected, customEqualityTesters);
+          result.pass = util.equals(actualNames, expected);
           if (result.pass) {
             result.message = "Was called with the expected color keys";
           } else {
