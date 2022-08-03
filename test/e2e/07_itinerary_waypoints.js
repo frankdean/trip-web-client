@@ -187,7 +187,7 @@ describe('Itinerary Waypoints', function() {
       expect(elePosition.getAttribute('value')).toEqual('50,-3');
       expect(eleAltitude.getAttribute('value')).toEqual('450');
       expect(eleSymbol.getAttribute('value')).toEqual('Flag, Blue');
-      expect(eleTime.getAttribute('value')).toEqual('2015-12-12T10:48:00.000');
+      expect(eleTime.getAttribute('value')).toMatch(/2015-12-12T10:48(:00.000)?/);
       expect(eleComment.getAttribute('value')).toEqual('Test comment');
       expect(eleDescription.getAttribute('value')).toEqual('Test description');
       expect(eleSamples.getAttribute('value')).toEqual('99');

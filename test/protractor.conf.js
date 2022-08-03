@@ -48,6 +48,8 @@ exports.config = {
       'moz:firefoxOptions': {
         'args': [ '--headless' ],
         'prefs': {
+          // https://github.com/angular/angular.js/issues/17117
+          'privacy.window.name.update.enabled': false,
           'browser.download.folderList': 2,
           'browser.download.manager.showWhenStarting': false,
           'browser.download.useDownloadDir': true,

@@ -442,7 +442,8 @@ describe('TRIP app', function() {
     });
 
     it('should default the "from" date to midnight this morning', function() {
-      expect(element(by.model('tracks.search.dateFrom')).getAttribute('value')).toMatch(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00(\.000)?(Z|\+00:00)?$/);
+      helper.takeScreenshot(testName + '_default_from_date', takeScreenshots);
+      expect(element(by.model('tracks.search.dateFrom')).getAttribute('value')).toMatch(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00(:00(\.000)?(Z|\+00:00)?)?$/);
     });
 
     it('should default the "to" date to one second before midnight today', function() {
