@@ -1,6 +1,6 @@
 {
   "name": "trip-web-client",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "Trip Recording and Itinerary Planner web client",
   "author": {
     "name": "Frank Dean",
@@ -85,11 +85,13 @@
     "test-single-run": "karma start test/karma.conf.js  --single-run",
     "preupdate-webdriver": "$npm_execpath install",
     "update-webdriver-chrome-XX.x.xxxx.xx": "webdriver-manager update --versions.chrome=XX.x.xxxx.xx",
+    "update-webdriver-107": "webdriver-manager update --versions.chrome=107.0.5304.87",
+    "update-webdriver-105": "webdriver-manager update --versions.chrome=105.0.5195.125",
     "update-webdriver-103": "webdriver-manager update --versions.chrome=103.0.5060.53",
     "update-webdriver-99": "webdriver-manager update --versions.chrome=99.0.4844.51",
     "update-webdriver-97": "webdriver-manager update --versions.chrome=97.0.4692.99",
     "update-webdriver": "webdriver-manager update",
-    "preprotractor": "$npm_execpath run update-webdriver-103",
+    "preprotractor": "$npm_execpath run update-webdriver-107",
     "protractor": "protractor test/protractor.conf.js",
     "dist-update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'dist/app/index-async.html');\"",
     "update-index-async": "node -e \"const shell = require('shelljs'); shell.sed('-i', /    \\/\\/ You need to run .yarn run update-index-async. to inject the angular async code here/, shell.sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=node_modules/angular-loader/angular-loader.min.js.map','app/node_modules/angular-loader/angular-loader.min.js'), 'app/index-async.html');\"",
