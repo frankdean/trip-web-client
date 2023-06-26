@@ -6,8 +6,12 @@ This is the README of the TRIP web client application.  See the README of the
 
 ## Installing required packages
 
-		$ yarn install
+		$ export TMPDIR=/tmp
+		$ npm install
 
+Defining `TMPDIR` is a workaround to an issue that surfaces when `npm`
+(seemingly unnecessarily) attempts to build PhantomJS.  See
+[Phantom installation failed TypeError: Path must be a string. Received undefined #200](https://github.com/karma-runner/karma-phantomjs-launcher/issues/200)
 
 ## Running directly with trip-server
 
