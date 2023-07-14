@@ -1,8 +1,13 @@
 # TRIP - Trip Recording and Itinerary Planner
 
-This is the README of the TRIP web client application.  See the README of the
-[trip-server][] application for details of the full application.
-
+This web application uses the [AngularJS][] framework, Google's support for
+which, officially ended as of January 2022.  Consequently, this project is now
+archived and is no longer supported.  It has been replaced with
+[a C++ rewrite as Trip Server v2][trip-server-2], which supports all the use
+cases of this version (Trip Server v1) and should suffer far less from the
+impact of dependency changes.  See the
+[README](https://www.fdsd.co.uk/trip-server-2/readme.html) for further
+details.  It can be run alongside v1.
 
 ## Installing required packages
 
