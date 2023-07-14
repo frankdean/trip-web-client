@@ -96,3 +96,6 @@ for the latest information.
     headless anyway, this is less of an issue.
 
     See <https://github.com/karma-runner/karma-safari-launcher/issues/29>
+
+[AngularJS]: https://angularjs.org
+[trip-server-2]: https://www.fdsd.co.uk/trip-server-2/
